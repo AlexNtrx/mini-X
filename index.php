@@ -1,41 +1,67 @@
-   <?php
-
+<?php
 require "function.php";
-    $conn = dbConnect();
+
+$conn = dbConnect();
+
 $contents = [];
-if($conn){
-    $contents = getShowContents();
+
+if ($conn) {
+    $contents = getShowContents($conn);
 }
 ?>
 
-
 <!DOCTYPE html>
 <html lang="fi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>minisome</title>
+
+    <title>miniX</title>
+
+    <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/kortit.css">
+    <link rel="stylesheet" href="./css/sidebar.css">
+    <link rel="stylesheet" href="./css/post.css">
+    <link rel="stylesheet" href="./css/header.css">
 </head>
+
 <body>
-    <?php
-if (!empty($contents)) {
+   
+    <div class="layout">
+        <!-- sivupalkkis -->
+        <?php include 'components/sidebar.php'; ?>
+        <main class="feed">
+            <header class="feed-header">
+    <a href="#" class="header-tab active">Home</a>
+    <a href="#" class="header-tab">Seurataan</a>
+</header>
+           <!-- Luo julkaisu osio -->
+            <?php include 'components/create-post.php'; ?>
 
-    foreach ($contents as $content) {
+            <!-- julkaisut -->
+            <section class="posts">
 
-        echo htmlspecialchars($content['author'], ENT_QUOTES, 'UTF-8');
-        echo '<br>';
+                <?php if (!empty($contents)): ?>
 
-        echo htmlspecialchars($content['content'], ENT_QUOTES, 'UTF-8');
-        echo '<br>';
+                    <?php foreach ($contents as $content): ?>
+                        <!-- kortit -->
+                        <?php include 'components/kortit.php'; ?>
 
-        echo htmlspecialchars($content['created_at'], ENT_QUOTES, 'UTF-8');
-        echo '<br><br>';
-    }
+                    <?php endforeach; ?>
 
-} else {
-    echo 'Ei julkaisuja.';
-}
-    ?>
+                <?php else: ?>
+
+                    <p>Ei julkaisuja</p>
+
+                <?php endif; ?>
+
+            </section>
+
+        </main>
+
+    </div>
+
 </body>
-</html>
 
+</html>

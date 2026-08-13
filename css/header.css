@@ -1,0 +1,31 @@
+.feed-header {
+    display: flex;
+
+    width: 100%;
+
+    border-bottom: 1px solid #2f3336;
+    background-color: #000;
+}
+
+.header-tab {
+    flex: 1;
+
+    padding: 16px 0;
+
+    text-align: center;
+    text-decoration: none;
+
+    color: #71767b;
+
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.header-tab:hover {
+    background-color: #181818;
+}
+
+.header-tab.active {
+    color: #e7e9ea;
+    font-weight: 700;
+}

@@ -1,7 +1,7 @@
 <?php 
     require "database.php";
 
-
+// dbConnect function
  function dbConnect(){
  // Create connection
   $conn = new mysqli(SERVER, USERNAME, PASSWORD, DATABASE);
@@ -13,8 +13,9 @@ if ($conn->connect_error) {
 }
 }
 
-function getShowContents(){ 
- $conn = dbConnect();
+// funtio, joka haetaan tiedot tietokannasta
+function getShowContents($conn){ 
+
     $sql = "SELECT * FROM posts ORDER BY id DESC";
        $result = $conn->query($sql);
     $contents= [];
@@ -23,7 +24,7 @@ function getShowContents(){
             $contents[] = $row;
         }
     }
-
+            // palataan haettut tiedot
     return $contents;
 }
 
