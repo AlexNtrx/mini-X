@@ -28,4 +28,16 @@ function getShowContents($conn){
     return $contents;
 }
 
+function addPost($conn, $author, $content) {
+
+    $sql = "INSERT INTO posts (author, content)
+            VALUES (?, ?)";
+
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param("ss", $author, $content);
+
+    return $stmt->execute();
+}
+
 ?>

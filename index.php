@@ -3,8 +3,23 @@ require "function.php";
 
 $conn = dbConnect();
 
-$contents = [];
+// tarksitetaan onko lomake lähetetty post metodilla
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $author = trim($_POST["author"] ?? "");
+    $content = trim($_POST["content"] ?? "");
+    if ($author !== "" && $content !== "") {
+        $success = addPost($conn, $author, $content);
+        if($success){
+            // Redirect to the same page to prevent form resubmission
+          header("Location: index.php");
+            exit;
+        } 
+    }
+}
 
+
+$contents = [];
+// getposts function
 if ($conn) {
     $contents = getShowContents($conn);
 }
@@ -33,7 +48,7 @@ if ($conn) {
         <?php include 'components/sidebar.php'; ?>
         <main class="feed">
             <header class="feed-header">
-    <a href="#" class="header-tab active">Home</a>
+    <a href="#" class="header-tab active">Sinulle</a>
     <a href="#" class="header-tab">Seurataan</a>
 </header>
            <!-- Luo julkaisu osio -->

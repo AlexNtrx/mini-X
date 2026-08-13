@@ -1,6 +1,23 @@
-<section class="create-post">
+<form method="POST" class="create-post">
+
     <div class="create-post-content">
-        <textarea placeholder="Mitä tapahtuu?"></textarea>
-        <button>Julkaise</button>
+        <input
+            type="text"
+            name="author"
+            class="author-input"
+            placeholder="Nimi"
+            required
+        >
+        <textarea
+            name="content"
+            placeholder="Mitä tapahtuu?"
+            required
+        ></textarea>
+
+        <button type="submit">
+            Julkaise
+        </button>
+
     </div>
-</section>
+
+</form>
