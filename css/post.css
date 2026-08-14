@@ -3,10 +3,8 @@
 .post-section {
     width: 600px;
     min-height: 100vh;
-
     background-color: #000;
     color: #e7e9ea;
-
     border-left: 1px solid #2f3336;
     border-right: 1px solid #2f3336;
 }
