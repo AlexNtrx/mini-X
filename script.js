@@ -1,8 +1,9 @@
-
+// näytää dropdown valikon
 function toggleMenu(button) {
     const menu = button.nextElementSibling;
     menu.classList.toggle("show");
 }
+// näytää muokkausLomakkeen
 function showEditForm(button) {
     const post = button.closest(".post");
 

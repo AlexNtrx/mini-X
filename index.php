@@ -5,9 +5,9 @@ $conn = dbConnect();
 // tarksitetaan onko lomake lähetetty post metodilla
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["create_post"])){
-        require "create_post.php";
+        require "./handlers/create-post.php";
     }elseif(isset($_POST["update_post"])){
-        require "edit_post.php";
+        require "./handlers/edit-post.php";
     }
    
 }
