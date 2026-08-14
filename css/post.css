@@ -1,7 +1,8 @@
 /*julkaisut lomake tyylit */
 
 .post-section {
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
     min-height: 100vh;
     background-color: #000;
     color: #e7e9ea;
@@ -18,7 +19,9 @@
 
 .create-post-content {
     flex: 1;
+    min-width: 0;
 }
+
 /* nimi */
 .author-input {
     width: 100%;
@@ -31,6 +34,7 @@
     outline: none;
     font-size: 16px;
 }
+
 .author-input::placeholder {
     color: #71767b;
 }
@@ -46,6 +50,7 @@
     outline: none;
     font-size: 20px;
 }
+
 /* btn */
 .create-post button {
     float: right;
@@ -56,4 +61,19 @@
     border-radius: 9999px;
     font-weight: 700;
     cursor: pointer;
+}
+
+@media (max-width: 600px) {
+    .post-section {
+        border-left: none;
+        border-right: none;
+    }
+
+    .create-post {
+        padding: 12px;
+    }
+
+    .create-post textarea {
+        font-size: 18px;
+    }
 }

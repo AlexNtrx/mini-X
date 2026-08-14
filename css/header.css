@@ -23,3 +23,10 @@
     color: #e7e9ea;
     font-weight: 700;
 }
+
+@media (max-width: 900px) {
+    /* Jättää tilaa vasemman yläkulman hamburger-painikkeelle */
+    .feed-header {
+        padding-left: 52px;
+    }
+}

@@ -1,4 +1,14 @@
- <aside class="sidebar">
+ <button
+        type="button"
+        class="hamburger-button"
+        id="hamburgerButton"
+        aria-label="Avaa valikko"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+ <aside class="sidebar" id ="sidebar">
+  
   <div class="logo">Mini X</div>
 
   <nav>

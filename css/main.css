@@ -2,24 +2,33 @@
     box-sizing: border-box;
 }
 
+html {
+    background-color: #000;
+}
+
 body {
     margin: 0;
     background-color: #000;
     color: #e7e9ea;
-
-    font-family:
-        "Segoe UI",
-        sans-serif;
+    overflow-x: hidden;
+    font-family: "Segoe UI", sans-serif;
 }
+
 /* Layout styles */
 .layout {
     display: flex;
     justify-content: center;
+    width: 100%;
     min-height: 100vh;
+
+    /* Tilaa kiinteälle sivupalkille desktopissa */
+    padding-left: 260px;
 }
+
 /* Feed styles */
 .feed {
-    width: 600px;
+    width: 100%;
+    max-width: 600px;
     min-height: 100vh;
     border-left: 1px solid #2f3336;
     border-right: 1px solid #2f3336;
@@ -27,4 +36,20 @@ body {
 
 .posts {
     width: 100%;
+}
+
+/* Tablet / mobile: sidebar muuttuu hamburger-valikoksi */
+@media (max-width: 900px) {
+    .layout {
+        padding-left: 0;
+    }
+}
+
+/* Pieni mobiili */
+@media (max-width: 600px) {
+    .feed {
+        max-width: none;
+        border-left: none;
+        border-right: none;
+    }
 }

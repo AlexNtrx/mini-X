@@ -32,14 +32,18 @@ if ($conn) {
 
 <body>
    
+  
+
     <div class="layout">
+        
         <!-- sivupalkkis -->
         <?php include 'components/sidebar.php'; ?>
+        
         <main class="feed">
             <header class="feed-header">
-    <a href="#" class="header-tab active">Sinulle</a>
-    <a href="#" class="header-tab">Seurataan</a>
-</header>
+             <a href="#" class="header-tab active">Sinulle</a>
+                <a href="#" class="header-tab">Seurataan</a>
+        </header>
            <!-- Luo julkaisu osio -->
             <?php include 'components/tekstikenttä.php'; ?>
 

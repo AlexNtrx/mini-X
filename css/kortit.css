@@ -2,12 +2,15 @@
 .posts {
     width: 100%;
 }
+
 .post-top {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     width: 100%;
+    gap: 8px;
 }
+
 .post {
     display: flex;
     gap: 12px;
@@ -22,13 +25,18 @@
 
 .post-content {
     flex: 1;
+    min-width: 0;
 }
+
 /* Post user styles */
 .post-user {
     display: flex;
     align-items: center;
     gap: 8px;
+    min-width: 0;
+    flex-wrap: wrap;
 }
+
 /* time */
 .post-user strong {
     color: #e7e9ea;
@@ -36,32 +44,46 @@
 
 .post-user span {
     color: #71767b;
+    overflow-wrap: anywhere;
 }
 
 .post-content p {
     margin: 4px 0 12px;
-
     line-height: 20px;
+    overflow-wrap: anywhere;
 }
-
 
 /* Menu button styles */
 .post-menu {
     position: relative;
+    flex-shrink: 0;
 }
+
 .menu-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 0;
     background: transparent;
     color: #71767b;
     border: none;
+    border-radius: 50%;
     font-size: 20px;
     cursor: pointer;
+}
+
+.menu-button:hover {
+    background-color: #181818;
 }
 
 .menu-dropdown {
     display: none;
     position: absolute;
-    top: 30px;
+    top: 36px;
     right: 0;
+    z-index: 50;
     min-width: 120px;
     background-color: #000;
     border: 1px solid #2f3336;
@@ -81,18 +103,21 @@
 }
 
 .menu-dropdown a:hover {
-  background-color: #181818;
+    background-color: #181818;
 }
-.menu-dropdown button{ 
-     width: 100%;
-     background-color: #000;
-     color: #e7e9ea;
-     border: none;
-     padding: 7px;
+
+.menu-dropdown button {
+    width: 100%;
+    background-color: #000;
+    color: #e7e9ea;
+    border: none;
+    padding: 10px 14px;
+    text-align: left;
+    cursor: pointer;
 }
-.menu-dropdown button:hover{
+
+.menu-dropdown button:hover {
     background-color: #2f3336;
-    
 }
 
 /* Edit form styles */
@@ -101,7 +126,6 @@
     font-size: 15px;
     font-weight: 700;
 }
-
 
 .post-text {
     color: #e7e9ea;
@@ -132,4 +156,18 @@ textarea.post-text {
 .edit-form {
     display: none;
     width: 100%;
+}
+
+@media (max-width: 600px) {
+    .post {
+        padding: 12px;
+    }
+
+    .post-user {
+        gap: 6px;
+    }
+
+    .post-user span {
+        font-size: 13px;
+    }
 }

@@ -13,3 +13,19 @@ function showEditForm(button) {
     postView.style.display = "none";
     editForm.style.display = "block";
 }
+//  hamburger menu
+   const hamburgerButton = document.getElementById("hamburgerButton");
+        const sidebar = document.querySelector(".sidebar");
+  
+        function setSidebarOpen(isOpen) {
+            sidebar.classList.toggle("open", isOpen);
+           
+        
+        }
+        hamburgerButton.addEventListener("click", function () {
+            setSidebarOpen(!sidebar.classList.contains("open"));
+        });
+        hamburgerButton
+
+    
+    
