@@ -30,6 +30,7 @@ function getShowContents($conn)
     return $contents;
 }
 
+// funktio, joka lisää julkaisu tietokantaan
 function addPost($conn, $author, $content)
 {
 
@@ -41,6 +42,7 @@ function addPost($conn, $author, $content)
 
     return $stmt->execute();
 }
+// funktio, joka päivittää julkaisu tietokannassa
 function updatePost($conn, $id, $author, $content)
 {
 

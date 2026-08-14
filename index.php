@@ -2,15 +2,8 @@
 require "function.php";
 
 $conn = dbConnect();
-// tarksitetaan onko lomake lähetetty post metodilla
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST["create_post"])){
-        require "./handlers/create-post.php";
-    }elseif(isset($_POST["update_post"])){
-        require "./handlers/edit-post.php";
-    }
-   
-}
+
+require "handlers/post-handlers.php";
 
 $contents = [];
 // getposts function
