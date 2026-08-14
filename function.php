@@ -1,37 +1,39 @@
-<?php 
-    require "database.php";
+<?php
+require "database.php";
 
 // dbConnect function
- function dbConnect(){
- // Create connection
-  $conn = new mysqli(SERVER, USERNAME, PASSWORD, DATABASE);
-// Check connection
-if ($conn->connect_error) {
-    die('Connection failed: ' . $conn->connect_error);
-}else{
-    return $conn;
-}
+function dbConnect()
+{
+    // Create connection
+    $conn = new mysqli(SERVER, USERNAME, PASSWORD, DATABASE);
+    // Check connection
+    if ($conn->connect_error) {
+        die('Connection failed: ' . $conn->connect_error);
+    } else {
+        return $conn;
+    }
 }
 
 // funtio, joka haetaan tiedot tietokannasta
-function getShowContents($conn){ 
+function getShowContents($conn)
+{
 
     $sql = "SELECT * FROM posts ORDER BY id DESC";
-       $result = $conn->query($sql);
-    $contents= [];
+    $result = $conn->query($sql);
+    $contents = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {
             $contents[] = $row;
         }
     }
-            // palataan haettut tiedot
+    // palataan haettut tiedot
     return $contents;
 }
 
-function addPost($conn, $author, $content) {
+function addPost($conn, $author, $content)
+{
 
-    $sql = "INSERT INTO posts (author, content)
-            VALUES (?, ?)";
+    $sql = "INSERT INTO posts (author, content)VALUES (?, ?)";
 
     $stmt = $conn->prepare($sql);
 
@@ -39,5 +41,19 @@ function addPost($conn, $author, $content) {
 
     return $stmt->execute();
 }
+function updatePost($conn, $id, $author, $content)
+{
 
-?>
+    $sql = "UPDATE posts SET author = ?, content = ? WHERE id = ?";
+
+    $stmt = $conn->prepare($sql);
+
+    $stmt->bind_param(
+        "ssi",
+        $author,
+        $content,
+        $id
+    );
+
+    return $stmt->execute();
+}

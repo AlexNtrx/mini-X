@@ -14,7 +14,8 @@
             required
         ></textarea>
 
-        <button type="submit">
+        <button type="submit"
+        name="create_post">
             Julkaise
         </button>
 

@@ -2,21 +2,15 @@
 require "function.php";
 
 $conn = dbConnect();
-
 // tarksitetaan onko lomake lähetetty post metodilla
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $author = trim($_POST["author"] ?? "");
-    $content = trim($_POST["content"] ?? "");
-    if ($author !== "" && $content !== "") {
-        $success = addPost($conn, $author, $content);
-        if($success){
-            // Redirect to the same page to prevent form resubmission
-          header("Location: index.php");
-            exit;
-        } 
+    if (isset($_POST["create_post"])){
+        require "create_post.php";
+    }elseif(isset($_POST["update_post"])){
+        require "edit_post.php";
     }
+   
 }
-
 
 $contents = [];
 // getposts function
@@ -78,5 +72,6 @@ if ($conn) {
     </div>
 
 </body>
+<script src="script.js"></script>
 
 </html>
