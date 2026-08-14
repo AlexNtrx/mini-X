@@ -16,13 +16,13 @@ body {
         Arial,
         sans-serif;
 }
-
+/* Layout styles */
 .layout {
     display: flex;
     justify-content: center;
     min-height: 100vh;
 }
-
+/* Feed styles */
 .feed {
     width: 600px;
     min-height: 100vh;

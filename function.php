@@ -50,12 +50,14 @@ function updatePost($conn, $id, $author, $content)
 
     $stmt = $conn->prepare($sql);
 
-    $stmt->bind_param(
-        "ssi",
-        $author,
-        $content,
-        $id
+    $stmt->bind_param( "ssi", $author, $content, $id
     );
 
+    return $stmt->execute();
+}
+function deletePost($conn,$id){
+    $sql = "DELETE FROM posts Where id = ?";
+    $stmt =$conn->prepare($sql);
+    $stmt->bind_param("i",$id);
     return $stmt->execute();
 }

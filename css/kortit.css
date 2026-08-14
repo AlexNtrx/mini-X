@@ -1,3 +1,4 @@
+/* Post kortti styles */
 .posts {
     width: 100%;
 }
@@ -26,13 +27,13 @@
 .post-content {
     flex: 1;
 }
-
+/* Post user styles */
 .post-user {
     display: flex;
     align-items: center;
     gap: 8px;
 }
-
+/* time */
 .post-user strong {
     color: #e7e9ea;
 }
@@ -46,10 +47,12 @@
 
     line-height: 20px;
 }
+
+
+/* Menu button styles */
 .post-menu {
     position: relative;
 }
-
 .menu-button {
     background: transparent;
     color: #71767b;
@@ -93,7 +96,9 @@
 .menu-dropdown a:hover {
     background-color: #181818;
 }
-/* Sama tyyli authorille normaalissa ja edit-tilassa */
+
+
+/* Edit form styles */
 .post-author {
     color: #e7e9ea;
     font-family: inherit;
@@ -101,7 +106,7 @@
     font-weight: 700;
 }
 
-/* Sama tyyli sisällölle normaalissa ja edit-tilassa */
+
 .post-text {
     color: #e7e9ea;
     font-family: inherit;
@@ -109,7 +114,6 @@
     line-height: 20px;
 }
 
-/* Kun post-author on input */
 input.post-author {
     width: 100%;
 
@@ -121,7 +125,6 @@ input.post-author {
     padding: 0;
 }
 
-/* Kun post-text on textarea */
 textarea.post-text {
     width: 100%;
     min-height: 60px;

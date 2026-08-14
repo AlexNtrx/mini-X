@@ -1,4 +1,4 @@
-/*julkaisut tyylit */
+/*julkaisut lomake tyylit */
 
 .post-section {
     width: 600px;
@@ -21,28 +21,7 @@
 .create-post-content {
     flex: 1;
 }
-
-.create-post textarea {
-    width: 100%;
-    min-height: 80px;
-    background: transparent;
-    color: #e7e9ea;
-    border: none;
-    resize: none;
-    outline: none;
-    font-size: 20px;
-}
-
-.create-post button {
-    float: right;
-    padding: 8px 18px;
-    background-color: #eff3f4;
-    color: #0f1419;
-    border: none;
-    border-radius: 9999px;
-    font-weight: 700;
-    cursor: pointer;
-}
+/* nimi */
 .author-input {
     width: 100%;
     padding: 10px 0;
@@ -56,4 +35,27 @@
 }
 .author-input::placeholder {
     color: #71767b;
+}
+
+/* tekstikenttä */
+.create-post textarea {
+    width: 100%;
+    min-height: 80px;
+    background: transparent;
+    color: #e7e9ea;
+    border: none;
+    resize: none;
+    outline: none;
+    font-size: 20px;
+}
+/* btn */
+.create-post button {
+    float: right;
+    padding: 8px 18px;
+    background-color: #eff3f4;
+    color: #0f1419;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    cursor: pointer;
 }

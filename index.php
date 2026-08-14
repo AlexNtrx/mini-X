@@ -2,11 +2,13 @@
 require "function.php";
 
 $conn = dbConnect();
-
+// haetaan handlers
 require "handlers/post-handlers.php";
 
+// array, joka sisältää kaikki julkaisut tietokannasta
 $contents = [];
-// getposts function
+
+// getposts funktio, joka hakee julkaisut tietokannasta
 if ($conn) {
     $contents = getShowContents($conn);
 }
@@ -39,7 +41,7 @@ if ($conn) {
     <a href="#" class="header-tab">Seurataan</a>
 </header>
            <!-- Luo julkaisu osio -->
-            <?php include 'components/create-post.php'; ?>
+            <?php include 'components/tekstikenttä.php'; ?>
 
             <!-- julkaisut -->
             <section class="posts">

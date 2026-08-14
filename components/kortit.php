@@ -6,7 +6,6 @@
 
         <!-- Normal post -->
         <div class="post-view">
-
             <div class="post-top">
 
                 <div class="post-user">
@@ -37,12 +36,17 @@
                             onclick="showEditForm(this)">
                             Muokkaa
                         </button>
-
-                        <button
+                        <!-- delete lomake -->
+                     <form method="POST">
+                        <input type="hidden" name="id" value="<?= $content["id"] ?>">
+                           <button
                             type="submit"
-                            name="delete_post">
+                            name="delete_post"
+                            onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')">
                             Poistaa
                         </button>
+                    </form>
+                 
 
                     </div>
 
@@ -81,7 +85,8 @@
 
             <button
                 type="submit"
-                name="update_post">
+                name="update_post"
+                onclick="return confirm('Haluatko varmasti päivittää tämän julkaisun?')">
                 Tallenna
             </button>
 
