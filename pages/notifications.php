@@ -29,7 +29,7 @@ if (isset($conn) && $conn) {
 
         <main class="feed">
             <header class="feed-header">
-                <a href="index.php?page=notifications" class="header-tab active">Kaikki ilmoitukset</a>
+                <h1>Ilmoitukset</h1>
             </header>
             <!-- ilmoitukset -->
             <section class="notifications-list">

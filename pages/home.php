@@ -22,7 +22,7 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
 
         <main class="feed">
             <header class="feed-header">
-                <a href="index.php?page=home" class="header-tab active">Sinulle</a>
+                <h1>Etusivu</h1>
             </header>
 
             <!-- Luo julkaisu -->

@@ -31,7 +31,7 @@ if ($q !== '' && isset($conn) && $conn) {
 
         <main class="feed">
             <header class="feed-header">
-                <a href="index.php?page=selaa" class="header-tab active">Selaa käyttäjiä</a>
+                <h1>Selaa käyttäjiä</h1>
             </header>
 
             <!-- Hakukenttä -->
@@ -77,7 +77,7 @@ if ($q !== '' && isset($conn) && $conn) {
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="empty-search">
-                        <?= $q !== '' ? 'Ei julkaisuja käyttäjältä "@' . htmlspecialchars($q) . '".' : 'Kirjoita käyttäjänมิ tai valitse käyttäjä ylhäältä nähdäksesi julkaisut.' ?>
+                        <?= $q !== '' ? 'Ei julkaisuja käyttäjältä "@' . htmlspecialchars($q) . '".' : 'Kirjoita käyttäjänimi tai valitse käyttäjä ylhäältä nähdäksesi julkaisut.' ?>
                     </p>
                 <?php endif; ?>
             </section>
