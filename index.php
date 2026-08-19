@@ -1,76 +1,31 @@
 <?php
-require "function.php";
-
-$conn = dbConnect();
-// haetaan handlers
-require "handlers/post-handlers.php";
-
-// array, joka sisältää kaikki julkaisut tietokannasta
-$contents = [];
-
-// getposts funktio, joka hakee julkaisut tietokannasta
-if ($conn) {
-    $contents = getShowContents($conn);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
-?>
 
-<!DOCTYPE html>
-<html lang="fi">
+require_once "functions/init.php";
+$conn = dbConnect();
+require_once "handlers/post-handlers.php";
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+// jos käyttäjä ei ole kirjautunut sisään, ohjataan hänet kirjautumissivulle
+if (!isset($_SESSION['user_id'])) {
+    include 'pages/form-page.php';
+    exit;
+}
+//  Hae sivu-parametri GET-pyynnöstä, oletuksena 'home'
+$page = trim($_GET['page'] ?? 'home');   
 
-    <title>miniX</title>
+// Määrittele reitit ja niiden vastaavat tiedostot
+$routes = [
+    'home'          => 'pages/home.php',
+    'profile'       => 'pages/profile.php',
+    'notifications' => 'pages/notifications.php',
+    'selaa'         => 'pages/selaa.php',
+];
 
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/kortit.css">
-    <link rel="stylesheet" href="./css/sidebar.css">
-    <link rel="stylesheet" href="./css/post.css">
-    <link rel="stylesheet" href="./css/header.css">
-</head>
-
-<body>
-   
-  
-
-    <div class="layout">
-        
-        <!-- sivupalkkis -->
-        <?php include 'components/sidebar.php'; ?>
-        
-        <main class="feed">
-            <header class="feed-header">
-             <a href="#" class="header-tab active">Sinulle</a>
-                <a href="#" class="header-tab">Seurataan</a>
-        </header>
-           <!-- Luo julkaisu osio -->
-            <?php include 'components/tekstikenttä.php'; ?>
-
-            <!-- julkaisut -->
-            <section class="posts">
-
-                <?php if (!empty($contents)): ?>
-
-                    <?php foreach ($contents as $content): ?>
-                        <!-- kortit -->
-                        <?php include 'components/kortit.php'; ?>
-
-                    <?php endforeach; ?>
-
-                <?php else: ?>
-
-                    <p>Ei julkaisuja</p>
-
-                <?php endif; ?>
-
-            </section>
-
-        </main>
-
-    </div>
-
-</body>
-<script src="script.js"></script>
-
-</html>
+// Jos sivu-parametri on määritelty reiteissä, sisällytä vastaava tiedosto
+if (isset($routes[$page])) { 
+    include $routes[$page];
+} else {
+    include $routes['home'];
+}

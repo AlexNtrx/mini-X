@@ -1,0 +1,323 @@
+:root {
+  --theme-signup: #000;
+  --theme-signup-darken: #222;
+  --theme-signup-background: #f9f9f9;
+  --theme-login: #000;
+  --theme-login-darken: #222;
+  --theme-login-background: #f9f9f9;
+  --theme-light: #555;
+  --theme-dark: #333;
+  --font-default: "Segoe UI", sans-serif;
+  --success: #5cb85c;
+  --error: #d9534f;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  font-family: var(--font-default);
+}
+
+/* Background static split */
+#back {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.backLeft,
+.backRight {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backLeft {
+  left: 0;
+  background: var(--theme-login);
+}
+
+.backRight {
+  right: 0;
+  background: var(--theme-signup);
+}
+
+h1 {
+  color: #fff;
+  font-size: 3rem;
+  user-select: none;
+}
+
+/* Sliding Viewport */
+#slideBox {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-left: 0;
+  overflow: hidden;
+  z-index: 10;
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.25),
+    0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.topLayer {
+  width: 200%;
+  height: 100%;
+  position: relative;
+  left: 0;
+  display: flex;
+}
+
+/* Left & Right Sliding Panels */
+.left,
+.right {
+  width: 50%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.left {
+  background: var(--theme-signup-background);
+}
+
+.right {
+  background: var(--theme-login-background);
+}
+
+/* Content Centering */
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100%;
+  width: 75%;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.content h2 {
+  font-weight: 300;
+  font-size: 2.4em;
+  margin: 0 0 0.8em;
+}
+
+.left .content h2 {
+  color: var(--theme-signup);
+}
+.right .content h2 {
+  color: var(--theme-login);
+}
+
+/* Form Fields */
+label {
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.left label {
+  color: var(--theme-light);
+}
+.right label {
+  color: var(--theme-dark);
+}
+
+input {
+  background-color: transparent;
+  border: 0;
+  outline: 0;
+  font-size: 1em;
+  padding: 8px 2px;
+  margin-top: 0.3em;
+  width: 100%;
+}
+
+.left input {
+  border-bottom: 1px solid var(--theme-light);
+  color: var(--theme-light);
+}
+
+.left input:focus {
+  border-color: var(--theme-signup);
+}
+
+.right input {
+  border-bottom: 1px solid var(--theme-dark);
+  color: var(--theme-dark);
+}
+
+.right input:focus {
+  border-color: var(--theme-login);
+}
+
+.form-element {
+  margin-bottom: 1.4em;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-submit {
+  display: flex;
+  align-items: center;
+  margin-top: 1.8em;
+}
+
+/* Buttons */
+button {
+  padding: 0.8em 1.4em;
+  margin-right: 12px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.9em;
+  color: #fff;
+  border-radius: 4px;
+  border: 0;
+
+}
+
+button.signup {
+  background: var(--theme-signup);
+}
+
+button.login {
+  background: var(--theme-login);
+}
+
+button.signup:hover {
+  background: var(--theme-signup-darken);
+}
+button.login:hover {
+  background: var(--theme-login-darken);
+}
+
+button.off {
+  background: transparent;
+  box-shadow: none;
+}
+
+button.off.signup {
+  color: var(--theme-signup);
+}
+
+button.off.login {
+  color: var(--theme-login);
+}
+
+button.off:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.left button.off:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.alert {
+  padding: 10px 14px;
+  border-radius: 4px;
+  margin-bottom: 1.2em;
+  font-size: 0.85em;
+  line-height: 1.4;
+}
+
+.alert-error {
+  background-color: #fde8e8;
+  color: #c81e1e;
+  border: 1px solid #f8b4b4;
+}
+
+.alert-success {
+  background-color: #def7ec;
+  color: #03543f;
+  border: 1px solid #84e1bc;
+}
+
+/* Responsive styles for Mobile & Tablet */
+@media (max-width: 768px) {
+  #back {
+    display: none;
+  }
+
+  #slideBox {
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .content {
+    width: 85%;
+    padding: 1.5rem 0;
+  }
+
+  .content h2 {
+    font-size: 2rem;
+    margin-bottom: 0.6em;
+  }
+
+  input {
+    font-size: 16px; 
+  }
+
+  .form-element {
+    margin-bottom: 1.1em;
+  }
+
+  .form-submit {
+    margin-top: 1.4em;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  button {
+    padding: 0.75em 1.2em;
+  }
+}
+
+/* Responsive styles for Large Screens */
+@media (min-width: 1920px) {
+  h1 {
+    font-size: 4rem;
+  }
+
+  .content h2 {
+    font-size: 3rem;
+  }
+
+  input {
+    font-size: 1.2rem;
+  }
+
+  label {
+    font-size: 0.95rem;
+  }
+
+  button {
+    font-size: 1.05rem;
+    padding: 0.9em 1.8em;
+  }
+}
+

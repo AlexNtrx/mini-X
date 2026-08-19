@@ -1,4 +1,4 @@
-.feed-header {
+.feed-header { 
     display: flex;
     width: 100%;
     border-bottom: 1px solid #2f3336;
@@ -25,8 +25,16 @@
 }
 
 @media (max-width: 900px) {
-    /* Jättää tilaa vasemman yläkulman hamburger-painikkeelle */
+  
     .feed-header {
         padding-left: 52px;
+    }
+}
+
+
+@media (min-width: 1800px) {
+    .header-tab {
+        font-size: 18px;
+        padding: 20px 0;
     }
 }

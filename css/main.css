@@ -20,8 +20,6 @@ body {
     justify-content: center;
     width: 100%;
     min-height: 100vh;
-
-    /* Tilaa kiinteälle sivupalkille desktopissa */
     padding-left: 260px;
 }
 
@@ -38,18 +36,33 @@ body {
     width: 100%;
 }
 
-/* Tablet / mobile: sidebar muuttuu hamburger-valikoksi */
+.empty-feed {
+    padding: 24px;
+    text-align: center;
+    color: #71767b;
+}
+
+/* responsive */
 @media (max-width: 900px) {
     .layout {
         padding-left: 0;
     }
 }
 
-/* Pieni mobiili */
 @media (max-width: 600px) {
     .feed {
         max-width: none;
         border-left: none;
         border-right: none;
+    }
+}
+
+@media (min-width: 1800px) {
+    .layout {
+        padding-left: 300px;
+    }
+
+    .feed {
+        max-width: 720px;
     }
 }

@@ -1,15 +1,4 @@
-/*julkaisut lomake tyylit */
-
-.post-section {
-    width: 100%;
-    max-width: 600px;
-    min-height: 100vh;
-    background-color: #000;
-    color: #e7e9ea;
-    border-left: 1px solid #2f3336;
-    border-right: 1px solid #2f3336;
-}
-
+/* Create Post Styles */
 .create-post {
     display: flex;
     gap: 12px;
@@ -17,29 +6,36 @@
     border-bottom: 1px solid #2f3336;
 }
 
+.create-post-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #2f3336;
+    color: #e7e9ea;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    user-select: none;
+}
+
 .create-post-content {
     flex: 1;
     min-width: 0;
 }
 
-/* nimi */
-.author-input {
-    width: 100%;
-    padding: 10px 0;
-    margin-bottom: 8px;
-    background: transparent;
+.create-post-user-info {
+    margin-bottom: 6px;
+}
+
+.create-post-username {
+    font-size: 15px;
+    font-weight: 700;
     color: #e7e9ea;
-    border: none;
-    border-bottom: 1px solid #2f3336;
-    outline: none;
-    font-size: 16px;
 }
 
-.author-input::placeholder {
-    color: #71767b;
-}
-
-/* tekstikenttä */
 .create-post textarea {
     width: 100%;
     min-height: 80px;
@@ -49,9 +45,13 @@
     resize: none;
     outline: none;
     font-size: 20px;
+    font-family: inherit;
 }
 
-/* btn */
+.create-post textarea::placeholder {
+    color: #71767b;
+}
+
 .create-post button {
     float: right;
     padding: 8px 18px;
@@ -61,19 +61,33 @@
     border-radius: 9999px;
     font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.create-post button:hover {
+    background-color: #d7dbdc;
 }
 
 @media (max-width: 600px) {
-    .post-section {
-        border-left: none;
-        border-right: none;
-    }
-
     .create-post {
         padding: 12px;
     }
-
     .create-post textarea {
         font-size: 18px;
+    }
+}
+
+/* Projector / Large Screen Presentation (1800px+) */
+@media (min-width: 1800px) {
+    .create-post-username {
+        font-size: 17px;
+    }
+    .create-post textarea {
+        font-size: 22px;
+        min-height: 100px;
+    }
+    .create-post button {
+        font-size: 16px;
+        padding: 10px 22px;
     }
 }
