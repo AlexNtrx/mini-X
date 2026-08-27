@@ -13,11 +13,11 @@ $mail = new PHPMailer(true);
 $mail->isSMTP();
 $mail->SMTPAuth = true;
 
-$mail->Host = "smtp.resend.com";
+$mail->Host = "smtp.example.com";
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
-$mail->Username = "resend";
-$mail->Password = "";
+$mail->Username = "your-user@example.com";
+$mail->Password = "your-password";
 
 $mail->CharSet    = "UTF-8";
 $mail->isHtml(true);
