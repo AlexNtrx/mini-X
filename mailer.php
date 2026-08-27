@@ -17,7 +17,7 @@ $mail->Host = "smtp.resend.com";
 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
 $mail->Port = 587;
 $mail->Username = "resend";
-$mail->Password = "re_EZCvHthw_EQBoYxqSB5q6zRdy6pwG7sgj";
+$mail->Password = "";
 
 $mail->CharSet    = "UTF-8";
 $mail->isHtml(true);
