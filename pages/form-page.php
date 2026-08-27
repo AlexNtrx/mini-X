@@ -8,6 +8,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
     <link rel="stylesheet" href="./css/register.css" />
+    <script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -37,7 +38,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   id="username-signup"
                   type="text"
                   name="username"
-                  value="<?= isset($_POST['register_post']) ? htmlspecialchars($_POST['username'] ?? '') : '' ?>"
+                  value=""
                   required
                 />
               </div>
@@ -92,6 +93,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   required
                 />
               </div>
+             
               <div class="form-element form-submit">
                 <button id="logIn" class="login" type="submit" name="login_post">
                   Log In
@@ -99,6 +101,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                 <button id="goRight" class="login off" type="button">
                   Sign Up
                 </button>
+                
               </div>
             </form>
           </div>
