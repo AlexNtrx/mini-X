@@ -1,0 +1,6 @@
+{
+    "require": {
+        "resend/resend-php": "^0.1.0",
+        "phpmailer/phpmailer": "^7.1"
+    }
+}

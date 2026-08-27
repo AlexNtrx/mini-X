@@ -45,8 +45,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["register_post"])) {
         $username = trim($_POST["username"] ?? "");
         $password = trim($_POST["password"] ?? "");
+        $email = trim($_POST['email'] ?? "");
 
-        if (empty($username) || empty($password)) {
+        if (empty($username) || empty($password)|| empty($email)) {
             $error = "Täytä kaikki kentät.";
         } elseif (strlen($username) < 3) {
             $error = "Käyttäjänimen tulee olla vähintään 3 merkkiä.";
@@ -55,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } elseif (isUsernameExists($conn, $username)) {
             $error = "Käyttäjänimi on jo varattu.";
         } else {
-            if (registerUser($conn, $username, $password)) {
+            if (registerUser($conn, $username, $password,$email)) {
                 $success = "Rekisteröinti onnistui! Voit nyt kirjautua sisään.";
             } else {
                 $error = "Rekisteröinti epäonnistui.";

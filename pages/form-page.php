@@ -51,6 +51,15 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   required
                 />
               </div>
+              <div class="form-element form-stack">
+                <label for="email-signup">Email</label>
+                <input
+                  id="password-signup"
+                  type="email"
+                  name="email"
+                  required
+                />
+              </div>
               <div class="form-element form-submit">
                 <button id="signUp" class="signup" type="submit" name="register_post">
                   Sign up
@@ -93,7 +102,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   required
                 />
               </div>
-             
+              <a href="pages/forgot-password.php">Unohduko salasana?</a>
               <div class="form-element form-submit">
                 <button id="logIn" class="login" type="submit" name="login_post">
                   Log In

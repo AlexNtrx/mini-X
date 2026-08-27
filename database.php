@@ -5,3 +5,4 @@ define('USERNAME', 'root');
 define('PASSWORD', '');
 define('DATABASE', 'minisome');
 ?>
+

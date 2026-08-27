@@ -12,11 +12,11 @@ function isUsernameExists($conn, $username)
 }
 
 // Rekisteröi uuden käyttäjän
-function registerUser($conn, $username, $password)
+function registerUser($conn, $username, $password,$email)
 {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-    $stmt->bind_param("ss", $username, $hashedPassword);
+    $stmt = $conn->prepare("INSERT INTO users (username, password,email) VALUES (?, ?,?)");
+    $stmt->bind_param("sss", $username, $hashedPassword,$email);
     $success = $stmt->execute();
     $newId = $conn->insert_id;
     $stmt->close();
