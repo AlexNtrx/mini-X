@@ -1,0 +1,59 @@
+/* SETTING Page Styles */
+.setting-list {
+    width: 100%;
+}
+
+.setting-items {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    border-bottom: 1px solid #2f3336;
+    text-decoration: none;
+    color: #e7e9ea;
+    transition: background-color 0.15s ease;
+}
+
+.notif-icon-col {
+    flex-shrink: 0;
+    width: 36px;
+    display: flex;
+    justify-content: center;
+    padding-top: 2px;
+}
+
+.notif-icon {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.notif-content-col {
+    flex: 1;
+    min-width: 0;
+}
+
+.notif-text {
+    font-size: 15px;
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.notif-text strong {
+    color: #e7e9ea;
+}
+
+.notif-text span {
+    color: #cfd9de;
+    margin-left: 4px;
+}
+
+.alert-error {
+    background-color: rgba(244, 33, 46, 0.15);
+    color: #f4212e;
+    border: 1px solid #f4212e;
+}
+
+.alert-success {
+    background-color: rgba(0, 186, 124, 0.15);
+    color: #00ba7c;
+    border: 1px solid #00ba7c;
+}

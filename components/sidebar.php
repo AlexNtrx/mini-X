@@ -26,7 +26,8 @@ $unreadNotifs = (isset($conn) && isset($_SESSION['user_id'])) ? getUnreadNotific
             <?php endif; ?>
         </a>
         <a href="index.php?page=profile" class="<?= $currentPage === 'profile' ? 'active' : '' ?>">Profiili</a>
-        <a href="logout.php" onclick="return confirm('Haluatko varmasti kirjautua ulos?');">Logout</a>
+         <a href="index.php?page=setting" class="<?= $currentPage === 'setting' ? 'active' : '' ?>">Asetukset</a>
+        <a href="logout.php" onclick="return confirm('Haluatko varmasti kirjautua ulos?');">Kirjaudu ulos</a>
     </nav>
 </aside>
 <div class="sidebar-overlay" id="sidebarOverlay"></div> 

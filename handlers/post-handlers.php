@@ -139,5 +139,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
     }
+    // Päivitä salasana
+    elseif (isset($_POST["update_password"])) {
+        $newSalasana = trim($_POST["password"] ?? "");
+        $confirmPassword =  trim($_POST["confirm_password"] ?? "");
+        if ($userId > 0) {
+            if (empty($newSalasana)) {
+                $error = "Salasana ei voi olla tyhjä.";
+            } elseif (strlen($newSalasana) < 6) {
+                $error = "Salasana tulee olla vähintään 6 merkkiä.";
+            } elseif ($newSalasana !== $confirmPassword) {
+                $error = "Salasanat eivät täsmää";
+            } else {
+                if (updateSalasana($conn, $userId, $newSalasana)) {
+                    $success = "Käyttäjänimi päivitetty onnistuneesti!";
+                } else {
+                    $error = "Päivitys epäonnistui.";
+                }
+            }
+        }
+    }
 }
 ?>

@@ -21,6 +21,7 @@ $routes = [
     'profile'       => 'pages/profile.php',
     'notifications' => 'pages/notifications.php',
     'selaa'         => 'pages/selaa.php',
+    'setting'       => 'pages/setting.php'
 ];
 
 // Jos sivu-parametri on määritelty reiteissä, sisällytä vastaava tiedosto

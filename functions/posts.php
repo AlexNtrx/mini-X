@@ -17,7 +17,7 @@ function getShowContents($conn)
 }
 
 // Hakee vain tietyn käyttäjän julkaisut profiilisivulle
-function getUserPosts($conn, $userId)
+function getUserPosts($conn, $userId,)
 {
     $sql = "SELECT posts.*, users.username AS author 
             FROM posts 
@@ -95,7 +95,7 @@ function searchPostsByUsername($conn, $keyword)
 // Hakee kaikki käyttäjät selaamista varten
 function getAllUsers($conn)
 {
-    $result = $conn->query("SELECT id, username FROM users ORDER BY username ASC");
+    $result = $conn->query("SELECT id, username,email FROM users ORDER BY username ASC");
     $users = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {

@@ -8,7 +8,6 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
     <link rel="stylesheet" href="./css/register.css" />
-    <script src="https://unpkg.com/just-validate@latest/dist/just-validate.production.min.js"></script>
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -32,6 +31,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
               <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <form id="form-signup" method="post">
+              <input type="hidden" name="register_post" value="1" />
               <div class="form-element form-stack">
                 <label for="username-signup">Username</label>
                 <input
@@ -39,7 +39,6 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   type="text"
                   name="username"
                   value=""
-                  required
                 />
               </div>
               <div class="form-element form-stack">
@@ -48,16 +47,14 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   id="password-signup"
                   type="password"
                   name="password"
-                  required
                 />
               </div>
               <div class="form-element form-stack">
                 <label for="email-signup">Email</label>
                 <input
-                  id="password-signup"
+                  id="email-signup"
                   type="email"
                   name="email"
-                  required
                 />
               </div>
               <div class="form-element form-submit">
@@ -118,6 +115,10 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
       </div>
     </div>
 
+<script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
+
     <script src="./lomakeet.js"></script>
+
+<script src="./validation.js"></script>
   </body>
 </html>

@@ -50,3 +50,13 @@ function updateUsername($conn, $userId, $newUsername)
     $stmt->close();
     return $success;
 }
+function updateSalasana($conn, $userId, $newSalasana)
+{
+    $hashedPassword = password_hash($newSalasana, PASSWORD_DEFAULT);
+    $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+    $stmt->bind_param("si", $hashedPassword , $userId);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}
+
