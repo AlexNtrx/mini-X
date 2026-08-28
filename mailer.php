@@ -19,7 +19,6 @@ $mail->Port = 587;
 $mail->Username = "your-user@example.com";
 $mail->Password = "your-password";
 
-$mail->CharSet    = "UTF-8";
 $mail->isHtml(true);
 
 return $mail;
