@@ -149,12 +149,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } elseif (strlen($newSalasana) < 6) {
                 $error = "Salasana tulee olla vähintään 6 merkkiä.";
             } elseif ($newSalasana !== $confirmPassword) {
-                $error = "Salasanat eivät täsmää";
+                $error = "Salasanat eivät täsmää.";
             } else {
                 if (updateSalasana($conn, $userId, $newSalasana)) {
-                    $success = "Käyttäjänimi päivitetty onnistuneesti!";
+                    $success = "Salasana päivitetty onnistuneesti!";
                 } else {
                     $error = "Päivitys epäonnistui.";
+                }
+            }
+        }
+    }
+    // Päivitä sähköposti
+    elseif (isset($_POST["update_email"])) {
+        $newEmail = trim($_POST["email"] ?? "");
+        if ($userId > 0) {
+            if (empty($newEmail)) {
+                $error = "Sähköposti ei voi olla tyhjä.";
+            } elseif (!filter_var($newEmail, FILTER_VALIDATE_EMAIL)) {
+                $error = "Virheellinen sähköpostiosoite.";
+            } elseif (isEmailExists($conn, $newEmail, $userId)) {
+                $error = "Tämä sähköpostiosoite on jo toisen käyttäjän käytössä.";
+            } else {
+                if (updateEmail($conn, $userId, $newEmail)) {
+                    $success = "Sähköposti päivitetty onnistuneesti!";
+                } else {
+                    $error = "Sähköpostin päivitys epäonnistui.";
                 }
             }
         }

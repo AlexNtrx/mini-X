@@ -8,6 +8,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
     <link rel="stylesheet" href="./css/register.css" />
+    <link rel="stylesheet" href="./css/forgot-password.css" />
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -99,7 +100,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   required
                 />
               </div>
-              <a href="pages/forgot-password.php">Unohduko salasana?</a>
+              <a href="pages/forgot-password.php" id="forgot-password-link" class="forgot-link">Unohditko salasanan?</a>
               <div class="form-element form-submit">
                 <button id="logIn" class="login" type="submit" name="login_post">
                   Log In
@@ -107,7 +108,6 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                 <button id="goRight" class="login off" type="button">
                   Sign Up
                 </button>
-                
               </div>
             </form>
           </div>
@@ -115,10 +115,41 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
       </div>
     </div>
 
-<script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
+    <!-- Forgot Password Modal -->
+    <div id="forgot-password-modal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+      <div class="modal-card">
+        <button type="button" class="modal-close" id="modal-close-btn" aria-label="Sulje">&times;</button>
+        <div class="modal-header">
+          <h2 id="modal-title">Palauta salasana</h2>
+          <p class="modal-subtitle">Syötä käyttäjätilisi sähköpostiosoite, niin lähetämme sinulle linkin salasanan palauttamista varten.</p>
+        </div>
+        
+        <div id="modal-alert-container"></div>
 
+        <form id="form-forgot-modal" method="post" action="send-password-reset.php">
+          <div class="form-element form-stack">
+            <label for="modal-email">Sähköposti</label>
+            <input
+              type="email"
+              name="email"
+              id="modal-email"
+              placeholder="esim. kayttaja@example.com"
+              required
+              autocomplete="email"
+            />
+          </div>
+          <div class="modal-actions">
+            <button type="button" class="modal-btn-secondary" id="modal-cancel-btn">Peruuta</button>
+            <button type="submit" class="modal-btn-primary" id="modal-submit-btn">
+              <span class="btn-text">Lähetä linkki</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
     <script src="./lomakeet.js"></script>
-
-<script src="./validation.js"></script>
+    <script src="./validation.js"></script>
   </body>
 </html>

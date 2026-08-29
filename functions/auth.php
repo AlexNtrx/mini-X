@@ -60,3 +60,32 @@ function updateSalasana($conn, $userId, $newSalasana)
     return $success;
 }
 
+// Tarkistaa onko sähköposti jo käytössä toisella käyttäjällä
+function isEmailExists($conn, $email, $excludeUserId = 0)
+{
+    if ($excludeUserId > 0) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ? LIMIT 1");
+        $stmt->bind_param("si", $email, $excludeUserId);
+    } else {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $stmt->bind_param("s", $email);
+    }
+    $stmt->execute();
+    $exists = $stmt->get_result()->num_rows > 0;
+    $stmt->close();
+    return $exists;
+}
+
+// Päivittää käyttäjän sähköpostin
+function updateEmail($conn, $userId, $newEmail)
+{
+    $stmt = $conn->prepare("UPDATE users SET email = ? WHERE id = ?");
+    $stmt->bind_param("si", $newEmail, $userId);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}
+
+
+
+
