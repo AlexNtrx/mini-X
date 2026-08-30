@@ -106,20 +106,82 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                 </section>
 
                 <!-- Tilin hallinta -->
-                <section class="setting-section">
+                <section class="setting-section setting-danger-zone">
                     <h2 class="setting-section-title">Tilin hallinta</h2>
                     <div class="setting-item">
                         <div class="setting-item-info">
-                            <span class="setting-label">Kirjaudu ulos</span>
-                            <span class="setting-desc">Päätä nykyinen istuntosi</span>
+                            <span class="setting-label">Poista tili</span>
+                            <span class="setting-desc">Poista tilisi ja piilota julkaisusi</span>
                         </div>
-                        <a href="logout.php" class="setting-btn-secondary">Kirjaudu ulos</a>
+                        <button type="button" id="btn-open-delete-modal" class="setting-btn-danger">Poista tili</button>
                     </div>
                 </section>
             </div>
         </main>
     </div>
+
+    <!-- Poista tili -vahvistusmodaali -->
+    <div id="delete-account-modal" class="setting-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="setting-modal-card">
+            <div class="setting-modal-header">
+                <h3>Haluatko poistaa tilisi?</h3>
+            </div>
+            <p class="setting-modal-desc">
+                Tämä toiminto piilottaa profiilisi ja julkaisusi. Vahvista poisto antamalla salasanasi.
+            </p>
+            <form method="POST" id="form-delete-account" class="setting-form">
+                <div class="form-group">
+                    <label for="delete-confirm-password">Salasana</label>
+                    <input type="password" id="delete-confirm-password" name="confirm_password" placeholder="Kirjoita salasanasi" required autocomplete="current-password">
+                </div>
+                <div class="setting-modal-actions">
+                    <button type="button" id="btn-cancel-delete" class="setting-btn-secondary">Peruuta</button>
+                    <button type="submit" name="delete_account" class="setting-btn-danger-solid">Poista tili</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script src="./script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const deleteModal = document.getElementById('delete-account-modal');
+            const openDeleteBtn = document.getElementById('btn-open-delete-modal');
+            const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
+            const passwordInput = document.getElementById('delete-confirm-password');
+
+            const openModal = () => {
+                if (deleteModal) {
+                    deleteModal.classList.add('active');
+                    deleteModal.setAttribute('aria-hidden', 'false');
+                    if (passwordInput) {
+                        passwordInput.value = '';
+                        setTimeout(() => passwordInput.focus(), 150);
+                    }
+                }
+            };
+
+            const closeModal = () => {
+                if (deleteModal) {
+                    deleteModal.classList.remove('active');
+                    deleteModal.setAttribute('aria-hidden', 'true');
+                }
+            };
+
+            openDeleteBtn?.addEventListener('click', openModal);
+            cancelDeleteBtn?.addEventListener('click', closeModal);
+
+            deleteModal?.addEventListener('click', (e) => {
+                if (e.target === deleteModal) closeModal();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && deleteModal?.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>

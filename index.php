@@ -5,7 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once "functions/init.php";
 $conn = dbConnect();
+$error = '';
+$success = '';
+
+require_once "handlers/auth-handlers.php";
 require_once "handlers/post-handlers.php";
+require_once "handlers/interaction-handlers.php";
+require_once "handlers/setting-handlers.php";
 
 // jos käyttäjä ei ole kirjautunut sisään, ohjataan hänet kirjautumissivulle
 if (!isset($_SESSION['user_id'])) {

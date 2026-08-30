@@ -74,6 +74,9 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
         <div class="right">
           <div class="content">
             <h2>Login</h2>
+            <?php if (isset($_GET['status']) && $_GET['status'] === 'account_deleted'): ?>
+              <div class="alert alert-success">Tilisi on poistettu onnistuneesti. Voit aktivoida tilisi uudelleen kirjautumalla sisään.</div>
+            <?php endif; ?>
             <?php if (!empty($error) && isset($_POST['login_post'])): ?>
               <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
@@ -143,6 +146,24 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
             <button type="submit" class="modal-btn-primary" id="modal-submit-btn">
               <span class="btn-text">Lähetä linkki</span>
             </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Reactivate Account Modal -->
+    <div id="reactivate-modal" class="modal-overlay <?= !empty($showReactivationModal) ? 'active' : '' ?>" aria-hidden="<?= !empty($showReactivationModal) ? 'false' : 'true' ?>" role="dialog" aria-modal="true" aria-labelledby="reactivate-title">
+      <div class="modal-card">
+        <form method="post">
+          <div class="modal-header">
+            <h2 id="reactivate-title">Aktivoi tili uudelleen?</h2>
+            <p class="modal-subtitle">
+              Käyttäjätilisi <strong>@<?= htmlspecialchars($_SESSION['pending_reactivation_username'] ?? '') ?></strong> on poistettu käytöstä. Haluatko aktivoida tilisi ja palauttaa julkaisusi näkyviin?
+            </p>
+          </div>
+          <div class="modal-actions">
+            <button type="submit" name="cancel_reactivation" class="modal-btn-secondary" id="reactivate-cancel-btn">Peruuta</button>
+            <button type="submit" name="confirm_reactivation" class="modal-btn-primary" id="reactivate-confirm-btn">Kyllä, aktivoi tili</button>
           </div>
         </form>
       </div>

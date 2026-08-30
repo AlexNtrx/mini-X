@@ -1,3 +1,6 @@
+/* ==========================================================================
+   Mini X - Setting Page Styles
+   ========================================================================== */
 
 .setting-container {
     padding: 16px;
@@ -104,18 +107,25 @@
     color: #1a8cd8;
 }
 
-/* Forms */
-.setting-form {
+/* Forms & Inputs */
+.setting-form,
+.setting-modal-card form {
     margin-top: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.setting-form .form-group {
+.setting-form .form-group,
+.setting-modal-card .form-group {
     display: flex;
     flex-direction: column;
     margin-bottom: 16px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.setting-form .form-group label {
+.setting-form .form-group label,
+.setting-modal-card .form-group label {
     font-size: 13px;
     color: #71767b;
     text-transform: uppercase;
@@ -127,11 +137,14 @@
 
 .setting-form input[type="text"],
 .setting-form input[type="password"],
-.setting-form input[type="email"] {
-    background-color: #000;
+.setting-form input[type="email"],
+.setting-modal-card input[type="text"],
+.setting-modal-card input[type="password"],
+.setting-modal-card input[type="email"] {
+    background-color: #16181c;
     border: 1px solid #2f3336;
     border-radius: 9999px;
-    padding: 10px 16px;
+    padding: 12px 18px;
     color: #e7e9ea;
     font-size: 15px;
     font-family: inherit;
@@ -146,6 +159,13 @@
 .setting-form input[type="email"]:focus {
     border-color: #1d9bf0;
     box-shadow: 0 0 0 1px #1d9bf0;
+}
+
+.setting-modal-card input[type="password"]:focus,
+.setting-modal-card input[type="text"]:focus,
+.setting-modal-card input[type="email"]:focus {
+    border-color: #f4212e;
+    box-shadow: 0 0 0 1px #f4212e;
 }
 
 .input-with-button {
@@ -211,6 +231,129 @@
     border-color: #6e767d;
 }
 
+.setting-btn-danger {
+    padding: 9px 20px;
+    background-color: rgba(244, 33, 46, 0.1);
+    color: #f4212e;
+    border: 1px solid #f4212e;
+    border-radius: 9999px;
+    font-weight: 600;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setting-btn-danger:hover {
+    background-color: rgba(244, 33, 46, 0.2);
+}
+
+.setting-btn-danger-solid {
+    padding: 10px 22px;
+    background-color: #f4212e;
+    color: #fff;
+    border: none;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 14px;
+    font-family: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    white-space: nowrap;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.setting-btn-danger-solid:hover {
+    background-color: #dc1e29;
+}
+
+/* Danger Zone */
+.setting-danger-zone {
+    border-color: rgba(244, 33, 46, 0.35);
+}
+
+.setting-danger-zone .setting-section-title {
+    color: #f4212e;
+    border-bottom-color: rgba(244, 33, 46, 0.25);
+}
+
+/* Modal for Delete Account */
+.setting-modal-overlay {
+    position: fixed;
+    inset: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.setting-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.setting-modal-card {
+    background-color: #000;
+    border: 1px solid #2f3336;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 440px;
+    padding: 28px 24px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+    position: relative;
+    color: #e7e9ea;
+    font-family: "Segoe UI", sans-serif;
+    transform: scale(0.95) translateY(12px);
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.setting-modal-overlay.active .setting-modal-card {
+    transform: scale(1) translateY(0);
+}
+
+.setting-modal-header h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #e7e9ea;
+    margin: 0 0 8px 0;
+}
+
+.setting-modal-desc {
+    font-size: 0.9rem;
+    color: #71767b;
+    margin: 0 0 20px 0;
+    line-height: 1.45;
+}
+
+.setting-modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 12px;
+    margin-top: 24px;
+}
+
 /* Responsive Styles */
 @media (max-width: 600px) {
     .setting-container {
@@ -236,6 +379,15 @@
     }
 
     .setting-form-actions .setting-btn-primary {
+        width: 100%;
+    }
+
+    .setting-modal-actions {
+        flex-direction: column-reverse;
+        gap: 10px;
+    }
+
+    .setting-modal-actions button {
         width: 100%;
     }
 }
@@ -265,8 +417,11 @@
     }
 
     .setting-btn-primary,
-    .setting-btn-secondary {
+    .setting-btn-secondary,
+    .setting-btn-danger,
+    .setting-btn-danger-solid {
         font-size: 15px;
         padding: 11px 24px;
     }
 }
+

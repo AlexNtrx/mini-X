@@ -125,4 +125,15 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
   });
+
+  // --- Reactivate Modal Logic ---
+  const reactivateModal = document.getElementById('reactivate-modal');
+  if (reactivateModal) {
+    reactivateModal.addEventListener('click', (e) => {
+      if (e.target === reactivateModal) {
+        reactivateModal.classList.remove('active');
+        reactivateModal.setAttribute('aria-hidden', 'true');
+      }
+    });
+  }
 });

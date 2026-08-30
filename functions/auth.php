@@ -25,7 +25,7 @@ function registerUser($conn, $username, $password,$email)
 // Kirjaa käyttäjän sisään
 function loginUser($conn, $username, $password)
 {
-    $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE username = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, username, password, deleted_at FROM users WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -40,6 +40,17 @@ function loginUser($conn, $username, $password)
     $stmt->close();
     return false;
 }
+
+// Aktivoi käyttäjätilin uudelleen (Reactivate Soft-Deleted Account)
+function reactivateUser($conn, $userId)
+{
+    $stmt = $conn->prepare("UPDATE users SET deleted_at = NULL WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}
+
 
 // Päivittää käyttäjänimen
 function updateUsername($conn, $userId, $newUsername)
@@ -64,10 +75,10 @@ function updateSalasana($conn, $userId, $newSalasana)
 function isEmailExists($conn, $email, $excludeUserId = 0)
 {
     if ($excludeUserId > 0) {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ? LIMIT 1");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ? AND deleted_at IS NULL LIMIT 1");
         $stmt->bind_param("si", $email, $excludeUserId);
     } else {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND deleted_at IS NULL LIMIT 1");
         $stmt->bind_param("s", $email);
     }
     $stmt->execute();
@@ -86,6 +97,24 @@ function updateEmail($conn, $userId, $newEmail)
     return $success;
 }
 
+// Poistaa käyttäjätilin väliaikaisesti (Soft Delete)
+function softDeleteUser($conn, $userId, $password)
+{
+    $stmt = $conn->prepare("SELECT password FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    $stmt->close();
 
+    if (!$user || !password_verify($password, $user['password'])) {
+        return "Salasana on virheellinen.";
+    }
 
+    $updateStmt = $conn->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ?");
+    $updateStmt->bind_param("i", $userId);
+    $success = $updateStmt->execute();
+    $updateStmt->close();
 
+    return $success ? true : "Tilin poistaminen epäonnistui.";
+}
