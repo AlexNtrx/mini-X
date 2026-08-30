@@ -1,7 +1,12 @@
+<?php $createPostAvatar = getUserAvatarUrl($_SESSION['avatar'] ?? null); ?>
 <form method="POST" class="create-post">
 
     <div class="create-post-avatar">
-        <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+        <?php if ($createPostAvatar): ?>
+            <img src="<?= $createPostAvatar ?>" alt="Avatar" class="avatar-img">
+        <?php else: ?>
+            <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+        <?php endif; ?>
     </div>
 
     <div class="create-post-content">

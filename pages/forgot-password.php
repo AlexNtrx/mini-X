@@ -12,7 +12,7 @@
         <h1 class="forgot-title">Palauta salasana</h1>
         <p class="forgot-desc">Syötä käyttäjätilisi sähköpostiosoite, niin lähetämme sinulle linkin salasanan vaihtamista varten.</p>
         
-        <form class="forgot-form" method="post" action="../send-password-reset.php">
+        <form class="forgot-form" method="post" action="../handlers/send-password-reset.php">
             <div class="form-group">
                 <label for="email">Sähköposti</label>
                 <input type="email" name="email" id="email" placeholder="esim. kayttaja@example.com" required autocomplete="email">

@@ -3,9 +3,11 @@
   Lataa kaikki funktiomoduulit
  */
 
-require_once "functions/db.php";
-require_once "functions/posts.php";
-require_once "functions/auth.php";
-require_once "functions/likes.php";
-require_once "functions/comments.php";
-require_once "functions/notifications.php";
+require_once __DIR__ . "/db.php";
+require_once __DIR__ . "/posts.php";
+require_once __DIR__ . "/auth.php";
+require_once __DIR__ . "/likes.php";
+require_once __DIR__ . "/comments.php";
+require_once __DIR__ . "/notifications.php";
+require_once __DIR__ . "/password-reset.php";
+

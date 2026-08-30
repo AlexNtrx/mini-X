@@ -25,6 +25,13 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
                 <h1>Etusivu</h1>
             </header>
 
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <?php if (!empty($success)): ?>
+                <div class="alert alert-success" style="margin: 12px 16px;"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+
             <!-- Luo julkaisu -->
             <?php include 'components/tekstikenttä.php'; ?>
 
@@ -40,6 +47,6 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
             </section>
         </main>
     </div>
-    <script src="./script.js"></script>
+    <script src="./js/script.js"></script>
 </body>
 </html>

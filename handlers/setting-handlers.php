@@ -26,6 +26,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
     }
+    // Päivitä profiilikuva (Avatar)
+    elseif (isset($_POST["update_avatar"])) {
+        if ($userId > 0 && isset($_FILES["avatar"])) {
+            $result = updateUserAvatar($conn, $userId, $_FILES["avatar"]);
+            if ($result === true) {
+                $success = "Profiilikuva päivitetty onnistuneesti!";
+            } else {
+                $error = is_string($result) ? $result : "Kuvan lataaminen epäonnistui.";
+            }
+        }
+    }
+    // Poista profiilikuva
+    elseif (isset($_POST["delete_avatar"])) {
+        if ($userId > 0) {
+            if (deleteUserAvatar($conn, $userId)) {
+                $success = "Profiilikuva poistettu onnistuneesti!";
+            } else {
+                $error = "Profiilikuvan poistaminen epäonnistui.";
+            }
+        }
+    }
     // Päivitä salasana
     elseif (isset($_POST["update_password"])) {
         $newSalasana = trim($_POST["password"] ?? "");

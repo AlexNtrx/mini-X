@@ -129,7 +129,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
         
         <div id="modal-alert-container"></div>
 
-        <form id="form-forgot-modal" method="post" action="send-password-reset.php">
+        <form id="form-forgot-modal" method="post" action="handlers/send-password-reset.php">
           <div class="form-element form-stack">
             <label for="modal-email">Sähköposti</label>
             <input
@@ -170,7 +170,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
     </div>
 
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
-    <script src="./lomakeet.js"></script>
-    <script src="./validation.js"></script>
+    <script src="./js/lomakeet.js"></script>
+    <script src="./js/validation.js"></script>
   </body>
 </html>

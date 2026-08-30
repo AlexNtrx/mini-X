@@ -1,11 +1,11 @@
 <?php
-require_once "functions/init.php";
+require_once __DIR__ . "/../functions/init.php";
 /** @var mysqli $conn */
 $userId = (int)($_SESSION['user_id'] ?? 0);
 
 $currentUser = null;
 if (isset($conn) && $conn && $userId > 0) {
-    $stmt = $conn->prepare("SELECT id, username, email, created_at FROM users WHERE id = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, username, email, avatar, created_at FROM users WHERE id = ? LIMIT 1");
     if ($stmt) {
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -15,6 +15,7 @@ if (isset($conn) && $conn && $userId > 0) {
 }
 $username = $currentUser['username'] ?? ($_SESSION['username'] ?? '');
 $email = $currentUser['email'] ?? '';
+$avatarUrl = getUserAvatarUrl($currentUser['avatar'] ?? null);
 $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($currentUser['created_at'])) : '';
 ?>
 <!DOCTYPE html>
@@ -51,6 +52,26 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                 <!-- Tilitiedot -->
                 <section class="setting-section">
                     <h2 class="setting-section-title">Tilitiedot</h2>
+
+                    <!-- Profiilikuva -->
+                    <div class="setting-item">
+                        <div class="setting-avatar-left">
+                            <div class="setting-avatar-preview">
+                                <?php if ($avatarUrl): ?>
+                                    <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img">
+                                <?php else: ?>
+                                    <div class="avatar-fallback">
+                                        <?= strtoupper(substr($username, 0, 2)) ?>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="setting-item-info">
+                                <span class="setting-label">Profiilikuva</span>
+                                <span class="setting-desc">Muokkaa kuvaa profiilisivulla</span>
+                            </div>
+                        </div>
+                        <a href="index.php?page=profile" class="setting-action-link">Vaihda kuva</a>
+                    </div>
 
                     <div class="setting-item">
                         <div class="setting-item-info">
@@ -142,7 +163,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
         </div>
     </div>
 
-    <script src="./script.js"></script>
+    <script src="./js/script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const deleteModal = document.getElementById('delete-account-modal');

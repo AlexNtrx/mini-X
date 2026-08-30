@@ -1,8 +1,9 @@
 <?php
-// Hakee kaikki julkaisut etusivulle (käyttäjänimi haetaan users-taulusta JOINilla)
+
+// Hakee kaikki julkaisut etusivulle (käyttäjänimi ja avatar haetaan users-taulusta JOINilla)
 function getShowContents($conn)
 {
-    $sql = "SELECT posts.*, users.username AS author 
+    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE users.deleted_at IS NULL 
@@ -20,7 +21,7 @@ function getShowContents($conn)
 // Hakee vain tietyn käyttäjän julkaisut profiilisivulle
 function getUserPosts($conn, $userId)
 {
-    $sql = "SELECT posts.*, users.username AS author 
+    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE posts.user_id = ? AND users.deleted_at IS NULL 
@@ -72,7 +73,7 @@ function deletePost($conn, $id, $userId)
 // Hakee julkaisut käyttäjänimen perusteella (Selaa / Haku)
 function searchPostsByUsername($conn, $keyword)
 {
-    $sql = "SELECT posts.*, users.username AS author 
+    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE users.username LIKE ? AND users.deleted_at IS NULL 
@@ -95,7 +96,7 @@ function searchPostsByUsername($conn, $keyword)
 // Hakee kaikki käyttäjät selaamista varten
 function getAllUsers($conn)
 {
-    $result = $conn->query("SELECT id, username FROM users WHERE deleted_at IS NULL ORDER BY username ASC");
+    $result = $conn->query("SELECT id, username, avatar FROM users WHERE deleted_at IS NULL ORDER BY username ASC");
     $users = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {
@@ -104,4 +105,3 @@ function getAllUsers($conn)
     }
     return $users;
 }
-

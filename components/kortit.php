@@ -1,5 +1,5 @@
 <?php
-require_once "functions/init.php";
+require_once __DIR__ . "/../functions/init.php";
 /** 
  * @var array $content 
  * @var mysqli $conn 
@@ -9,9 +9,14 @@ require_once "functions/init.php";
     class="post"
     id="post-<?= $content["id"] ?>">
 
+    <?php $postAvatarUrl = getUserAvatarUrl($content['author_avatar'] ?? null); ?>
     <!-- Post Avatar -->
     <div class="post-avatar">
-        <?= strtoupper(substr($content['author'] ?? 'U', 0, 2)) ?>
+        <?php if ($postAvatarUrl): ?>
+            <img src="<?= $postAvatarUrl ?>" alt="Avatar" class="avatar-img">
+        <?php else: ?>
+            <?= strtoupper(substr($content['author'] ?? 'U', 0, 2)) ?>
+        <?php endif; ?>
     </div>
 
     <div class="post-content">
@@ -99,6 +104,14 @@ require_once "functions/init.php";
                 <form method="POST" class="add-comment-form">
                     <input type="hidden" name="post_id" value="<?= $postId ?>">
                     <div class="comment-input-row">
+                        <div class="comment-input-avatar">
+                            <?php $currentCommentUserAvatar = getUserAvatarUrl($_SESSION['avatar'] ?? null); ?>
+                            <?php if ($currentCommentUserAvatar): ?>
+                                <img src="<?= $currentCommentUserAvatar ?>" alt="Avatar" class="avatar-img">
+                            <?php else: ?>
+                                <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+                            <?php endif; ?>
+                        </div>
                         <input type="text" name="comment_content" class="comment-input" placeholder="Kirjoita kommentti..." required autocomplete="off">
                         <button type="submit" name="add_comment" class="comment-submit-btn">Vastaa</button>
                     </div>
@@ -108,9 +121,14 @@ require_once "functions/init.php";
                 <?php if (!empty($comments)): ?>
                     <div class="comments-list">
                         <?php foreach ($comments as $comment): ?>
+                            <?php $commentAvatarUrl = getUserAvatarUrl($comment['author_avatar'] ?? null); ?>
                             <div class="comment-item">
                                 <div class="comment-avatar">
-                                    <?= strtoupper(substr($comment['author'] ?? 'U', 0, 2)) ?>
+                                    <?php if ($commentAvatarUrl): ?>
+                                        <img src="<?= $commentAvatarUrl ?>" alt="Avatar" class="avatar-img">
+                                    <?php else: ?>
+                                        <?= strtoupper(substr($comment['author'] ?? 'U', 0, 2)) ?>
+                                    <?php endif; ?>
                                 </div>
                                 <div class="comment-body">
                                     <div class="comment-header">

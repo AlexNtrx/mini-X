@@ -13,7 +13,7 @@ function addComment($conn, $postId, $userId, $content)
 // Hakee julkaisun kaikki kommentit (kirjoittaja haetaan users-taulusta)
 function getCommentsByPost($conn, $postId)
 {
-    $sql = "SELECT comments.*, users.username AS author 
+    $sql = "SELECT comments.*, users.username AS author, users.avatar AS author_avatar 
             FROM comments 
             JOIN users ON comments.user_id = users.id 
             WHERE comments.post_id = ? 

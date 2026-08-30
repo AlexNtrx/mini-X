@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const formData = new FormData(forgotForm);
       formData.append('ajax', '1');
 
-      const response = await fetch('send-password-reset.php', {
+      const response = await fetch('handlers/send-password-reset.php', {
         method: 'POST',
         headers: { 'X-Requested-With': 'XMLHttpRequest' },
         body: formData
