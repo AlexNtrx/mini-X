@@ -36,6 +36,20 @@ function toggleCommentSection(postId) {
     }
 }
 
+// Avaa kommenttiosion automaattisesti, jos URL-osoitteessa on ankkuri (#comments-ID)
+document.addEventListener("DOMContentLoaded", () => {
+    if (window.location.hash) {
+        const hash = window.location.hash;
+        if (hash.startsWith("#comments-")) {
+            const section = document.querySelector(hash);
+            if (section) {
+                section.classList.add("show");
+                section.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+        }
+    }
+});
+
 // Mobiilisivupalkin (Hamburger) ohjaus
 const hamburgerButton = document.getElementById("hamburgerButton");
 const sidebar = document.querySelector(".sidebar");

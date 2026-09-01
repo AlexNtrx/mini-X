@@ -60,13 +60,39 @@ function updatePost($conn, $id, $content, $userId)
     return $res;
 }
 
-// Poistaa julkaisun
+// Poistaa julkaisun ja sen liittyvät tykkäykset, kommentit ja ilmoitukset
 function deletePost($conn, $id, $userId)
 {
     $stmt = $conn->prepare("DELETE FROM posts WHERE id = ? AND user_id = ?");
     $stmt->bind_param("ii", $id, $userId);
     $res = $stmt->execute();
+    $affected = $stmt->affected_rows;
     $stmt->close();
+
+    if ($affected > 0) {
+        // Poista julkaisuun liittyvät tykkäykset, kommentit ja ilmoitukset
+        $delLikes = $conn->prepare("DELETE FROM likes WHERE post_id = ?");
+        if ($delLikes) {
+            $delLikes->bind_param("i", $id);
+            $delLikes->execute();
+            $delLikes->close();
+        }
+
+        $delComments = $conn->prepare("DELETE FROM comments WHERE post_id = ?");
+        if ($delComments) {
+            $delComments->bind_param("i", $id);
+            $delComments->execute();
+            $delComments->close();
+        }
+
+        $delNotifs = $conn->prepare("DELETE FROM notifications WHERE post_id = ?");
+        if ($delNotifs) {
+            $delNotifs->bind_param("i", $id);
+            $delNotifs->execute();
+            $delNotifs->close();
+        }
+    }
+
     return $res;
 }
 
