@@ -46,8 +46,8 @@ function getUserByResetToken($conn, $token)
 // Asettaa käyttäjälle uuden salasanan palautustunnisteen avulla
 function resetPasswordWithToken($conn, $token, $newPassword, $confirmPassword)
 {
-    if (strlen($newPassword) < 8) {
-        return "Salasanan on oltava vähintään 8 merkkiä pitkä.";
+    if (strlen($newPassword) < 6) {
+        return "Salasanan on oltava vähintään 6 merkkiä pitkä.";
     }
 
     if (!preg_match("/[a-z]/i", $newPassword)) {

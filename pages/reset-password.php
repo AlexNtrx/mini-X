@@ -65,12 +65,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
 
                 <div class="form-group">
                     <label for="password">Uusi salasana</label>
-                    <input type="password" id="password" name="password" required minlength="8" placeholder="Vähintään 8 merkkiä (sis. kirjaimia ja numeroita)" autocomplete="new-password">
+                    <input type="password" id="password" name="password" required minlength="6" placeholder="Vähintään 6 merkkiä (sis. kirjaimia ja numeroita)" autocomplete="new-password">
                 </div>
 
                 <div class="form-group">
                     <label for="password_confirmation">Toista uusi salasana</label>
-                    <input type="password" id="password_confirmation" name="password_confirmation" required minlength="8" placeholder="Toista uusi salasana" autocomplete="new-password">
+                    <input type="password" id="password_confirmation" name="password_confirmation" required minlength="6" placeholder="Toista uusi salasana" autocomplete="new-password">
                 </div>
 
                 <button type="submit" class="submit-btn">Tallenna uusi salasana</button>
