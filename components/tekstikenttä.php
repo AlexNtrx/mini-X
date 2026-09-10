@@ -15,7 +15,7 @@
         </div>
         <textarea
             name="content"
-            placeholder="Mitä tapahtuu? (enintään 140 merkkiä)"
+            placeholder="Mitä tapahtuu?"
             maxlength="140"
             required></textarea>
 
