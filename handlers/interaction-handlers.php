@@ -23,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["add_comment"])) {
         $postId = (int)($_POST["post_id"] ?? 0);
         $content = trim($_POST["comment_content"] ?? "");
-        if ($postId > 0 && $userId > 0 && $content !== "") {
+        if ($postId > 0 && $userId > 0 && $content !== "" && mb_strlen($content) <= 140) {
             if (addComment($conn, $postId, $userId, $content)) {
                 $postOwnerId = getPostOwnerId($conn, $postId);
                 $preview = mb_substr($content, 0, 60);

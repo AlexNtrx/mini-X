@@ -12,8 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         if (empty($username) || empty($password) || empty($email)) {
             $error = "Täytä kaikki kentät.";
-        } elseif (strlen($username) < 3) {
+        } elseif (mb_strlen($username) < 3) {
             $error = "Käyttäjänimen tulee olla vähintään 3 merkkiä.";
+        } elseif (mb_strlen($username) > 20) {
+            $error = "Käyttäjänimen tulee olla enintään 20 merkkiä.";
         } elseif (strlen($password) < 6) {
             $error = "Salasanan tulee olla vähintään 6 merkkiä.";
         } elseif (isUsernameExists($conn, $username)) {

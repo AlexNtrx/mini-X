@@ -112,7 +112,7 @@ require_once __DIR__ . "/../functions/init.php";
                                 <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
                             <?php endif; ?>
                         </div>
-                        <input type="text" name="comment_content" class="comment-input" placeholder="Kirjoita kommentti..." required autocomplete="off">
+                        <input type="text" name="comment_content" class="comment-input" placeholder="Kirjoita kommentti... (enintään 140 merkkiä)" maxlength="140" required autocomplete="off">
                         <button type="submit" name="add_comment" class="comment-submit-btn">Vastaa</button>
                     </div>
                 </form>
@@ -172,6 +172,7 @@ require_once __DIR__ . "/../functions/init.php";
                 <textarea
                     class="post-text"
                     name="content"
+                    maxlength="140"
                     required><?= htmlspecialchars($content["content"], ENT_QUOTES, "UTF-8") ?></textarea>
 
                 <div class="edit-actions">

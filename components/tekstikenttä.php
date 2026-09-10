@@ -15,7 +15,8 @@
         </div>
         <textarea
             name="content"
-            placeholder="Mitä tapahtuu?"
+            placeholder="Mitä tapahtuu? (enintään 140 merkkiä)"
+            maxlength="140"
             required></textarea>
 
         <button type="submit" name="create_post">

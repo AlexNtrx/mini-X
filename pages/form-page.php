@@ -40,6 +40,8 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   type="text"
                   name="username"
                   value=""
+                  minlength="3"
+                  maxlength="20"
                 />
               </div>
               <div class="form-element form-stack">

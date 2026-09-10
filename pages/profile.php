@@ -93,7 +93,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                         <div class="form-group">
                             <label for="username">Muokkaa nimeä:</label>
                             <div class="input-with-button">
-                                <input type="text" id="username" name="username" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" required minlength="3">
+                                <input type="text" id="username" name="username" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" required minlength="3" maxlength="20">
                                 <button type="submit" name="update_profile" class="save-profile-btn">Tallenna</button>
                             </div>
                         </div>

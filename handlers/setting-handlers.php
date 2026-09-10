@@ -12,8 +12,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($userId > 0) {
             if (empty($newUsername)) {
                 $error = "Käyttäjänimi ei voi olla tyhjä.";
-            } elseif (strlen($newUsername) < 3) {
+            } elseif (mb_strlen($newUsername) < 3) {
                 $error = "Käyttäjänimen tulee olla vähintään 3 merkkiä.";
+            } elseif (mb_strlen($newUsername) > 20) {
+                $error = "Käyttäjänimen tulee olla enintään 20 merkkiä.";
             } elseif ($newUsername !== ($_SESSION['username'] ?? '') && isUsernameExists($conn, $newUsername)) {
                 $error = "Käyttäjänimi on jo varattu toiselle käyttäjälle.";
             } else {

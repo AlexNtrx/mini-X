@@ -6,6 +6,16 @@ validation
       rule: 'required',
       errorMessage: 'Username is required',
     },
+    {
+      rule: 'minLength',
+      value: 3,
+      errorMessage: 'Käyttäjänimen tulee olla vähintään 3 merkkiä',
+    },
+    {
+      rule: 'maxLength',
+      value: 20,
+      errorMessage: 'Käyttäjänimen tulee olla enintään 20 merkkiä',
+    },
   ])
   .addField('#password-signup', [
     {
