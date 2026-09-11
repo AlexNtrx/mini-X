@@ -11,9 +11,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $postId = (int)($_POST["post_id"] ?? 0);
         if ($postId > 0 && $userId > 0) {
             toggleLike($conn, $postId, $userId);
+            $postOwnerId = getPostOwnerId($conn, $postId);
             if (isPostLikedByUser($conn, $postId, $userId)) {
-                $postOwnerId = getPostOwnerId($conn, $postId);
                 addNotification($conn, $postOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'like');
+            } else {
+                removeNotification($conn, $postOwnerId, $userId, $postId, 'like');
             }
             header("Location: " . $cleanUrl . "#post-" . $postId);
             exit;

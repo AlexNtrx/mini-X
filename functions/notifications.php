@@ -12,11 +12,30 @@ function getPostOwnerId($conn, $postId)
     return (int)($row['user_id'] ?? 0);
 }
 
+// Poistaa tietyn ilmoituksen (esim. kun tykkäys perutaan)
+function removeNotification($conn, $userId, $actorId, $postId, $type)
+{
+    if (!$userId || !$actorId) {
+        return false;
+    }
+
+    $stmt = $conn->prepare("DELETE FROM notifications WHERE user_id = ? AND actor_id = ? AND post_id = ? AND type = ?");
+    $stmt->bind_param("iiis", $userId, $actorId, $postId, $type);
+    $res = $stmt->execute();
+    $stmt->close();
+    return $res;
+}
+
 // Luo uuden ilmoituksen (ei luoda, jos käyttäjä tykkää/kommentoi omaa julkaisuaan)
 function addNotification($conn, $userId, $actorId, $actorName, $postId, $type, $contentPreview = '')
 {
     if (!$userId || !$actorId || $userId === $actorId) {
         return false;
+    }
+
+    // Jos kyseessä on tykkäys, poistetaan vanha mahdollinen ilmoitus ensin, jottei tule duplikaatteja
+    if ($type === 'like') {
+        removeNotification($conn, $userId, $actorId, $postId, $type);
     }
 
     $stmt = $conn->prepare("INSERT INTO notifications (user_id, actor_id, actor_name, post_id, type, content_preview) VALUES (?, ?, ?, ?, ?, ?)");

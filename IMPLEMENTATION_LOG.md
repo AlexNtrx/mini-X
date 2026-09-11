@@ -21,3 +21,13 @@
 - **การทดสอบ**:
   - ตรวจสอบความถูกต้องของตรรกะ Path resolution สำหรับ `/minisome/index.php`, `/mini-X/index.php`, และรูท
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 3] fix(notifications): cleanup like notifications upon unlike action
+
+- **ปัญหา**: เมื่อผู้ใช้กดยกเลิกถูกใจ (Unlike) ระบบลบเฉพาะข้อมูลในตาราง `likes` แต่ไม่ได้ลบการแจ้งเตือนในตาราง `notifications` ทำให้เจ้าของโพสต์ยังคงเห็นการแจ้งเตือนค้างอยู่ และหากกดถูกใจซ้ำหลายครั้งจะทำให้เกิดการแจ้งเตือนซ้ำซ้อน
+- **ไฟล์ที่แก้ไข**:
+  - `functions/notifications.php`: เพิ่มฟังก์ชัน `removeNotification($conn, $userId, $actorId, $postId, $type)` และป้องกันการสร้าง Like notification ซ้ำซ้อนใน `addNotification()`
+  - `handlers/interaction-handlers.php`: เรียกใช้ `removeNotification()` เพื่อล้างการแจ้งเตือนทันทีเมื่อตรวจพบว่าผู้ใช้ทำการ Unlike
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ PHP ด้วย `php -l` ผ่านฉลุยทั้งสองไฟล์
+- **สถานะ**: สำเร็จ (Fixed)
