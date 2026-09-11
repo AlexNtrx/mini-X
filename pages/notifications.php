@@ -1,5 +1,15 @@
 <?php
-require_once "functions/init.php";
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+require_once __DIR__ . "/../functions/init.php";
+if (!isset($_SESSION['user_id'])) {
+    header("Location: ../index.php");
+    exit;
+}
+if (!isset($conn) || !$conn) {
+    $conn = dbConnect();
+}
 /** @var mysqli $conn */
 $userId = (int)($_SESSION['user_id'] ?? 0);
 $notifications = [];

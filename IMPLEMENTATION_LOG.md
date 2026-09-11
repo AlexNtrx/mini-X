@@ -71,3 +71,12 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ด้วย `php -l` ผ่านฉลุย
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 8] fix(security): secure direct access to pages and fix include paths
+
+- **ปัญหา**: ไฟล์ในโฟลเดอร์ `pages/` (เช่น `home.php`, `profile.php`, `notifications.php`, `selaa.php`, `setting.php`) มีการใช้ `require_once "functions/init.php"` ซึ่งเป็น Relative path จาก Working Directory ทำให้หากมีคนเปิด URL ไฟล์ตรงๆ ผ่านเบราว์เซอร์ จะเกิด PHP Fatal Error เนื่องจากหา Path ไม่เจอ อีกทั้งไฟล์ยังไม่มีการตรวจสอบ Session ในระดับไฟล์ ทำให้เสี่ยงต่อการหลุดของโครงสร้างหน้าเว็บเมื่อไม่มีสิทธิ์เข้าถึง
+- **ไฟล์ที่แก้ไข**:
+  - `pages/home.php`, `pages/profile.php`, `pages/notifications.php`, `pages/selaa.php`, `pages/setting.php`: ปรับปรุง Include path เป็น `__DIR__ . "/../functions/init.php"`, เพิ่มการตรวจสอบ Session หากยังไม่ได้ล็อกอินให้ Redirect ไปยังหน้าหลักทันที และเริ่มต้น `$conn = dbConnect()` หากยังไม่ได้เปิดการเชื่อมต่อ
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ด้วย `php -l` ทุกไฟล์ผ่าน 100%
+- **สถานะ**: สำเร็จ (Fixed)
