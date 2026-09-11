@@ -8,10 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Luo uusi julkaisu
     if (isset($_POST["create_post"])) {
         $content = trim($_POST["content"] ?? "");
-        if ($content !== "" && mb_strlen($content) <= 140 && $userId > 0) {
-            if (addPost($conn, $userId, $content)) {
-                header("Location: " . $redirectUrl);
-                exit;
+        if ($userId > 0) {
+            if ($content === "") {
+                $error = "Julkaisun teksti ei voi olla tyhjä.";
+            } elseif (mb_strlen($content) > 140) {
+                $error = "Julkaisun teksti saa olla enintään 140 merkkiä.";
+            } else {
+                if (addPost($conn, $userId, $content)) {
+                    header("Location: " . $redirectUrl);
+                    exit;
+                } else {
+                    $error = "Julkaisun luominen epäonnistui.";
+                }
             }
         }
     }
@@ -19,10 +27,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["update_post"])) {
         $id = (int)($_POST["id"] ?? 0);
         $content = trim($_POST["content"] ?? "");
-        if ($id > 0 && $content !== "" && mb_strlen($content) <= 140 && $userId > 0) {
-            updatePost($conn, $id, $content, $userId);
-            header("Location: " . $redirectUrl);
-            exit;
+        if ($id > 0 && $userId > 0) {
+            if ($content === "") {
+                $error = "Julkaisun teksti ei voi olla tyhjä.";
+            } elseif (mb_strlen($content) > 140) {
+                $error = "Julkaisun teksti saa olla enintään 140 merkkiä.";
+            } else {
+                if (updatePost($conn, $id, $content, $userId)) {
+                    header("Location: " . $redirectUrl);
+                    exit;
+                } else {
+                    $error = "Julkaisun muokkaaminen epäonnistui.";
+                }
+            }
         }
     }
     // Poista julkaisu

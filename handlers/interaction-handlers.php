@@ -25,14 +25,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["add_comment"])) {
         $postId = (int)($_POST["post_id"] ?? 0);
         $content = trim($_POST["comment_content"] ?? "");
-        if ($postId > 0 && $userId > 0 && $content !== "" && mb_strlen($content) <= 140) {
-            if (addComment($conn, $postId, $userId, $content)) {
-                $postOwnerId = getPostOwnerId($conn, $postId);
-                $preview = mb_substr($content, 0, 60);
-                addNotification($conn, $postOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'comment', $preview);
+        if ($postId > 0 && $userId > 0) {
+            if ($content === "") {
+                $error = "Kommentti ei voi olla tyhjä.";
+            } elseif (mb_strlen($content) > 140) {
+                $error = "Kommentti saa olla enintään 140 merkkiä.";
+            } else {
+                if (addComment($conn, $postId, $userId, $content)) {
+                    $postOwnerId = getPostOwnerId($conn, $postId);
+                    $preview = mb_substr($content, 0, 60);
+                    addNotification($conn, $postOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'comment', $preview);
+                }
+                header("Location: " . $cleanUrl . "#comments-" . $postId);
+                exit;
             }
-            header("Location: " . $cleanUrl . "#comments-" . $postId);
-            exit;
         }
     }
     // Poista kommentti
