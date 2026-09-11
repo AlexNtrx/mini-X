@@ -31,3 +31,13 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ PHP ด้วย `php -l` ผ่านฉลุยทั้งสองไฟล์
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 4] fix(profile): allow case-sensitivity username update for same user
+
+- **ปัญหา**: เมื่อผู้ใช้ต้องการเปลี่ยนตัวพิมพ์เล็ก/ใหญ่ของชื่อตัวเอง (เช่น `alex` เป็น `Alex`) ในหน้า Profile ระบบจะแจ้ง Error ว่าชื่อถูกใช้งานแล้ว เนื่องจาก PHP เปรียบเทียบแบบ Case-sensitive แต่ MySQL เปรียบเทียบแบบ Case-insensitive และฟังก์ชัน `isUsernameExists` เดิมไม่ได้รองรับการยกเว้น ID ของผู้ใช้ปัจจุบัน
+- **ไฟล์ที่แก้ไข**:
+  - `functions/auth.php`: ปรับปรุงฟังก์ชัน `isUsernameExists($conn, $username, $excludeUserId = 0)` ให้รองรับ Parameter คัดกรอง ID ตนเองออก (เหมือน `isEmailExists`)
+  - `handlers/setting-handlers.php`: ส่ง `$userId` เข้าไปยัง `isUsernameExists()` เพื่อให้ผู้ใช้สามารถปรับแต่งตัวพิมพ์ชื่อตนเองได้โดยไม่ติดข้อผิดพลาด
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ PHP ด้วย `php -l` ผ่านฉลุยทั้งสองไฟล์
+- **สถานะ**: สำเร็จ (Fixed)

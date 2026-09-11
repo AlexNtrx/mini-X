@@ -1,10 +1,15 @@
 <?php
 
 // Tarkistaa onko käyttäjänimi varattu
-function isUsernameExists($conn, $username)
+function isUsernameExists($conn, $username, $excludeUserId = 0)
 {
-    $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
-    $stmt->bind_param("s", $username);
+    if ($excludeUserId > 0) {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? AND id != ? LIMIT 1");
+        $stmt->bind_param("si", $username, $excludeUserId);
+    } else {
+        $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? LIMIT 1");
+        $stmt->bind_param("s", $username);
+    }
     $stmt->execute();
     $exists = $stmt->get_result()->num_rows > 0;
     $stmt->close();
