@@ -88,9 +88,9 @@ function sendPasswordResetEmail($email, $token)
 
         $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https://' : 'http://';
         $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
-        $scriptDir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+        $scriptDir = str_replace('\\', '/', rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\'));
         // Varmistetaan oikea polku pages/reset-password.php
-        $basePath = preg_replace('/(\/pages|\/handlers)$/', '', $scriptDir);
+        $basePath = rtrim(preg_replace('/(\/pages|\/handlers)$/', '', $scriptDir), '/');
         $resetLink = $protocol . $host . $basePath . "/pages/reset-password.php?token=" . urlencode($token);
 
         $mail->Subject = "Salasanan palautus / Reset Password - Mini X";

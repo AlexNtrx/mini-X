@@ -62,3 +62,12 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ด้วย `php -l` ผ่านฉลุยทั้งสองไฟล์
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 7] fix(mail): normalize directory separator for password reset link
+
+- **ปัญหา**: บน Windows บางคอนฟิกูเรชัน `dirname($_SERVER['SCRIPT_NAME'])` คืนค่า Path ที่คั่นด้วย Backslash (`\handlers`) ทำให้ Regex `/(\/pages|\/handlers)$/` จับคู่ไม่ติด ส่งผลให้ `$basePath` ยังติดโฟลเดอร์ handlers เกิดเป็นลิงก์กู้รหัสผ่านที่พาธผิดในอีเมล
+- **ไฟล์ที่แก้ไข**:
+  - `functions/password-reset.php`: แปลง Backslash ทั้งหมดให้เป็น Slash ด้วย `str_replace('\\', '/', ...)` ก่อนตัดชื่อโฟลเดอร์ และใช้ `rtrim` รับประกันความถูกต้องของ URL
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ด้วย `php -l` ผ่านฉลุย
+- **สถานะ**: สำเร็จ (Fixed)
