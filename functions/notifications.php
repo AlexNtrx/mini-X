@@ -41,6 +41,23 @@ function getUserNotifications($conn, $userId)
     return $notifications;
 }
 
+// Hakee käyttäjän uudet ilmoitukset tietyn ID:n jälkeen
+function getNewNotificationsSince($conn, $userId, $sinceId)
+{
+    if (!$userId) return [];
+    $stmt = $conn->prepare("SELECT id, user_id, actor_id, actor_name, post_id, type, content_preview, created_at, is_read FROM notifications WHERE user_id = ? AND id > ? ORDER BY id ASC");
+    $stmt->bind_param("ii", $userId, $sinceId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $notifications = [];
+    while ($row = $result->fetch_assoc()) {
+        $notifications[] = $row;
+    }
+    $stmt->close();
+    return $notifications;
+}
+
+
 // Hakee lukemattomien ilmoitusten määrän
 function getUnreadNotificationCount($conn, $userId)
 {

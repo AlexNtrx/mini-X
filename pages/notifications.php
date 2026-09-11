@@ -8,6 +8,7 @@ if (isset($conn) && $conn) {
     // Merkitään ilmoitukset luetuiksi
     markNotificationsAsRead($conn, $userId);
 }
+$latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -32,10 +33,10 @@ if (isset($conn) && $conn) {
                 <h1>Ilmoitukset</h1>
             </header>
             <!-- ilmoitukset -->
-            <section class="notifications-list">
+            <section class="notifications-list" data-latest-id="<?= $latestId ?>">
                 <?php if (!empty($notifications)): ?>
                     <?php foreach ($notifications as $notif): ?>
-                        <a href="index.php?page=home#post-<?= (int)$notif['post_id'] ?>" class="notification-item <?= !$notif['is_read'] ? 'unread' : '' ?>">
+                        <a href="index.php?page=home#post-<?= (int)$notif['post_id'] ?>" class="notification-item <?= !$notif['is_read'] ? 'unread' : '' ?>" data-id="<?= (int)$notif['id'] ?>">
                             <div class="notif-icon-col">
                                 <?php if ($notif['type'] === 'like'): ?>
                                     <span class="notif-icon notif-like">&#10084;&#65039;</span>

@@ -136,6 +136,9 @@ function getUserAvatarUrl($avatar)
 // Päivittää käyttäjän profiilikuvan
 function updateUserAvatar($conn, $userId, $file)
 {
+    if (isset($file['error']) && ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE)) {
+    return "Kuvan koko saa olla enintään 3 MB.";
+}
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
         return "Kuvan latauksessa tapahtui virhe.";
     }
