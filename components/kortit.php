@@ -15,7 +15,7 @@ require_once __DIR__ . "/../functions/init.php";
         <?php if ($postAvatarUrl): ?>
             <img src="<?= $postAvatarUrl ?>" alt="Avatar" class="avatar-img">
         <?php else: ?>
-            <?= strtoupper(substr($content['author'] ?? 'U', 0, 2)) ?>
+            <?= getUserInitials($content['author'] ?? '') ?>
         <?php endif; ?>
     </div>
 
@@ -109,7 +109,7 @@ require_once __DIR__ . "/../functions/init.php";
                             <?php if ($currentCommentUserAvatar): ?>
                                 <img src="<?= $currentCommentUserAvatar ?>" alt="Avatar" class="avatar-img">
                             <?php else: ?>
-                                <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+                                <?= getUserInitials($_SESSION['username'] ?? '') ?>
                             <?php endif; ?>
                         </div>
                         <input type="text" name="comment_content" class="comment-input" placeholder="Kirjoita kommentti..." maxlength="140" required autocomplete="off">
@@ -127,7 +127,7 @@ require_once __DIR__ . "/../functions/init.php";
                                     <?php if ($commentAvatarUrl): ?>
                                         <img src="<?= $commentAvatarUrl ?>" alt="Avatar" class="avatar-img">
                                     <?php else: ?>
-                                        <?= strtoupper(substr($comment['author'] ?? 'U', 0, 2)) ?>
+                                        <?= getUserInitials($comment['author'] ?? '') ?>
                                     <?php endif; ?>
                                 </div>
                                 <div class="comment-body">

@@ -61,7 +61,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img">
                                 <?php else: ?>
                                     <div class="avatar-fallback">
-                                        <?= strtoupper(substr($username, 0, 2)) ?>
+                                        <?= getUserInitials($username) ?>
                                     </div>
                                 <?php endif; ?>
                             </div>

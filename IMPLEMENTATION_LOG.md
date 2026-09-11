@@ -41,3 +41,14 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ PHP ด้วย `php -l` ผ่านฉลุยทั้งสองไฟล์
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 5] fix(ui): handle utf-8 multibyte username initials safely
+
+- **ปัญหา**: โค้ดเดิมใช้ `substr()` ในการตัดตัวอักษรย่อสำหรับ Avatar เมื่อผู้ใช้ไม่มีรูปภาพ ซึ่ง `substr()` ทำงานแบบ Byte-based ทำให้อักขระพิเศษ, ภาษาฟินแลนด์ (`Ä`, `Ö`), ภาษาไทย หรือ Emoji ถูกตัดไบต์ขาดครึ่ง แสดงผลเป็นตัวอักขระเสีย (``) และไม่มีการครอบ `htmlspecialchars()`
+- **ไฟล์ที่แก้ไข**:
+  - `functions/auth.php`: เพิ่มฟังก์ชันกลาง `getUserInitials($username)` ใช้ `mb_substr()` และ `mb_strtoupper()` รองรับ UTF-8 พร้อมครอบ `htmlspecialchars()` ป้องกัน XSS
+  - `components/sidebar.php`, `components/kortit.php`, `components/tekstikenttä.php`, `pages/profile.php`, `pages/setting.php`: ปรับเปลี่ยนให้เรียกใช้ `getUserInitials()` แทนการใช้ `substr()`
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ด้วย `php -l` ทุกไฟล์ผ่านฉลุย
+  - ทดสอบการตัดชื่อ 'alex' -> 'AL', 'äijä' -> 'ÄI', 'สมชาย' -> 'สม', '<script>' -> '&lt;S' ผ่าน CLI ได้ผลถูกต้องสมบูรณ์
+- **สถานะ**: สำเร็จ (Fixed)

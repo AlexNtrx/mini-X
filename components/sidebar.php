@@ -22,7 +22,7 @@ $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                 <?php if ($sidebarAvatarUrl): ?>
                     <img src="<?= $sidebarAvatarUrl ?>" alt="Avatar" class="sidebar-avatar-img">
                 <?php else: ?>
-                    <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+                    <?= getUserInitials($_SESSION['username'] ?? '') ?>
                 <?php endif; ?>
             </div>
             <div class="sidebar-user-info">

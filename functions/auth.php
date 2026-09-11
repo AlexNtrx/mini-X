@@ -138,6 +138,17 @@ function getUserAvatarUrl($avatar)
     return null;
 }
 
+// Palauttaa käyttäjän nimikirjaimet turvallisesti UTF-8-muodossa
+function getUserInitials($username)
+{
+    $name = trim($username ?? '');
+    if ($name === '') {
+        return 'U';
+    }
+    $initials = mb_substr($name, 0, 2, 'UTF-8');
+    return htmlspecialchars(mb_strtoupper($initials, 'UTF-8'), ENT_QUOTES, 'UTF-8');
+}
+
 // Päivittää käyttäjän profiilikuvan
 function updateUserAvatar($conn, $userId, $file)
 {

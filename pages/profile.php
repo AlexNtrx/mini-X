@@ -51,7 +51,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                                 <?php if ($avatarUrl): ?>
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="profile-avatar-img" id="profile-avatar-img">
                                 <?php else: ?>
-                                    <span id="profile-avatar-fallback"><?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?></span>
+                                    <span id="profile-avatar-fallback"><?= getUserInitials($_SESSION['username'] ?? '') ?></span>
                                 <?php endif; ?>
                             </div>
                        

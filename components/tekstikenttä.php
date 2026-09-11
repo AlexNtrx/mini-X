@@ -5,7 +5,7 @@
         <?php if ($createPostAvatar): ?>
             <img src="<?= $createPostAvatar ?>" alt="Avatar" class="avatar-img">
         <?php else: ?>
-            <?= strtoupper(substr($_SESSION['username'] ?? 'U', 0, 2)) ?>
+            <?= getUserInitials($_SESSION['username'] ?? '') ?>
         <?php endif; ?>
     </div>
 
