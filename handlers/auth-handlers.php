@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if (!empty($user['deleted_at'])) {
                     $_SESSION['pending_reactivation_user_id'] = (int)$user['id'];
                     $_SESSION['pending_reactivation_username'] = $user['username'];
+                    $_SESSION['pending_reactivation_avatar'] = $user['avatar'] ?? null;
                     $showReactivationModal = true;
                 } else {
                     session_regenerate_id(true);
@@ -70,7 +71,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             session_regenerate_id(true);
             $_SESSION['user_id'] = $pendingUserId;
             $_SESSION['username'] = $pendingUsername;
-            unset($_SESSION['pending_reactivation_user_id'], $_SESSION['pending_reactivation_username']);
+            $_SESSION['avatar'] = $_SESSION['pending_reactivation_avatar'] ?? null;
+            unset(
+                $_SESSION['pending_reactivation_user_id'],
+                $_SESSION['pending_reactivation_username'],
+                $_SESSION['pending_reactivation_avatar']
+            );
             header("Location: index.php?page=home");
             exit;
         } else {
@@ -79,7 +85,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     // Peruuta tilin uudelleenaktivointi
     elseif (isset($_POST["cancel_reactivation"])) {
-        unset($_SESSION['pending_reactivation_user_id'], $_SESSION['pending_reactivation_username']);
+        unset(
+            $_SESSION['pending_reactivation_user_id'],
+            $_SESSION['pending_reactivation_username'],
+            $_SESSION['pending_reactivation_avatar']
+        );
         $showReactivationModal = false;
     }
 }
