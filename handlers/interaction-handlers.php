@@ -3,7 +3,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userId = (int)($_SESSION['user_id'] ?? 0);
-    $redirectUrl = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "index.php";
+    $redirectUrl = getSafeRedirectUrl("index.php");
     $cleanUrl = preg_replace('/#.*$/', '', $redirectUrl);
 
     // Tykkää / Peruuta tykkäys

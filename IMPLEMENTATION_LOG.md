@@ -80,3 +80,14 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ด้วย `php -l` ทุกไฟล์ผ่าน 100%
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 9] fix(security): prevent open redirect by validating referer host
+
+- **ปัญหา**: โค้ดเดิมนำค่า `$_SERVER['HTTP_REFERER']` มาใช้ทำ Header Location Redirect ทันทีโดยไม่มีการตรวจสอบ Hostname ทำให้มีช่องโหว่ Open Redirect ซึ่งอาจถูกผู้ไม่ประสงค์ดีหลอกล่อให้ Redirect ผู้ใช้ไปยังเว็บไซต์อันตรายภายนอกได้
+- **ไฟล์ที่แก้ไข**:
+  - `functions/init.php`: เพิ่มฟังก์ชัน `getSafeRedirectUrl($default = 'index.php')` เพื่อตรวจสอบความปลอดภัยของ Host ใน Referer โดยอนุญาตเฉพาะ Domain/Host เดียวกันกับเซิร์ฟเวอร์เท่านั้น
+  - `handlers/post-handlers.php`, `handlers/interaction-handlers.php`: ปรับเปลี่ยนให้ใช้ `getSafeRedirectUrl("index.php")` เพื่อป้องกันการถูก Redirect ออกนอกระบบ
+- **การทดสอบ**:
+  - ตรวจสอบไวยากรณ์ด้วย `php -l` ผ่านฉลุยทุกไฟล์
+  - ทดสอบจำลอง Referer ปลอม ('http://evil.com/phishing') ระบบบล็อกและคืนค่า 'index.php' อย่างปลอดภัย ส่วน Referer ภายในระบบทำงานได้ตามปกติ
+- **สถานะ**: สำเร็จ (Fixed)

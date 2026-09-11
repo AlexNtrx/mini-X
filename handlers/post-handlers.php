@@ -3,7 +3,7 @@
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userId = (int)($_SESSION['user_id'] ?? 0);
-    $redirectUrl = !empty($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : "index.php";
+    $redirectUrl = getSafeRedirectUrl("index.php");
 
     // Luo uusi julkaisu
     if (isset($_POST["create_post"])) {
