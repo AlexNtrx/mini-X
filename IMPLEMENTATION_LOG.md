@@ -12,3 +12,12 @@
 - **การทดสอบ**:
   - ตรวจสอบไวยากรณ์ด้วย `php -l handlers/auth-handlers.php` (ผ่าน 100%)
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Point 2] fix(js): resolve dynamic base path for notification polling
+
+- **ปัญหา**: ใน `js/script.js` มีการฮาร์ดโค้ดพาธ `/mini-X` ทำให้เวลาติดตั้งโปรเจกต์ในโฟลเดอร์ชื่ออื่น (เช่น `minisome` บน XAMPP) หรือเปิด URL ที่ไม่มี trailing slash การ fetch API ไปยัง `/api/notifications-count.php` และ `/api/get-new-notifications.php` จะกลายเป็น 404 Not Found
+- **ไฟล์ที่แก้ไข**:
+  - `js/script.js`: เพิ่มฟังก์ชัน `getAppBasePath()` คำนวณ Base URL ของโปรเจกต์จาก `window.location.pathname` แบบไดนามิก รองรับทั้งการเข้าถึงผ่านชื่อโฟลเดอร์ใดๆ หรือ Root path
+- **การทดสอบ**:
+  - ตรวจสอบความถูกต้องของตรรกะ Path resolution สำหรับ `/minisome/index.php`, `/mini-X/index.php`, และรูท
+- **สถานะ**: สำเร็จ (Fixed)

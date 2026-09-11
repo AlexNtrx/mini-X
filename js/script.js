@@ -78,12 +78,22 @@ if (sidebarOverlay) {
 // Ilmoitusten reaaliaikainen tarkistus ja automaattinen päivitys
 let isCheckingNotifications = false;
 
+function getAppBasePath() {
+    let path = window.location.pathname;
+    if (!path.endsWith('/') && !/\.[a-zA-Z0-9]+$/.test(path)) {
+        path += '/';
+    }
+    let dir = path.substring(0, path.lastIndexOf('/') + 1);
+    if (!dir) dir = '/';
+    dir = dir.replace(/\/(pages|api|handlers)\/$/, '/');
+    return dir;
+}
+
 function checkUnreadNotifications() {
     if (isCheckingNotifications) return;
     isCheckingNotifications = true;
 
-    const path = window.location.pathname;
-    const basePath = path.includes("/mini-X") ? "/mini-X/" : "./";
+    const basePath = getAppBasePath();
     const notifList = document.querySelector(".notifications-list");
 
     // Jos ollaan ilmoitussivulla (.notifications-list löytyy DOMista)
@@ -96,7 +106,7 @@ function checkUnreadNotifications() {
             }
         }
 
-        const getNewNotifsUrl = basePath.replace(/\/+$/, "") + "/api/get-new-notifications.php?since_id=" + encodeURIComponent(latestNotifId);
+        const getNewNotifsUrl = basePath + "api/get-new-notifications.php?since_id=" + encodeURIComponent(latestNotifId);
 
         fetch(getNewNotifsUrl)
             .then((res) => (res.ok ? res.json() : null))
@@ -186,7 +196,7 @@ function checkUnreadNotifications() {
     }
 
     // Muilla sivuilla päivitetään sivupalkin lukemattomien ilmoitusten määrä
-    const apiUrl = basePath.replace(/\/+$/, "") + "/api/notifications-count.php";
+    const apiUrl = basePath + "api/notifications-count.php";
 
     fetch(apiUrl)
         .then((res) => {
