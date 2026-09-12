@@ -91,3 +91,13 @@
   - ตรวจสอบไวยากรณ์ด้วย `php -l` ผ่านฉลุยทุกไฟล์
   - ทดสอบจำลอง Referer ปลอม ('http://evil.com/phishing') ระบบบล็อกและคืนค่า 'index.php' อย่างปลอดภัย ส่วน Referer ภายในระบบทำงานได้ตามปกติ
 - **สถานะ**: สำเร็จ (Fixed)
+
+## [Documentation] docs: add comprehensive portfolio README
+
+- **รายละเอียด**: จัดทำไฟล์ `README.md` ฉบับ Portfolio ภาษาอังกฤษระดับสากล เพื่อนำไปใช้เป็นผลงานสำหรับสมัครงาน / ยื่นฝึกงาน (Työnhaku)
+- **หัวข้อสำคัญที่ระบุ**:
+  - Project Overview & Architecture (Full-Stack Vanilla PHP + MySQL + ES6 JavaScript)
+  - Key Engineering Highlights (Authentication Lifecycle, Soft Delete, Real-time Polling, CRUD)
+  - Security & Best Practices (Prepared Statements, XSS Defense, Safe Password Hashing, Open Redirect Prevention, UTF-8 Multibyte Safety)
+  - Quick Setup & Test Credentials for recruiters
+  - Author details
