@@ -1,4 +1,4 @@
-﻿# Mini X 📱 – Full-Stack Microblogging Web App
+# Mini X 📱 – Full-Stack Microblogging Web App
 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
 [![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
@@ -71,11 +71,3 @@
 - **Username:** `admin`
 - **Password:** `admin123`
 *(Or create a new account directly on the sign-up page)*
-
----
-
-## 👤 Author
-
-**Alex Nithitorn**  
-- **GitHub:** [@AlexNtrx](https://github.com/AlexNtrx)  
-- **Focus:** Full-Stack Web Development / Software Development
