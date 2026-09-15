@@ -1,8 +1,22 @@
 // Näyttää / piilottaa postauksen valikon (dropdown)
 function toggleMenu(button) {
     const menu = button.nextElementSibling;
-    if (menu) menu.classList.toggle("show");
+    if (!menu) return;
+    const isCurrentlyShown = menu.classList.contains("show");
+    // Suljetaan muut auki olevat valikot
+    document.querySelectorAll(".menu-dropdown.show").forEach(m => m.classList.remove("show"));
+    // Avataan klikattu valikko jos se ei ollut auki
+    if (!isCurrentlyShown) {
+        menu.classList.add("show");
+    }
 }
+
+// Suljetaan postauksen valikko, jos klikataan sen ulkopuolelle
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".post-menu")) {
+        document.querySelectorAll(".menu-dropdown.show").forEach(m => m.classList.remove("show"));
+    }
+});
 
 // Näyttää postauksen muokkauslomakkeen
 function showEditForm(button) {
