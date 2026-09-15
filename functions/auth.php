@@ -82,10 +82,10 @@ function updateSalasana($conn, $userId, $newSalasana)
 function isEmailExists($conn, $email, $excludeUserId = 0)
 {
     if ($excludeUserId > 0) {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ? AND deleted_at IS NULL LIMIT 1");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ? LIMIT 1");
         $stmt->bind_param("si", $email, $excludeUserId);
     } else {
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND deleted_at IS NULL LIMIT 1");
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? LIMIT 1");
         $stmt->bind_param("s", $email);
     }
     $stmt->execute();
@@ -152,10 +152,15 @@ function getUserInitials($username)
 // Päivittää käyttäjän profiilikuvan
 function updateUserAvatar($conn, $userId, $file)
 {
-    if (isset($file['error']) && ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE)) {
-    return "Kuvan koko saa olla enintään 3 MB.";
-}
-    if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) {
+    if (!isset($file) || !is_array($file) || !isset($file['error'])) {
+        return "Kuvan latauksessa tapahtui virhe.";
+    }
+
+    if ($file['error'] === UPLOAD_ERR_INI_SIZE || $file['error'] === UPLOAD_ERR_FORM_SIZE) {
+        return "Kuvan koko saa olla enintään 3 MB.";
+    }
+
+    if ($file['error'] !== UPLOAD_ERR_OK || empty($file['tmp_name'])) {
         return "Kuvan latauksessa tapahtui virhe.";
     }
 
