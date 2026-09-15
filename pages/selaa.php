@@ -49,6 +49,13 @@ if ($q !== '' && isset($conn) && $conn) {
                 <h1>Selaa käyttäjiä</h1>
             </header>
 
+            <?php if (!empty($error)): ?>
+                <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>
+            <?php endif; ?>
+            <?php if (!empty($success)): ?>
+                <div class="alert alert-success" style="margin: 12px 16px;"><?= htmlspecialchars($success) ?></div>
+            <?php endif; ?>
+
             <!-- Hakukenttä -->
             <section class="search-container">
                 <form method="GET" action="index.php" class="search-form">
