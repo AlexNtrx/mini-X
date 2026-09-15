@@ -1,0 +1,797 @@
+
+
+:root {
+  --x-black: #000000;
+  --x-bg-card: #16181c;
+  --x-bg-hover: #181818;
+  --x-border: #2f3336;
+  --x-border-light: #38444d;
+  --x-blue: #1d9bf0;
+  --x-blue-hover: #1a8cd8;
+  --x-text-main: #e7e9ea;
+  --x-text-muted: #71767b;
+  --x-text-dim: #536471;
+  --x-green: #00ba7c;
+  --x-red: #f4212e;
+  --x-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+body.x-privacy-body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--x-black);
+  color: var(--x-text-main);
+  font-family: var(--x-font);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Yläpalkki (Top Navbar) */
+.x-privacy-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--x-border);
+  padding: 12px 24px;
+}
+
+.x-privacy-navbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.x-privacy-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+
+.x-privacy-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.x-btn-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.x-btn-outline {
+  border: 1px solid var(--x-border);
+  background: transparent;
+  color: var(--x-text-main);
+}
+
+.x-btn-outline:hover {
+  background-color: var(--x-bg-hover);
+  border-color: var(--x-text-muted);
+}
+
+/* Sivun pääasettelu (X 2-sarake: Sticky Index + Content) */
+.x-privacy-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+
+/* Vasen navigaatiopalkki (Sticky Chapters) */
+.x-privacy-sidebar {
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  padding-right: 12px;
+}
+
+.x-chapter-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.x-chapter-item a {
+  display: block;
+  padding: 10px 14px;
+  border-radius: 8px;
+  color: var(--x-text-main);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.35;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.x-chapter-item a:hover {
+  background-color: var(--x-bg-card);
+  color: var(--x-blue);
+}
+
+/* Pääsisältöalue */
+.x-privacy-content {
+  min-width: 0; /* estää grid overflow */
+}
+
+/* Hero & Johdanto */
+.x-hero-date {
+  display: inline-block;
+  font-size: 14px;
+  color: var(--x-text-muted);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.x-hero-title {
+  font-size: 38px;
+  font-weight: 900;
+  letter-spacing: -0.8px;
+  color: #fff;
+  margin: 0 0 16px;
+  line-height: 1.15;
+}
+
+.x-hero-intro {
+  font-size: 16px;
+  color: var(--x-text-main);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+/* "Paina mieleesi ainakin nämä" -X-yhteenvetokortit */
+.x-highlight-box {
+  background-color: var(--x-bg-card);
+  border: 1px solid var(--x-border);
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 40px;
+}
+
+.x-highlight-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 18px;
+}
+
+.x-highlight-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.x-summary-card {
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.15s, border-color 0.15s;
+}
+
+.x-summary-card:hover {
+  border-color: var(--x-blue);
+  transform: translateY(-2px);
+}
+
+.x-summary-heading {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 6px;
+}
+
+.x-summary-desc {
+  font-size: 13px;
+  color: var(--x-text-muted);
+  margin: 0 0 12px;
+  line-height: 1.45;
+}
+
+.x-summary-link {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--x-blue);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.x-summary-link:hover {
+  text-decoration: underline;
+}
+
+/* Luvut (Chapters) */
+.x-chapter-section {
+  padding-top: 24px;
+  margin-bottom: 44px;
+  border-top: 1px solid var(--x-border);
+  scroll-margin-top: 90px;
+}
+
+.x-chapter-header {
+  margin-bottom: 16px;
+}
+
+.x-chapter-heading {
+  font-size: 24px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.x-chapter-lead {
+  font-size: 15px;
+  color: var(--x-text-muted);
+  margin: 0 0 16px;
+}
+
+/* Alaluvut (1.1, 1.2, 2.1 ...) */
+.x-subchapter {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.x-subchapter-heading {
+  font-size: 17px;
+  font-weight: 700;
+  color: #f7f9f9;
+  margin: 0 0 8px;
+}
+
+.x-p {
+  font-size: 15px;
+  color: #cfd9de;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+
+.x-ul {
+  margin: 8px 0 16px 20px;
+  padding: 0;
+  color: #cfd9de;
+  font-size: 15px;
+}
+
+.x-ul li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.x-ul strong {
+  color: #fff;
+}
+
+/* Taulukko (Julkiset vs Yksityiset tiedot) */
+.x-table-wrapper {
+  overflow-x: auto;
+  margin: 18px 0;
+  border: 1px solid var(--x-border);
+  border-radius: 12px;
+}
+
+.x-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  text-align: left;
+}
+
+.x-table th {
+  background-color: var(--x-bg-card);
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--x-border);
+}
+
+.x-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--x-border);
+  color: #cfd9de;
+}
+
+.x-table tr:last-child td {
+  border-bottom: none;
+}
+
+.x-table tr:hover td {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* Badget (Julkinen vs Yksityinen) */
+.x-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.x-badge-public {
+  background-color: rgba(0, 186, 124, 0.15);
+  color: var(--x-green);
+  border: 1px solid rgba(0, 186, 124, 0.3);
+}
+
+.x-badge-private {
+  background-color: rgba(244, 33, 46, 0.15);
+  color: var(--x-red);
+  border: 1px solid rgba(244, 33, 46, 0.3);
+}
+
+/* X-Callout laatikko */
+.x-callout {
+  background-color: rgba(29, 155, 240, 0.08);
+  border-left: 3px solid var(--x-blue);
+  padding: 14px 18px;
+  border-radius: 0 10px 10px 0;
+  margin: 16px 0;
+  font-size: 14px;
+  color: #cfd9de;
+}
+
+.x-callout-title {
+  font-weight: 700;
+  color: var(--x-blue);
+  margin-bottom: 4px;
+}
+
+/* Toast feedback kopioinnille */
+.x-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background-color: var(--x-green);
+  color: #fff;
+  padding: 12px 22px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 700;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+  animation: xToastIn 0.25s ease;
+}
+
+.x-toast.show {
+  display: flex;
+}
+
+@keyframes xToastIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Sivun alatunniste (Footer) */
+.x-privacy-footer {
+  border-top: 1px solid var(--x-border);
+  padding: 32px 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--x-text-muted);
+}
+
+.x-privacy-footer a {
+  color: var(--x-text-muted);
+  text-decoration: none;
+  margin: 0 8px;
+}
+
+.x-privacy-footer a:hover {
+  color: var(--x-blue);
+  text-decoration: underline;
+}
+
+/* Hamburger-painike & Drawer */
+.x-privacy-hamburger {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--x-border);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  cursor: pointer;
+  color: #fff;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  transition: background-color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.x-privacy-hamburger:hover {
+  background-color: var(--x-bg-card);
+  border-color: var(--x-blue);
+}
+
+.x-privacy-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background-color: #fff;
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.x-privacy-mobile-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 2000;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.x-privacy-mobile-overlay.open {
+  display: block;
+  opacity: 1;
+}
+
+.x-privacy-mobile-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: auto;
+  width: min(300px, 85vw);
+  height: 100vh;
+  background-color: #000;
+  border-right: 1px solid var(--x-border);
+  border-left: none;
+  z-index: 2001;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.8);
+}
+
+.x-privacy-mobile-drawer.open {
+  transform: translateX(0);
+}
+
+.x-nav-spacer {
+  display: none;
+}
+
+.x-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--x-border);
+}
+
+.x-drawer-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.x-drawer-icon {
+  width: 28px;
+  height: 28px;
+  background: #fff;
+  color: #000;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.x-drawer-close {
+  background: transparent;
+  border: none;
+  color: var(--x-text-muted);
+  font-size: 28px;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.x-drawer-close:hover {
+  background-color: var(--x-bg-card);
+  color: #fff;
+}
+
+.x-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.x-drawer-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.x-drawer-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 16px;
+  font-size: 14px;
+  font-weight: 700;
+  border-radius: 9999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.x-drawer-btn-outline {
+  background: transparent;
+  border: 1px solid var(--x-border);
+  color: var(--x-text-main);
+}
+
+.x-drawer-btn-outline:hover {
+  background: var(--x-bg-hover);
+  border-color: var(--x-text-muted);
+}
+
+.x-drawer-divider {
+  height: 1px;
+  background-color: var(--x-border);
+  margin: 20px 0;
+}
+
+.x-drawer-section-title {
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--x-text-muted);
+  margin-bottom: 12px;
+}
+
+.x-drawer-chapters {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.x-drawer-link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 8px;
+  color: var(--x-text-main);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.15s, color 0.15s;
+}
+
+.x-drawer-link:hover,
+.x-drawer-link:active {
+  background-color: var(--x-bg-card);
+  color: var(--x-blue);
+}
+
+/* Responsiivisuus mobiilille ja tabletille */
+@media (max-width: 900px) {
+  .x-privacy-navbar-inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* Hamburger vasemmalla */
+  .x-privacy-hamburger {
+    display: flex;
+    order: 1;
+    z-index: 2;
+  }
+
+  /* Logo keskitettynä */
+  .x-privacy-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    white-space: nowrap;
+    z-index: 1;
+    max-width: calc(100% - 100px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Spacer oikealla tasapainottamaan asettelua */
+  .x-nav-spacer {
+    display: block;
+    width: 38px;
+    height: 38px;
+    order: 3;
+    pointer-events: none;
+    visibility: hidden;
+    flex-shrink: 0;
+  }
+
+  /* Piilotetaan täydet yläpalkin napit */
+  .x-privacy-nav-actions {
+    display: none;
+  }
+
+  .x-privacy-container {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding: 16px 16px 60px;
+  }
+
+  /* Piilotetaan sivupalkki mobiilissa */
+  .x-privacy-sidebar {
+    display: none;
+  }
+
+  .x-hero-title {
+    font-size: 28px;
+  }
+
+  .x-highlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .x-chapter-section {
+    scroll-margin-top: 115px;
+  }
+}
+
+/* Pienet mobiilinäytöt (alle 600px) */
+@media (max-width: 600px) {
+  .x-privacy-navbar {
+    padding: 10px 14px;
+  }
+
+  .x-privacy-logo span {
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .x-privacy-container {
+    padding: 12px 12px 60px;
+  }
+
+  .x-hero-date {
+    font-size: 12px;
+  }
+
+  .x-hero-title {
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+
+  .x-hero-intro {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .x-highlight-box {
+    padding: 16px 14px;
+    border-radius: 12px;
+    margin-bottom: 28px;
+  }
+
+  .x-highlight-title {
+    font-size: 16px;
+    margin-bottom: 14px;
+  }
+
+  .x-chapter-heading {
+    font-size: 19px;
+  }
+
+  .x-subchapter-heading {
+    font-size: 15px;
+  }
+
+  .x-p, .x-ul {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .x-ul {
+    margin-left: 16px;
+  }
+
+  .x-callout {
+    padding: 12px 14px;
+    font-size: 13px;
+  }
+
+  .x-table-wrapper {
+    margin: 12px 0;
+    border-radius: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .x-table th, .x-table td {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .x-toast {
+    left: 16px;
+    right: 16px;
+    bottom: 16px;
+    justify-content: center;
+    font-size: 13px;
+    padding: 10px 16px;
+  }
+
+  .x-privacy-footer {
+    padding: 24px 12px;
+    font-size: 12px;
+  }
+
+  .x-privacy-footer a {
+    margin: 0 4px;
+    display: inline-block;
+    padding: 2px 0;
+  }
+}

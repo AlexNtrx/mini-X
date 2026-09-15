@@ -162,7 +162,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                 <h3>Haluatko poistaa tilisi?</h3>
             </div>
             <p class="setting-modal-desc">
-                Tämä toiminto piilottaa profiilisi ja julkaisusi. Vahvista poisto antamalla salasanasi.
+                Tämä toiminto asettaa tilisi 30 päivän tauolle ja piilottaa profiilisi muilta. Voit palauttaa tilisi kirjautumalla sisään 30 päivän kuluessa, jonka jälkeen tili poistetaan pysyvästi. Vahvista antamalla salasanasi.
             </p>
             <form method="POST" id="form-delete-account" class="setting-form">
                 <div class="form-group">

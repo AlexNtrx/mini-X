@@ -321,3 +321,42 @@ button.off:hover {
   }
 }
 
+/* Privacy Links in Auth Forms */
+.form-terms {
+  font-size: 0.82rem;
+  color: #555;
+  margin: 10px 0 6px;
+  line-height: 1.45;
+}
+
+.form-terms a,
+.auth-privacy-link {
+  color: #1d9bf0;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s ease;
+}
+
+.form-terms a:hover,
+.auth-privacy-link:hover {
+  text-decoration: underline;
+  color: #1a8cd8;
+}
+
+.form-row-links {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 6px 0 14px;
+}
+
+.form-row-links .forgot-link {
+  margin: 0;
+}
+
+.auth-privacy-link {
+  font-size: 0.88em;
+}
+

@@ -11,6 +11,9 @@
     background-color: #000;
     color: #e7e9ea;
     border-right: 1px solid #2f3336;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
 }
 
 .logo {
@@ -202,8 +205,4 @@
         font-size: 22px;
         padding: 14px 20px;
     }
-
-    .sidebar h3 {
-        font-size: 20px;
-    }
-}
+}

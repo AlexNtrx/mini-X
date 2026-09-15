@@ -76,9 +76,7 @@ require_once __DIR__ . "/../functions/init.php";
             $comments = (isset($conn) && $conn) ? getCommentsByPost($conn, $postId) : [];
             $commentCount = count($comments);
             ?>
-            <p class="post-text">
-                <?= htmlspecialchars($content["content"], ENT_QUOTES, "UTF-8") ?>
-            </p>
+            <p class="post-text"><?= htmlspecialchars(trim($content["content"] ?? ''), ENT_QUOTES, "UTF-8") ?></p>
 
             <!-- Action Bar (Likes & Comments) -->
             <div class="post-actions">
@@ -142,7 +140,7 @@ require_once __DIR__ . "/../functions/init.php";
                                             </form>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="comment-text"><?= htmlspecialchars($comment['content'], ENT_QUOTES, 'UTF-8') ?></div>
+                                    <div class="comment-text"><?= htmlspecialchars(trim($comment['content'] ?? ''), ENT_QUOTES, 'UTF-8') ?></div>
                                 </div>
                             </div>
                         <?php endforeach; ?>
@@ -173,7 +171,7 @@ require_once __DIR__ . "/../functions/init.php";
                     class="post-text"
                     name="content"
                     maxlength="140"
-                    required><?= htmlspecialchars($content["content"], ENT_QUOTES, "UTF-8") ?></textarea>
+                    required><?= htmlspecialchars(trim($content["content"] ?? ''), ENT_QUOTES, "UTF-8") ?></textarea>
 
                 <div class="edit-actions">
                     <button

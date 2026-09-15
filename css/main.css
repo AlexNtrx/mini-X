@@ -37,10 +37,6 @@ body {
     border-right: 1px solid #2f3336;
 }
 
-.posts {
-    width: 100%;
-}
-
 .empty-feed {
     padding: 24px;
     text-align: center;

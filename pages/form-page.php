@@ -66,6 +66,9 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
                   value="<?= isset($_POST['register_post']) ? htmlspecialchars($_POST['email'] ?? '') : '' ?>"
                 />
               </div>
+              <div class="form-terms">
+                Rekisteröitymällä hyväksyt palvelun <a href="index.php?page=privacy" target="_blank" rel="noopener">tietosuojakäytännön</a>.
+              </div>
               <div class="form-element form-submit">
                 <button id="signUp" class="signup" type="submit" name="register_post">
                   Sign up
@@ -112,7 +115,10 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
                   required
                 />
               </div>
-              <a href="pages/forgot-password.php" id="forgot-password-link" class="forgot-link">Unohditko salasanan?</a>
+              <div class="form-row-links">
+                <a href="pages/forgot-password.php" id="forgot-password-link" class="forgot-link">Unohditko salasanan?</a>
+                <a href="index.php?page=privacy" class="auth-privacy-link" target="_blank" rel="noopener">Tietosuojakäytäntö</a>
+              </div>
               <div class="form-element form-submit">
                 <button id="logIn" class="login" type="submit" name="login_post">
                   Log In

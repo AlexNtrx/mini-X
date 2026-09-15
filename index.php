@@ -12,8 +12,7 @@ require_once "handlers/auth-handlers.php";
 
 // Julkiset sivut, joita voi tarkastella myös ilman sisäänkirjautumista
 $publicPages = [
-    'privacy'    => 'pages/privacy-policy.php',
-    'tietosuoja' => 'pages/privacy-policy.php'
+    'privacy' => 'pages/privacy-policy.php'
 ];
 
 $page = trim($_GET['page'] ?? '');
@@ -45,7 +44,6 @@ $routes = [
     'selaa'         => 'pages/selaa.php',
     'setting'       => 'pages/setting.php',
     'privacy'       => 'pages/privacy-policy.php',
-    'tietosuoja'    => 'pages/privacy-policy.php'
 ];
 
 // Jos sivu-parametri on määritelty reiteissä, sisällytä vastaava tiedosto
