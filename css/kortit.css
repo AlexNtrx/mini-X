@@ -75,6 +75,8 @@
     margin: 4px 0 12px;
     line-height: 20px;
     overflow-wrap: anywhere;
+    white-space: pre-wrap;
+    word-break: break-word;
 }
 
 /* Post Menu & Dropdown */
@@ -435,6 +437,8 @@ textarea.post-text:focus {
     color: #cfd9de;
     line-height: 1.4;
     word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: pre-wrap;
 }
 
 /* responsive */

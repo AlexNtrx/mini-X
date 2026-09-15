@@ -58,7 +58,7 @@ require_once __DIR__ . "/../functions/init.php";
                                     type="submit"
                                     name="delete_post"
                                     onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')">
-                                    Poistaa
+                                    Poista
                                 </button>
                             </form>
 
