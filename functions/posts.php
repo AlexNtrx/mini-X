@@ -105,7 +105,8 @@ function searchPostsByUsername($conn, $keyword)
             WHERE users.username LIKE ? AND users.deleted_at IS NULL 
             ORDER BY posts.id DESC";
     $stmt = $conn->prepare($sql);
-    $searchTerm = "%" . $keyword . "%";
+    $escapedKeyword = addcslashes($keyword, '%_');
+    $searchTerm = "%" . $escapedKeyword . "%";
     $stmt->bind_param("s", $searchTerm);
     $stmt->execute();
     $result = $stmt->get_result();

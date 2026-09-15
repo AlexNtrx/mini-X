@@ -110,6 +110,14 @@ CREATE TABLE IF NOT EXISTS `users` (
   `deleted_at` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Vedos taulusta `users` (Demo-käyttäjä: admin / admin123)
+--
+
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `avatar`, `created_at`) VALUES
+(1, 'admin', '$2y$10$Prt6YHLV9aGPrloYOhsHd.h6Q/64nUuwizB1ruC2eetZVu31p7nwS', 'admin@example.com', NULL, CURRENT_TIMESTAMP);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
