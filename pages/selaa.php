@@ -1,4 +1,9 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'selaa.php') {
+    $qs = !empty($_SERVER['QUERY_STRING']) ? '&' . $_SERVER['QUERY_STRING'] : '';
+    header("Location: ../index.php?page=selaa" . $qs);
+    exit;
+}
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -37,7 +42,7 @@ if ($q !== '' && isset($conn) && $conn) {
 <body>
     <div class="layout">
         <!-- Sivupalkki -->
-        <?php include 'components/sidebar.php'; ?>
+        <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
             <header class="feed-header">
@@ -83,7 +88,7 @@ if ($q !== '' && isset($conn) && $conn) {
             <section class="posts">
                 <?php if (!empty($contents)): ?>
                     <?php foreach ($contents as $content): ?>
-                        <?php include 'components/kortit.php'; ?>
+                        <?php include __DIR__ . '/../components/kortit.php'; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="empty-search">

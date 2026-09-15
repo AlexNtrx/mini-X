@@ -1,4 +1,8 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'setting.php') {
+    header("Location: ../index.php?page=setting");
+    exit;
+}
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -44,7 +48,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
 <body>
     <div class="layout">
         <!-- Sivupalkki -->
-        <?php include 'components/sidebar.php'; ?>
+        <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
             <header class="feed-header">

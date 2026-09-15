@@ -1,4 +1,8 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'home.php') {
+    header("Location: ../index.php?page=home");
+    exit;
+}
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -28,7 +32,7 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
 <body>
     <div class="layout">
         <!-- Sivupalkki -->
-        <?php include 'components/sidebar.php'; ?>
+        <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
             <header class="feed-header">
@@ -43,13 +47,13 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
             <?php endif; ?>
 
             <!-- Luo julkaisu -->
-            <?php include 'components/tekstikenttä.php'; ?>
+            <?php include __DIR__ . '/../components/tekstikenttä.php'; ?>
 
             <!-- Julkaisut -->
             <section class="posts">
                 <?php if (!empty($contents)): ?>
                     <?php foreach ($contents as $content): ?>
-                        <?php include 'components/kortit.php'; ?>
+                        <?php include __DIR__ . '/../components/kortit.php'; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <p class="empty-feed">Ei julkaisuja vielä.</p>

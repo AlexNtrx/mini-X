@@ -1,4 +1,9 @@
 <?php 
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'form-page.php') {
+    $qs = !empty($_SERVER['QUERY_STRING']) ? '?' . $_SERVER['QUERY_STRING'] : '';
+    header("Location: ../index.php" . $qs);
+    exit;
+}
 $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'signup';
 ?>
 <!doctype html>

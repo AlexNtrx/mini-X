@@ -1,4 +1,8 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'profile.php') {
+    header("Location: ../index.php?page=profile");
+    exit;
+}
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -40,7 +44,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
 <body>
     <div class="layout">
         <!-- Sivupalkki -->
-        <?php include 'components/sidebar.php'; ?>
+        <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
             <!-- Profiili Header -->
@@ -120,7 +124,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
             <section class="posts">
                 <?php if (!empty($contents)): ?>
                     <?php foreach ($contents as $content): ?>
-                        <?php include 'components/kortit.php'; ?>
+                        <?php include __DIR__ . '/../components/kortit.php'; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <div class="empty-posts">

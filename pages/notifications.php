@@ -1,4 +1,8 @@
 <?php
+if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'notifications.php') {
+    header("Location: ../index.php?page=notifications");
+    exit;
+}
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -36,7 +40,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
 <body>
     <div class="layout">
         <!-- Sivupalkki -->
-        <?php include 'components/sidebar.php'; ?>
+        <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
             <header class="feed-header">
