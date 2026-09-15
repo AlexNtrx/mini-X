@@ -4,7 +4,7 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'form-page.php') {
     header("Location: ../index.php" . $qs);
     exit;
 }
-$activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'signup';
+$activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['status']) && $_GET['status'] === 'account_deleted') || (isset($_GET['tab']) && $_GET['tab'] === 'login') || isset($_POST['cancel_reactivation'])) ? 'login' : 'signup';
 ?>
 <!doctype html>
 <html lang="fi">
@@ -44,7 +44,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   id="username-signup"
                   type="text"
                   name="username"
-                  value=""
+                  value="<?= isset($_POST['register_post']) ? htmlspecialchars($_POST['username'] ?? '') : '' ?>"
                   minlength="3"
                   maxlength="20"
                 />
@@ -63,6 +63,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
                   id="email-signup"
                   type="email"
                   name="email"
+                  value="<?= isset($_POST['register_post']) ? htmlspecialchars($_POST['email'] ?? '') : '' ?>"
                 />
               </div>
               <div class="form-element form-submit">
@@ -91,6 +92,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success)) ? 'login' : 'sign
               <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
             <?php endif; ?>
             <form id="form-login" method="post">
+              <input type="hidden" name="login_post" value="1" />
               <div class="form-element form-stack">
                 <label for="username-login">Username</label>
                 <input
