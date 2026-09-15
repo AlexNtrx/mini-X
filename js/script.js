@@ -137,7 +137,7 @@ function checkUnreadNotifications() {
                     // joten prependaamalla järjestyksessä uusin tulee listan ylimmäksi
                     data.notifications.forEach((notif) => {
                         const item = document.createElement("a");
-                        item.href = `index.php?page=home#post-${encodeURIComponent(notif.post_id)}`;
+                        item.href = `index.php?page=home#${notif.type === 'comment' ? 'comments-' : 'post-'}${encodeURIComponent(notif.post_id)}`;
                         item.className = "notification-item unread";
                         item.setAttribute("data-id", notif.id);
 
