@@ -99,7 +99,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
 
             <!-- Hero-osio -->
             <div class="x-hero">
-                <span class="x-hero-date">Voimassa alkaen: 15. syyskuuta 2026 &bull; Versio 1.0</span>
+                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.1</span>
                 <h1 class="x-hero-title">Mini X:n tietosuojaseloste</h1>
                 <p class="x-hero-intro">
                     Tämä tietosuojaseloste kertoo, mitä henkilötietoja Mini X -palvelu kerää, miten niitä käytetään ja miten voit hallita omia tietojasi. Lue huolellisesti, jotta ymmärrät oikeutesi ja velvollisuutesi palvelun käyttäjänä.
@@ -160,6 +160,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <p class="x-p">Tilin luominen vaatii tiettyjen perustietojen antamista:</p>
                     <ul class="x-ul">
                         <li><strong>Käyttäjätunnus:</strong> Valitsemasi nimimerkki (3–20 merkkiä), joka yksilöi sinut palvelussa.</li>
+                        <li><strong>Näyttönimi:</strong> Vapaaehtoinen profiilinimi (enintään 25 merkkiä), joka näkyy käyttäjätunnuksesi ohella julkaisuissa ja profiilissasi.</li>
                         <li><strong>Sähköpostiosoite:</strong> Käytetään käyttäjätilin varmistamiseen ja salasanan turvalliseen palauttamiseen.</li>
                         <li><strong>Salasana:</strong> Tallennetaan aina vahvasti salattuna. Emme koskaan tallenna tai näe salasanaasi selväkielisenä.</li>
                         <li><strong>Profiilikuva:</strong> Vapaaehtoinen kuva, jonka voit ladata tilisi personoimiseksi.</li>
@@ -234,6 +235,11 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                                 <td><strong>Käyttäjätunnus</strong></td>
                                 <td><span class="x-badge x-badge-public">Julkinen</span></td>
                                 <td>Näkyy julkaisuissa, kommenteissa, profiilisivullasi ja käyttäjähaussa.</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Näyttönimi</strong></td>
+                                <td><span class="x-badge x-badge-public">Julkinen</span></td>
+                                <td>Näkyy kaikille julkaisujesi ja kommenttiesi yhteydessä sekä profiilissasi käyttäjätunnuksen (@tunnus) rinnalla.</td>
                             </tr>
                             <tr>
                                 <td><strong>Profiilikuva</strong></td>
@@ -328,7 +334,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
 
                 <ul class="x-ul">
                     <li><strong>Pääsy ja tarkastusoikeus (Art. 15):</strong> Sinulla on oikeus nähdä, mitä tietoja sinusta on tallennettu. Näet tietosi suoraan Profiili- ja Asetukset-sivuiltasi.</li>
-                    <li><strong>Oikeus tietojen oikaisemiseen (Art. 16):</strong> Voit päivittää ja korjata käyttäjänimesi, sähköpostiosoitteesi, salasanasi ja profiilikuvasi milloin tahansa sovelluksen <em>Asetukset</em>-sivulla.</li>
+                    <li><strong>Oikeus tietojen oikaisemiseen (Art. 16):</strong> Voit päivittää ja korjata näyttönimesi, käyttäjänimesi, sähköpostiosoitteesi, salasanasi ja profiilikuvasi milloin tahansa sovelluksen <em>Asetukset</em>- tai <em>Profiili</em>-sivulla.</li>
                     <li><strong>Oikeus tietojen poistamiseen ("oikeus tulla unohdetuksi", Art. 17):</strong> Voit poistaa tilisi itse Asetukset-sivun "Poista tili" -painikkeella tai pyytää rekisterinpitäjää poistamaan kaikki tietosi peruuttamattomasti.</li>
                     <li><strong>Oikeus käsittelyn rajoittamiseen ja vastustamiseen (Art. 18 & 21):</strong> Voit pyytää tietojesi käsittelyn rajoittamista tai vastustaa käsittelyä.</li>
                     <li><strong>Oikeus siirtää tiedot järjestelmästä toiseen (Art. 20):</strong> Sinulla on oikeus saada meille antamasi henkilötiedot jäsennellyssä muodossa.</li>
