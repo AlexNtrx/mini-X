@@ -120,6 +120,6 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
         </main>
     </div>
 
-    <script src="./js/script.js"></script>
+    <script src="./js/script.js?v=1.1.1"></script>
 </body>
 </html>

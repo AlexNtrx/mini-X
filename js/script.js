@@ -254,7 +254,7 @@ function initComposerImageUpload() {
     const removePreviewBtn = document.getElementById('btn-remove-preview');
     const postTextarea = document.getElementById('create-post-textarea');
 
-    if (mediaBtn && imageInput) {
+    if (mediaBtn && imageInput && !mediaBtn.hasAttribute('onclick')) {
         mediaBtn.addEventListener('click', () => {
             imageInput.click();
         });

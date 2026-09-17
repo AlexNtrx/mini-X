@@ -255,7 +255,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
         </div>
     </div>
 
-    <script src="./js/script.js"></script>
+    <script src="./js/script.js?v=1.1.1"></script>
     <script>
         function toggleSettingForm(id, force) {
             const el = document.getElementById(id);

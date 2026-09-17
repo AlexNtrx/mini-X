@@ -95,7 +95,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             </section>
         </main>
     </div>
-    <script src="./js/script.js"></script>
+    <script src="./js/script.js?v=1.1.1"></script>
 </body>
 
 </html>
