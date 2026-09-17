@@ -1,4 +1,7 @@
 <?php
+// Asetetaan aikavyöhyke (Timezone: Bangkok UTC+7)
+date_default_timezone_set('Asia/Bangkok');
+
 /*
   Lataa kaikki funktiomoduulit
  */
