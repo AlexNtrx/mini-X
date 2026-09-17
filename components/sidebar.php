@@ -4,6 +4,8 @@ require_once __DIR__ . "/../functions/init.php";
 $currentPage = $_GET['page'] ?? 'home';
 $unreadNotifs = (isset($conn) && isset($_SESSION['user_id'])) ? getUnreadNotificationCount($conn, (int)$_SESSION['user_id']) : 0;
 $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
+$sidebarDisplayName = $_SESSION['display_name'] ?? ($_SESSION['username'] ?? '');
+$sidebarUsername = $_SESSION['username'] ?? '';
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -23,12 +25,12 @@ $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                 <?php if ($sidebarAvatarUrl): ?>
                     <img src="<?= $sidebarAvatarUrl ?>" alt="Avatar" class="sidebar-avatar-img">
                 <?php else: ?>
-                    <?= getUserInitials($_SESSION['username'] ?? '') ?>
+                    <?= getUserInitials($sidebarDisplayName) ?>
                 <?php endif; ?>
             </div>
             <div class="sidebar-user-info">
-                <span class="sidebar-username"><?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
-                <span class="sidebar-handle">@<?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
+                <span class="sidebar-username"><?= htmlspecialchars($sidebarDisplayName) ?></span>
+                <span class="sidebar-handle">@<?= htmlspecialchars($sidebarUsername) ?></span>
             </div>
         </a>
         <a href="index.php?page=home" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Etusivu</a>

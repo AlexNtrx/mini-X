@@ -45,6 +45,13 @@
     color: #e7e9ea;
 }
 
+.create-post-handle {
+    font-size: 13px;
+    color: #71767b;
+    margin-left: 6px;
+    font-weight: 400;
+}
+
 .create-post textarea {
     width: 100%;
     min-height: 80px;

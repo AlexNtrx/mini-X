@@ -83,8 +83,9 @@ if ($q !== '' && isset($conn) && $conn) {
                                 <a 
                                     href="index.php?page=selaa&q=<?= urlencode($u['username']) ?>" 
                                     class="user-chip <?= ($q === $u['username']) ? 'active' : '' ?>"
+                                    title="@<?= htmlspecialchars($u['username']) ?>"
                                 >
-                                    @<?= htmlspecialchars($u['username']) ?>
+                                    <?= htmlspecialchars($u['display_name']) ?> <span style="opacity: 0.7; font-size: 12px;">@<?= htmlspecialchars($u['username']) ?></span>
                                 </a>
                             <?php endforeach; ?>
                         </div>

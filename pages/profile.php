@@ -20,7 +20,7 @@ $contents = (isset($conn) && $conn) ? getUserPosts($conn, $userId) : [];
 
 $profileUser = null;
 if (isset($conn) && $conn && $userId > 0) {
-    $userStmt = $conn->prepare("SELECT avatar FROM users WHERE id = ? LIMIT 1");
+    $userStmt = $conn->prepare("SELECT avatar, username, display_name FROM users WHERE id = ? LIMIT 1");
     if ($userStmt) {
         $userStmt->bind_param("i", $userId);
         $userStmt->execute();
@@ -28,6 +28,8 @@ if (isset($conn) && $conn && $userId > 0) {
         $userStmt->close();
     }
 }
+$profileUsername = $profileUser['username'] ?? ($_SESSION['username'] ?? '');
+$profileDisplayName = !empty($profileUser['display_name']) ? $profileUser['display_name'] : ($_SESSION['display_name'] ?? $profileUsername);
 $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
 ?>
 <!DOCTYPE html>
@@ -35,7 +37,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profiili - Mini X</title>
+    <title><?= htmlspecialchars($profileDisplayName) ?> - Mini X</title>
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/kortit.css">
     <link rel="stylesheet" href="./css/sidebar.css">
@@ -58,7 +60,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                     &#9776;
                 </button>
                 <div class="header-info">
-                    <h2><?= htmlspecialchars($_SESSION['username'] ?? '') ?></h2>
+                    <h2><?= htmlspecialchars($profileDisplayName) ?></h2>
                     <span><?= count($contents) ?> julkaisua</span>
                 </div>
             </header>
@@ -73,7 +75,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                                 <?php if ($avatarUrl): ?>
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="profile-avatar-img" id="profile-avatar-img">
                                 <?php else: ?>
-                                    <span id="profile-avatar-fallback"><?= getUserInitials($_SESSION['username'] ?? '') ?></span>
+                                    <span id="profile-avatar-fallback"><?= getUserInitials($profileDisplayName) ?></span>
                                 <?php endif; ?>
                             </div>
                        
@@ -99,8 +101,8 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                     </div>
 
                     <div class="profile-name-section">
-                        <h3 class="profile-display-name"><?= htmlspecialchars($_SESSION['username'] ?? '') ?></h3>
-                        <span class="profile-handle">@<?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
+                        <h3 class="profile-display-name"><?= htmlspecialchars($profileDisplayName) ?></h3>
+                        <span class="profile-handle">@<?= htmlspecialchars($profileUsername) ?></span>
                     </div>
 
                     <?php if (!empty($error)): ?>
@@ -113,10 +115,10 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                     <!-- Edit Name Form -->
                     <form method="POST" class="profile-edit-form">
                         <div class="form-group">
-                            <label for="username">Muokkaa nimeä:</label>
+                            <label for="display_name">Muokkaa nimeä:</label>
                             <div class="input-with-button">
-                                <input type="text" id="username" name="username" value="<?= htmlspecialchars($_SESSION['username'] ?? '') ?>" required minlength="3" maxlength="20">
-                                <button type="submit" name="update_profile" class="save-profile-btn">Tallenna</button>
+                                <input type="text" id="display_name" name="display_name" value="<?= htmlspecialchars($profileDisplayName) ?>" required minlength="1" maxlength="25" placeholder="Nimi (enintään 25 merkkiä)">
+                                <button type="submit" name="update_display_name" class="save-profile-btn">Tallenna</button>
                             </div>
                         </div>
                     </form>

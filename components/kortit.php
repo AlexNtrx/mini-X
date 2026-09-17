@@ -15,7 +15,7 @@ require_once __DIR__ . "/../functions/init.php";
         <?php if ($postAvatarUrl): ?>
             <img src="<?= $postAvatarUrl ?>" alt="Avatar" class="avatar-img">
         <?php else: ?>
-            <?= getUserInitials($content['author'] ?? '') ?>
+            <?= getUserInitials($content['author_display_name'] ?? ($content['author'] ?? '')) ?>
         <?php endif; ?>
     </div>
 
@@ -27,10 +27,13 @@ require_once __DIR__ . "/../functions/init.php";
 
                 <div class="post-user">
                     <strong class="post-author">
-                        <?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?>
+                        <?= htmlspecialchars($content["author_display_name"] ?? $content["author"], ENT_QUOTES, "UTF-8") ?>
                     </strong>
-                    <span>
-                        <?= htmlspecialchars($content["created_at"], ENT_QUOTES, "UTF-8") ?>
+                    <span class="post-handle">
+                        @<?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?>
+                    </span>
+                    <span class="post-date">
+                        · <?= htmlspecialchars($content["created_at"], ENT_QUOTES, "UTF-8") ?>
                     </span>
                 </div>
 
@@ -125,13 +128,14 @@ require_once __DIR__ . "/../functions/init.php";
                                     <?php if ($commentAvatarUrl): ?>
                                         <img src="<?= $commentAvatarUrl ?>" alt="Avatar" class="avatar-img">
                                     <?php else: ?>
-                                        <?= getUserInitials($comment['author'] ?? '') ?>
+                                        <?= getUserInitials($comment['author_display_name'] ?? ($comment['author'] ?? '')) ?>
                                     <?php endif; ?>
                                 </div>
                                 <div class="comment-body">
                                     <div class="comment-header">
-                                        <strong class="comment-author"><?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                        <span class="comment-date"><?= htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        <strong class="comment-author"><?= htmlspecialchars($comment['author_display_name'] ?? $comment['author'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                        <span class="comment-handle">@<?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        <span class="comment-date">· <?= htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') ?></span>
                                         <?php if (isset($_SESSION['user_id']) && (int)$_SESSION['user_id'] === (int)$comment['user_id']): ?>
                                             <form method="POST" class="delete-comment-form" onsubmit="return confirm('Poistetaanko kommentti?');">
                                                 <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">
@@ -163,7 +167,8 @@ require_once __DIR__ . "/../functions/init.php";
                     value="<?= $content["id"] ?>">
 
                 <div class="post-user">
-                    <strong class="post-author"><?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?></strong>
+                    <strong class="post-author"><?= htmlspecialchars($content["author_display_name"] ?? $content["author"], ENT_QUOTES, "UTF-8") ?></strong>
+                    <span class="post-handle">@<?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?></span>
                     <span>(muokkaus)</span>
                 </div>
 

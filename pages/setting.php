@@ -19,7 +19,7 @@ $userId = (int)($_SESSION['user_id'] ?? 0);
 
 $currentUser = null;
 if (isset($conn) && $conn && $userId > 0) {
-    $stmt = $conn->prepare("SELECT id, username, email, avatar, created_at FROM users WHERE id = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, username, display_name, email, avatar, created_at FROM users WHERE id = ? LIMIT 1");
     if ($stmt) {
         $stmt->bind_param("i", $userId);
         $stmt->execute();
@@ -28,6 +28,7 @@ if (isset($conn) && $conn && $userId > 0) {
     }
 }
 $username = $currentUser['username'] ?? ($_SESSION['username'] ?? '');
+$displayName = !empty($currentUser['display_name']) ? $currentUser['display_name'] : ($_SESSION['display_name'] ?? $username);
 $email = $currentUser['email'] ?? '';
 $avatarUrl = getUserAvatarUrl($currentUser['avatar'] ?? null);
 $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($currentUser['created_at'])) : '';
@@ -76,12 +77,12 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img" id="setting-avatar-img">
                                 <?php else: ?>
                                     <div class="avatar-fallback" id="setting-avatar-fallback">
-                                        <?= getUserInitials($username) ?>
+                                        <?= getUserInitials($displayName) ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
                             <div class="setting-item-info">
-                                <span class="setting-username-title"><?= htmlspecialchars($username) ?></span>
+                                <span class="setting-username-title"><?= htmlspecialchars($displayName) ?></span>
                                 <span class="setting-handle">@<?= htmlspecialchars($username) ?></span>
                             </div>
                         </div>
@@ -104,13 +105,27 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                         </form>
                     </div>
 
+                    <!-- Päivitä näyttönimi -->
                     <form method="POST" class="setting-form">
                         <div class="form-group">
-                            <label for="setting-username">Päivitä käyttäjätunnus</label>
+                            <label for="setting-display-name">Nimi</label>
                             <div class="input-with-button">
-                                <input type="text" id="setting-username" name="username" value="<?= htmlspecialchars($username) ?>" placeholder="esim. kayttaja" required minlength="3" maxlength="20">
-                                <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna</button>
+                                <input type="text" id="setting-display-name" name="display_name" value="<?= htmlspecialchars($displayName) ?>" placeholder="esim. Matti Meikäläinen" required minlength="1" maxlength="25">
+                                <button type="submit" name="update_display_name" class="setting-btn-primary">Tallenna nimi</button>
                             </div>
+                            <span class="setting-field-hint">Näkyy julkaisuissa ja profiilissa.</span>
+                        </div>
+                    </form>
+
+                    <!-- Päivitä käyttäjätunnus -->
+                    <form method="POST" class="setting-form">
+                        <div class="form-group">
+                            <label for="setting-username">Käyttäjätunnus</label>
+                            <div class="input-with-button">
+                                <input type="text" id="setting-username" name="username" value="<?= htmlspecialchars($username) ?>" placeholder="esim. kayttaja" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+">
+                                <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna tunnus</button>
+                            </div>
+                            <span class="setting-field-hint">Käytetään kirjautumiseen</span>
                         </div>
                     </form>
 

@@ -71,6 +71,17 @@
     overflow-wrap: anywhere;
 }
 
+.post-handle,
+.comment-handle {
+    color: #71767b;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.comment-handle {
+    font-size: 12px;
+}
+
 .post-content p {
     margin: 4px 0 12px;
     line-height: 20px;
