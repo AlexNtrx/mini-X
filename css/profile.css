@@ -108,100 +108,39 @@
     display: block;
 }
 
-.profile-avatar-form {
+.profile-actions {
     display: flex;
     align-items: center;
 }
 
-.profile-avatar-actions,
-.avatar-save-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.change-avatar-btn {
+.profile-edit-btn {
     display: inline-flex;
     align-items: center;
-    padding: 7px 16px;
+    justify-content: center;
+    padding: 8px 18px;
     background-color: transparent;
     color: #e7e9ea;
     border: 1px solid #536471;
     border-radius: 9999px;
     font-weight: 700;
-    font-size: 13.5px;
+    font-size: 14px;
+    text-decoration: none;
     cursor: pointer;
     transition: background-color 0.2s ease, border-color 0.2s ease;
-    text-decoration: none;
     user-select: none;
+    white-space: nowrap;
 }
 
-.change-avatar-btn:hover {
+.profile-edit-btn:hover {
     background-color: rgba(239, 243, 244, 0.1);
     border-color: #71767b;
 }
 
-.save-avatar-btn {
-    padding: 7px 16px;
-    background-color: #1d9bf0;
-    color: #fff;
-    border: none;
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 13.5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-}
-
-.save-avatar-btn:hover {
-    background-color: #1a8cd8;
-}
-
-.cancel-avatar-btn {
-    padding: 7px 14px;
-    background-color: transparent;
-    color: #71767b;
-    border: 1px solid #2f3336;
-    border-radius: 9999px;
-    font-weight: 600;
-    font-size: 13px;
-    cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.cancel-avatar-btn:hover {
-    color: #e7e9ea;
-    border-color: #536471;
-}
-
-.delete-avatar-btn {
-    padding: 7px 16px;
-    background-color: transparent;
-    color: #f4212e;
-    border: 1px solid rgba(244, 33, 46, 0.4);
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 13.5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-}
-
-.delete-avatar-btn:hover {
-    background-color: rgba(244, 33, 46, 0.1);
-    border-color: #f4212e;
-}
 /* Name Section */
 
 .profile-name-section {
     margin-top: 6px;
     margin-bottom: 16px;
-}
-
-.profile-name-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 16px;
 }
 
 .profile-display-name {
@@ -214,106 +153,6 @@
 .profile-handle {
     font-size: 14px;
     color: #71767b;
-}
-
-.profile-edit-toggle-btn {
-    display: inline-flex;
-    align-items: center;
-    padding: 7px 16px;
-    background-color: transparent;
-    color: #e7e9ea;
-    border: 1px solid #536471;
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 13.5px;
-    cursor: pointer;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
-    user-select: none;
-    white-space: nowrap;
-}
-
-.profile-edit-toggle-btn:hover {
-    background-color: rgba(239, 243, 244, 0.1);
-    border-color: #71767b;
-}
-
-.profile-field-hint {
-    font-size: 12px;
-    color: #71767b;
-    margin-top: 8px;
-    display: block;
-    line-height: 1.4;
-}
-
-.profile-setting-link {
-    color: #1d9bf0;
-    text-decoration: none;
-}
-
-.profile-setting-link:hover {
-    text-decoration: underline;
-}
-
-/* Edit Profile Form */
-
-.profile-edit-form {
-    background-color: #16181c;
-    border: 1px solid #2f3336;
-    border-radius: 12px;
-    padding: 16px;
-    margin-top: 12px;
-}
-
-.profile-edit-form .form-group label {
-    display: block;
-    font-size: 13px;
-    color: #71767b;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    font-weight: 600;
-}
-
-/* Input with Button */
-.input-with-button {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.input-with-button input {
-    flex: 1;
-    background: #000;
-    border: 1px solid #2f3336;
-    border-radius: 9999px;
-    padding: 10px 16px;
-    color: #e7e9ea;
-    font-size: 15px;
-    outline: none;
-    transition: border-color 0.2s ease;
-    min-width: 0;
-}
-
-.input-with-button input:focus {
-    border-color: #1d9bf0;
-}
-
-/* Save Profile Button */
-.save-profile-btn {
-    padding: 10px 22px;
-    background-color: #eff3f4;
-    color: #0f1419;
-    border: none;
-    border-radius: 9999px;
-    font-weight: 700;
-    font-size: 14px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    white-space: nowrap;
-}
-
-.save-profile-btn:hover {
-    background-color: #d7dbdc;
 }
 
 /* Profile Tabs */
@@ -389,12 +228,20 @@
         height: 40px;
     }
 
+    .profile-avatar-wrapper {
+        width: 72px;
+        height: 72px;
+        margin-top: -36px;
+    }
+
     .profile-avatar {
-        width: 74px;
-        height: 74px;
-        top: -40px;
         font-size: 26px;
         border-width: 3px;
+    }
+
+    .profile-edit-btn {
+        padding: 6px 14px;
+        font-size: 13px;
     }
 
     .profile-details {
@@ -403,19 +250,6 @@
 
     .profile-display-name {
         font-size: 20px;
-    }
-
-    .profile-edit-form {
-        padding: 12px;
-    }
-
-    .input-with-button {
-        flex-direction: row;
-    }
-
-    .save-profile-btn {
-        padding: 9px 18px;
-        font-size: 13px;
     }
 
     .empty-posts {
@@ -443,16 +277,24 @@
         height: 160px;
     }
 
-    .profile-avatar {
+    .profile-avatar-wrapper {
         width: 100px;
         height: 100px;
+        margin-top: -50px;
+    }
+
+    .profile-avatar {
         font-size: 40px;
-        top: -55px;
         border-width: 5px;
     }
 
     .profile-avatar-row {
         height: 55px;
+    }
+
+    .profile-edit-btn {
+        padding: 10px 22px;
+        font-size: 15px;
     }
 
     .profile-display-name {
@@ -466,19 +308,5 @@
     .profile-tab {
         font-size: 18px;
         padding: 20px;
-    }
-
-    .profile-edit-form {
-        padding: 20px;
-    }
-
-    .input-with-button input {
-        font-size: 17px;
-        padding: 12px 18px;
-    }
-
-    .save-profile-btn {
-        font-size: 16px;
-        padding: 12px 26px;
     }
 }
