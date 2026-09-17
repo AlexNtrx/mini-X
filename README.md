@@ -1,73 +1,81 @@
-# Mini X 📱 – Full-Stack Microblogging Web App
+# Mini-X – Pienimuotoinen sosiaalisen median sovellus (Opintoprojekti)
 
-[![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat&logo=php&logoColor=white)](https://www.php.net/)
-[![MySQL](https://img.shields.io/badge/MySQL-Database-4479A1?style=flat&logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES6+-F7DF1E?style=flat&logo=javascript&logoColor=black)](https://developer.mozilla.org/)
-[![CSS3](https://img.shields.io/badge/CSS3-Responsive-1572B6?style=flat&logo=css3&logoColor=white)](https://www.w3.org/Style/CSS/)
+>  **Huomautus:**  
+> Tämä projekti on kehitetty **oppimistehtävänä osana tieto- ja viestintätekniikan perustutkintoa (ohjelmistokehittäjä)**. Projektin tavoitteena on osoittaa web-ohjelmoinnin, relaatiotietokantojen, sovellusturvallisuuden ja järjestelmällisen testauksen osaamista ilman raskaita valmiskehyksiä.
 
-> A responsive, full-stack microblogging platform (inspired by Twitter/X) built from scratch without heavy frameworks. Designed to demonstrate core backend architecture, relational database management, application security, and asynchronous UI updates.
-
-*(Note: Application UI and mock data are localized in Finnish as part of the initial release.)*
+Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka on toteutettu PHP:llä ja MySQL-tietokannalla.
 
 ---
 
-## 🚀 Key Features
+##  Tekijän ja projektin tiedot
+- **Tekijä:** Nithitorn Kaosa-ard
+- **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
+- **Ajankohta:** Syyskuu 2026
+---
 
-- **Authentication & Account Lifecycle:**
-  - Secure registration and login with BCRYPT password hashing (`password_hash`).
-  - Token-based email password reset workflow via `PHPMailer`.
-  - **Soft delete & account reactivation:** Users can safely deactivate accounts and restore data upon re-login.
-  - Avatar management (upload validation, MIME-type inspection, secure file storage, and fallback initials).
-- **Post Management (CRUD):**
-  - Create, read, edit, and delete posts (140-character limit with multibyte UTF-8 support).
-  - Search and filter posts by username.
-- **Social Interactions:**
-  - Real-time like/unlike toggle and post commenting with ownership validation.
-- **Asynchronous Notifications:**
-  - Background polling mechanism built with vanilla JavaScript (`Fetch API`) providing real-time notification updates without page reloads.
+##  Käytetyt teknologiat
+- **Backend:** PHP 8.2+
+- **Tietokanta:** MySQL(minisome)
+- **Palvelinympäristö:** WampServer tai XAMPP
+- **Frontend:** HTML5, CSS3 (tumma teema, responsiivinen mobiilinäkymä), JavaScript (Vanilla JS)
+- **Kirjastot:** PHPMailer, JustValidate
 
 ---
 
-## 🔒 Security & Engineering Best Practices
+##  Tärkeimmät toiminnot
 
-- **SQL Injection Prevention:** All database operations strictly use parameterized queries (`mysqli::prepare` and `bind_param`).
-- **Cross-Site Scripting (XSS) Defense:** All dynamic output is escaped using `htmlspecialchars()`.
-- **Open Redirect Protection:** Safe redirect validator verifies referer hostnames before executing header redirections.
-- **UTF-8 Multibyte Safety:** Text truncation and initials generation use `mb_*` functions to support Scandinavian (`ä`, `ö`) and international characters without byte corruption.
-- **Input Validation:** Multi-layer validation on both client-side (`JustValidate`) and server-side.
+1. **Käyttäjätilit ja tietoturva:**
+   - Rekisteröityminen ja kirjautuminen.
+   - Salasanojen turvallinen suojaus (`password_hash` / BCRYPT).
+   - SQL-injektioiden esto parametroiduilla kyselyillä (`prepared statements`).
+   - XSS-hyökkäysten esto tulosteissa (`htmlspecialchars`).
+   - Profiilikuvan lataus ja nimikirjain-avatar.
+   - Tilin asettaminen tauolle (soft delete) ja mahdollisuus palauttaa tili kirjautumalla sisään 30 päivän kuluessa ennen tietojen pysyvää poistamista.
+
+2. **Julkaisujen hallinta (CRUD):**
+   - Viestien julkaisu (enintään 140 merkkiä), muokkaaminen ja poisto.
+   - Julkaisujen haku käyttäjätunnuksen perusteella.
+
+3. **Vuorovaikutus ja reaaliaikaisuus:**
+   - Julkaisuista tykkääminen ja kommentointi.
+   - Reaaliaikaiset ilmoitukset ilman sivun uudelleenlatausta (JavaScript Fetch API).
 
 ---
 
-## 🛠️ Tech Stack
+##  Asennus- ja käynnistysohje 
 
-- **Backend:** PHP 8.x (Procedural / Modular Architecture)
-- **Database:** MySQL (phpMyAdmin / XAMPP)
-- **Frontend:** Semantic HTML5, Modern CSS3 (Dark Theme, Flexbox, Grid, Mobile Drawer), Vanilla JavaScript (ES6+)
-- **Dependencies:** PHPMailer, JustValidate (via Composer / CDN)
+### 1. Esivaatimukset
+- Paikallinen palvelin: **WampServer** tai **XAMPP** (Apache, MySQL, PHP 8.2+).
+
+### 2. Projektikansion sijoitus
+Kloonaa tai siirrä tämä projekti palvelimen juurikansioon:
+- WampServer: `C:\wamp64\www\mini-X`
+- XAMPP: `C:\xampp\htdocs\mini-X`
+
+### 3. Tietokannan tuonti
+1. Avaa selaimessa phpMyAdmin: `http://localhost/phpmyadmin/`
+2. Luo uusi tietokanta nimellä: `minisome` (merkistö: `utf8mb4_unicode_ci`)
+3. Valitse luotu `minisome`-tietokanta ja klikkaa yläpalkista **Tuo** (Import).
+4. Valitse projektin juuresta tiedosto: `minisome.sql` ja klikkaa sivun alalaidasta **Suorita** (Go / Import).
+
+### 4. Sovelluksen avaaminen
+Avaa selain ja mene osoitteeseen:  
+ **`http://localhost/mini-X/`**
 
 ---
 
-## ⚡ Quick Setup (Local Development)
+##  Testitunnukset
 
-### Prerequisites
-- XAMPP (Apache + MySQL with PHP 8.2+)
+Voit rekisteröidä uuden käyttäjän tai kirjautua sisään valmiilla testitilillä:
+- **Käyttäjätunnus:** `admin`
+- **Salasana:** `admin123`
 
-### Installation
-1. Clone the repository into your XAMPP `htdocs` directory:
-   ```bash
-   git clone https://github.com/AlexNtrx/mini-X.git C:\xampp\htdocs\minisome
-   ```
-2. Start **Apache** and **MySQL** from XAMPP Control Panel.
-3. Import the database:
-   - Open `http://localhost/phpmyadmin/`
-   - Create a database named `minisome` (`utf8mb4_unicode_ci`)
-   - Import `minisome.sql`
-4. Open the application:
-   ```
-   http://localhost/minisome/
-   ```
+---
 
-### 🔑 Demo Credentials
-- **Username:** `admin`
-- **Password:** `admin123`
-*(Or create a new account directly on the sign-up page)*
+##  Testaus ja dokumentaatio
+
+Sovellukselle on suoritettu kattava testaus ja dokumentointi, jonka materiaalit löytyvät kansiosta `testaus/`:
+- **Testausraportti:** [`testaus/MiniX_Testausraportti.docx`](testaus/MiniX_Testausraportti.docx)
+- **Testitapaukset ja -tulokset:** [`testaus/MiniX_Testitapaukset.xlsx`](testaus/MiniX_Testitapaukset.xlsx)
+- **Käytettävyystestauksen kuvat:** Kansiossa `testaus/` (`kaytettavyystestaus_1.jpg` – `kaytettavyystestaus_4.jpg`)
+

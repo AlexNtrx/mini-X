@@ -173,7 +173,10 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
           <div class="modal-header">
             <h2 id="reactivate-title">Aktivoi tili uudelleen?</h2>
             <p class="modal-subtitle">
-              Käyttäjätilisi <strong>@<?= htmlspecialchars($_SESSION['pending_reactivation_username'] ?? '') ?></strong> on poistettu käytöstä. Haluatko aktivoida tilisi ja palauttaa julkaisusi näkyviin?
+              Käyttäjätilisi <strong>@<?= htmlspecialchars($_SESSION['pending_reactivation_username'] ?? '') ?></strong> on tällä hetkellä tauolla. Sinulla on 30 päivää aikaa palauttaa tilisi, minkä jälkeen käyttäjätilisi ja kaikki julkaisusi poistetaan automaattisesti ja pysyvästi.
+            </p>
+            <p class="modal-subtitle" style="margin-top: 10px; margin-bottom: 0;">
+              Haluatko aktivoida tilisi nyt ja palauttaa julkaisusi näkyviin?
             </p>
           </div>
           <div class="modal-actions">
