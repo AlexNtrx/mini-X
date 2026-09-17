@@ -11,10 +11,6 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu 2026
-
-## 🔗 Projektin linkit
-- 🌐 **Sovellus verkossa:** [https://mini-x.infinityfree.io/](https://mini-x.infinityfree.io/)
-- 💻 **Lähdekoodi:** [GitHub-repositorio](https://github.com/AlexNtrx/mini-X)
 ---
 
 ##  Käytetyt teknologiat
@@ -63,8 +59,8 @@ Kloonaa tai siirrä tämä projekti palvelimen juurikansioon:
    *(Tiedosto luo automaattisesti `minisome`-tietokannan, taulut sekä valmiin `admin`-testikäyttäjän).*
 
 ### 4. Sovelluksen avaaminen
-- **Verkossa (Julkaistu versio):** [https://mini-x.infinityfree.io/](https://mini-x.infinityfree.io/)
-- **Paikallisesti omalla koneella:** `http://localhost/mini-X/`
+Avaa selain ja mene osoitteeseen:  
+ **`http://localhost/mini-X/`**
 
 ---
 
