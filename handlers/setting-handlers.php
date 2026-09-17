@@ -6,8 +6,27 @@
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userId = (int)($_SESSION['user_id'] ?? 0);
 
+    // Päivitä näyttönimi (Display Name)
+    if (isset($_POST["update_display_name"])) {
+        $newDisplayName = trim(preg_replace('/\s+/', ' ', $_POST["display_name"] ?? ""));
+        if ($userId > 0) {
+            $len = mb_strlen($newDisplayName, "UTF-8");
+            if ($len < 1) {
+                $error = "Nimi ei voi olla tyhjä.";
+            } elseif ($len > 25) {
+                $error = "Nimen tulee olla enintään 25 merkkiä.";
+            } else {
+                if (updateDisplayName($conn, $userId, $newDisplayName)) {
+                    $_SESSION['display_name'] = $newDisplayName;
+                    $success = "Nimi päivitetty onnistuneesti!";
+                } else {
+                    $error = "Päivitys epäonnistui.";
+                }
+            }
+        }
+    }
     // Päivitä profiilin käyttäjänimi
-    if (isset($_POST["update_profile"])) {
+    elseif (isset($_POST["update_profile"])) {
         $newUsername = trim($_POST["username"] ?? "");
         if ($userId > 0) {
             if (empty($newUsername)) {
@@ -16,6 +35,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $error = "Käyttäjänimen tulee olla vähintään 3 merkkiä.";
             } elseif (mb_strlen($newUsername) > 20) {
                 $error = "Käyttäjänimen tulee olla enintään 20 merkkiä.";
+            } elseif (!preg_match('/^[a-zA-Z0-9_]+$/', $newUsername)) {
+                $error = "Käyttäjänimi voi sisältää vain kirjaimia (a-z), numeroita ja alaviivoja (_).";
             } elseif (isUsernameExists($conn, $newUsername, $userId)) {
                 $error = "Käyttäjänimi on jo varattu toiselle käyttäjälle.";
             } else {

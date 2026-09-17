@@ -46,12 +46,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if (!empty($user['deleted_at'])) {
                     $_SESSION['pending_reactivation_user_id'] = (int)$user['id'];
                     $_SESSION['pending_reactivation_username'] = $user['username'];
+                    $_SESSION['pending_reactivation_display_name'] = !empty($user['display_name']) ? $user['display_name'] : $user['username'];
                     $_SESSION['pending_reactivation_avatar'] = $user['avatar'] ?? null;
                     $showReactivationModal = true;
                 } else {
                     session_regenerate_id(true);
                     $_SESSION['user_id'] = (int)$user['id'];
                     $_SESSION['username'] = $user['username'];
+                    $_SESSION['display_name'] = !empty($user['display_name']) ? $user['display_name'] : $user['username'];
                     $_SESSION['avatar'] = $user['avatar'];
                     header("Location: index.php?page=home");
                     exit;
@@ -65,16 +67,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["confirm_reactivation"])) {
         $pendingUserId = (int)($_SESSION['pending_reactivation_user_id'] ?? 0);
         $pendingUsername = $_SESSION['pending_reactivation_username'] ?? '';
+        $pendingDisplayName = $_SESSION['pending_reactivation_display_name'] ?? $pendingUsername;
 
         if ($pendingUserId > 0 && !empty($pendingUsername)) {
             reactivateUser($conn, $pendingUserId);
             session_regenerate_id(true);
             $_SESSION['user_id'] = $pendingUserId;
             $_SESSION['username'] = $pendingUsername;
+            $_SESSION['display_name'] = $pendingDisplayName;
             $_SESSION['avatar'] = $_SESSION['pending_reactivation_avatar'] ?? null;
             unset(
                 $_SESSION['pending_reactivation_user_id'],
                 $_SESSION['pending_reactivation_username'],
+                $_SESSION['pending_reactivation_display_name'],
                 $_SESSION['pending_reactivation_avatar']
             );
             header("Location: index.php?page=home");

@@ -3,7 +3,10 @@
 // Hakee kaikki julkaisut etusivulle (käyttäjänimi ja avatar haetaan users-taulusta JOINilla)
 function getShowContents($conn)
 {
-    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
+    $sql = "SELECT posts.*, 
+                   users.username AS author, 
+                   COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
+                   users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE users.deleted_at IS NULL 
@@ -21,7 +24,10 @@ function getShowContents($conn)
 // Hakee vain tietyn käyttäjän julkaisut profiilisivulle
 function getUserPosts($conn, $userId)
 {
-    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
+    $sql = "SELECT posts.*, 
+                   users.username AS author, 
+                   COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
+                   users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE posts.user_id = ? AND users.deleted_at IS NULL 
@@ -96,18 +102,21 @@ function deletePost($conn, $id, $userId)
     return $res;
 }
 
-// Hakee julkaisut käyttäjänimen perusteella (Selaa / Haku)
+// Hakee julkaisut käyttäjänimen tai nimen perusteella (Selaa / Haku)
 function searchPostsByUsername($conn, $keyword)
 {
-    $sql = "SELECT posts.*, users.username AS author, users.avatar AS author_avatar 
+    $sql = "SELECT posts.*, 
+                   users.username AS author, 
+                   COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
+                   users.avatar AS author_avatar 
             FROM posts 
             JOIN users ON posts.user_id = users.id 
-            WHERE users.username LIKE ? AND users.deleted_at IS NULL 
+            WHERE (users.username LIKE ? OR users.display_name LIKE ?) AND users.deleted_at IS NULL 
             ORDER BY posts.id DESC";
     $stmt = $conn->prepare($sql);
     $escapedKeyword = addcslashes($keyword, '%_');
     $searchTerm = "%" . $escapedKeyword . "%";
-    $stmt->bind_param("s", $searchTerm);
+    $stmt->bind_param("ss", $searchTerm, $searchTerm);
     $stmt->execute();
     $result = $stmt->get_result();
     $contents = [];
@@ -123,7 +132,7 @@ function searchPostsByUsername($conn, $keyword)
 // Hakee kaikki käyttäjät selaamista varten
 function getAllUsers($conn)
 {
-    $result = $conn->query("SELECT id, username, avatar FROM users WHERE deleted_at IS NULL ORDER BY username ASC");
+    $result = $conn->query("SELECT id, username, COALESCE(NULLIF(display_name, ''), username) AS display_name, avatar FROM users WHERE deleted_at IS NULL ORDER BY username ASC");
     $users = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {

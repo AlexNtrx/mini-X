@@ -17,11 +17,12 @@ function isUsernameExists($conn, $username, $excludeUserId = 0)
 }
 
 // Rekisteröi uuden käyttäjän
-function registerUser($conn, $username, $password, $email)
+function registerUser($conn, $username, $password, $email, $displayName = null)
 {
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-    $stmt = $conn->prepare("INSERT INTO users (username, password, email) VALUES (?, ?, ?)");
-    $stmt->bind_param("sss", $username, $hashedPassword, $email);
+    $finalDisplayName = (!empty($displayName)) ? trim($displayName) : $username;
+    $stmt = $conn->prepare("INSERT INTO users (username, display_name, password, email) VALUES (?, ?, ?, ?)");
+    $stmt->bind_param("ssss", $username, $finalDisplayName, $hashedPassword, $email);
     $success = $stmt->execute();
     $newId = $conn->insert_id;
     $stmt->close();
@@ -31,7 +32,7 @@ function registerUser($conn, $username, $password, $email)
 // Kirjaa käyttäjän sisään
 function loginUser($conn, $username, $password)
 {
-    $stmt = $conn->prepare("SELECT id, username, password, avatar, deleted_at FROM users WHERE username = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, username, display_name, password, avatar, deleted_at FROM users WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -52,6 +53,16 @@ function reactivateUser($conn, $userId)
 {
     $stmt = $conn->prepare("UPDATE users SET deleted_at = NULL WHERE id = ?");
     $stmt->bind_param("i", $userId);
+    $success = $stmt->execute();
+    $stmt->close();
+    return $success;
+}
+
+// Päivittää näyttönimen (Display Name)
+function updateDisplayName($conn, $userId, $newDisplayName)
+{
+    $stmt = $conn->prepare("UPDATE users SET display_name = ? WHERE id = ?");
+    $stmt->bind_param("si", $newDisplayName, $userId);
     $success = $stmt->execute();
     $stmt->close();
     return $success;
@@ -144,6 +155,12 @@ function getUserInitials($username)
     $name = trim($username ?? '');
     if ($name === '') {
         return 'U';
+    }
+    $parts = preg_split('/\s+/', $name, -1, PREG_SPLIT_NO_EMPTY);
+    if (count($parts) >= 2) {
+        $first = mb_substr($parts[0], 0, 1, 'UTF-8');
+        $second = mb_substr($parts[1], 0, 1, 'UTF-8');
+        return htmlspecialchars(mb_strtoupper($first . $second, 'UTF-8'), ENT_QUOTES, 'UTF-8');
     }
     $initials = mb_substr($name, 0, 2, 'UTF-8');
     return htmlspecialchars(mb_strtoupper($initials, 'UTF-8'), ENT_QUOTES, 'UTF-8');
