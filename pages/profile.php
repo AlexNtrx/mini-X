@@ -106,7 +106,7 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                                 <h3 class="profile-display-name"><?= htmlspecialchars($profileDisplayName) ?></h3>
                                 <span class="profile-handle">@<?= htmlspecialchars($profileUsername) ?></span>
                             </div>
-                            <button type="button" class="profile-edit-toggle-btn" id="btn-toggle-profile-edit" onclick="toggleProfileEditForm()">
+                            <button type="button" class="profile-edit-toggle-btn" id="btn-toggle-profile-edit" data-form-target="profile-edit-form-wrapper" onclick="toggleProfileEditForm()">
                                 Muokkaa nimeä
                             </button>
                         </div>
@@ -172,8 +172,34 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
             if (nextState) {
                 const input = document.getElementById('display_name');
                 if (input) setTimeout(() => input.focus(), 100);
+            } else {
+                const form = wrapper.querySelector('form');
+                if (form) form.reset();
             }
         }
+
+        // Suljetaan profiilin muokkauslomake, jos klikataan sen ulkopuolelle
+        document.addEventListener('click', (e) => {
+            const wrapper = document.getElementById('profile-edit-form-wrapper');
+            const toggleBtn = document.getElementById('btn-toggle-profile-edit');
+            if (wrapper && wrapper.style.display !== 'none') {
+                const wasClickInside = wrapper.contains(e.target);
+                const wasClickOnTrigger = toggleBtn && toggleBtn.contains(e.target);
+                if (!wasClickInside && !wasClickOnTrigger) {
+                    toggleProfileEditForm(false);
+                }
+            }
+        });
+
+        // Suljetaan muokkauslomake painettaessa Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const wrapper = document.getElementById('profile-edit-form-wrapper');
+                if (wrapper && wrapper.style.display !== 'none') {
+                    toggleProfileEditForm(false);
+                }
+            }
+        });
 
         <?php if (!empty($error) && isset($_POST['update_display_name'])): ?>
         document.addEventListener('DOMContentLoaded', () => {

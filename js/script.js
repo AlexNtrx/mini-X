@@ -20,23 +20,59 @@ document.addEventListener("click", (e) => {
 
 // Näyttää postauksen muokkauslomakkeen
 function showEditForm(button) {
+    // Suljetaan mahdolliset muut auki olevat postauksen muokkauslomakkeet
+    document.querySelectorAll(".post .edit-form").forEach((form) => {
+        if (form.style.display === "block") {
+            cancelEditForm(form);
+        }
+    });
+
     const post = button.closest(".post");
     if (!post) return;
     const postView = post.querySelector(".post-view");
     const editForm = post.querySelector(".edit-form");
     if (postView) postView.style.display = "none";
-    if (editForm) editForm.style.display = "block";
+    if (editForm) {
+        editForm.style.display = "block";
+        const textarea = editForm.querySelector("textarea, input[type='text']");
+        if (textarea) {
+            textarea.focus();
+            const val = textarea.value;
+            textarea.value = "";
+            textarea.value = val;
+        }
+    }
+    // Suljetaan auki oleva valikko
+    document.querySelectorAll(".menu-dropdown.show").forEach((m) => m.classList.remove("show"));
 }
 
 // Peruuttaa muokkauksen ja palauttaa normaalin näkymän
-function cancelEditForm(button) {
-    const post = button.closest(".post");
+function cancelEditForm(element) {
+    const post = element.closest(".post");
     if (!post) return;
     const postView = post.querySelector(".post-view");
     const editForm = post.querySelector(".edit-form");
-    if (editForm) editForm.style.display = "none";
+    if (editForm) {
+        editForm.style.display = "none";
+        if (typeof editForm.reset === "function") {
+            editForm.reset();
+        }
+    }
     if (postView) postView.style.display = "block";
 }
+
+// Suljetaan postauksen muokkauslomake, jos klikataan sen ulkopuolelle
+document.addEventListener("click", (e) => {
+    if (e.target.closest(".menu-dropdown") || e.target.closest(".menu-button")) return;
+
+    document.querySelectorAll(".post .edit-form").forEach((editForm) => {
+        if (editForm.style.display === "block") {
+            if (!editForm.contains(e.target)) {
+                cancelEditForm(editForm);
+            }
+        }
+    });
+});
 
 // Näyttää / piilottaa kommenttiosion
 function toggleCommentSection(postId) {
@@ -95,10 +131,17 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener("click", () => setSidebarOpen(false));
 }
 
-// Sulje sivupalkki painettaessa Escape-näppäintä
+// Sulje sivupalkki ja postauksen muokkauslomakkeet painettaessa Escape-näppäintä
 document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && sidebar && sidebar.classList.contains("open")) {
-        setSidebarOpen(false);
+    if (e.key === "Escape") {
+        if (sidebar && sidebar.classList.contains("open")) {
+            setSidebarOpen(false);
+        }
+        document.querySelectorAll(".post .edit-form").forEach((editForm) => {
+            if (editForm.style.display === "block") {
+                cancelEditForm(editForm);
+            }
+        });
     }
 });
 

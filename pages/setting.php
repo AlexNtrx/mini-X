@@ -111,7 +111,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                             <span class="setting-label">Nimi</span>
                             <span class="setting-value"><?= htmlspecialchars($displayName) ?></span>
                         </div>
-                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-display-name-wrapper')">
+                        <button type="button" class="setting-btn-secondary" data-form-target="form-display-name-wrapper" onclick="toggleSettingForm('form-display-name-wrapper')">
                             Muokkaa
                         </button>
                     </div>
@@ -136,7 +136,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                             <span class="setting-label">Käyttäjätunnus</span>
                             <span class="setting-value">@<?= htmlspecialchars($username) ?></span>
                         </div>
-                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-username-wrapper')">
+                        <button type="button" class="setting-btn-secondary" data-form-target="form-username-wrapper" onclick="toggleSettingForm('form-username-wrapper')">
                             Muokkaa
                         </button>
                     </div>
@@ -161,7 +161,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                             <span class="setting-label">Sähköposti</span>
                             <span class="setting-value"><?= !empty($email) ? htmlspecialchars($email) : '<span class="text-muted">Ei asetettu</span>' ?></span>
                         </div>
-                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-email-wrapper')">
+                        <button type="button" class="setting-btn-secondary" data-form-target="form-email-wrapper" onclick="toggleSettingForm('form-email-wrapper')">
                             Muokkaa
                         </button>
                     </div>
@@ -197,7 +197,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                             <span class="setting-label">Salasana</span>
                             <span class="setting-value">••••••••</span>
                         </div>
-                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-password-wrapper')">
+                        <button type="button" class="setting-btn-secondary" data-form-target="form-password-wrapper" onclick="toggleSettingForm('form-password-wrapper')">
                             Vaihda salasana
                         </button>
                     </div>
@@ -264,12 +264,39 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
             if (!el) return;
             const isCurrentlyOpen = el.style.display !== 'none';
             const nextState = force !== undefined ? force : !isCurrentlyOpen;
+
+            // Jos avataan jokin lomake, suljetaan ensin muut auki olevat lomakkeet
+            if (nextState) {
+                document.querySelectorAll('.setting-collapsible-wrapper').forEach(w => {
+                    if (w.id !== id && w.style.display !== 'none') {
+                        toggleSettingForm(w.id, false);
+                    }
+                });
+            }
+
             el.style.display = nextState ? 'block' : 'none';
             if (nextState) {
                 const input = el.querySelector('input:not([type="hidden"])');
                 if (input) setTimeout(() => input.focus(), 100);
+            } else {
+                const form = el.querySelector('form');
+                if (form) form.reset();
             }
         }
+
+        // Suljetaan asetuslomake, jos klikataan sen ulkopuolelle
+        document.addEventListener('click', (e) => {
+            document.querySelectorAll('.setting-collapsible-wrapper').forEach(wrapper => {
+                if (wrapper.style.display !== 'none') {
+                    const formId = wrapper.id;
+                    const wasClickInside = wrapper.contains(e.target);
+                    const wasClickOnTrigger = e.target.closest(`[data-form-target="${formId}"]`);
+                    if (!wasClickInside && !wasClickOnTrigger) {
+                        toggleSettingForm(formId, false);
+                    }
+                }
+            });
+        });
 
         <?php if (!empty($error)): ?>
         document.addEventListener('DOMContentLoaded', () => {
@@ -362,8 +389,16 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
             });
 
             document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && deleteModal?.classList.contains('active')) {
-                    closeModal();
+                if (e.key === 'Escape') {
+                    if (deleteModal?.classList.contains('active')) {
+                        closeModal();
+                    } else {
+                        document.querySelectorAll('.setting-collapsible-wrapper').forEach(w => {
+                            if (w.style.display !== 'none') {
+                                toggleSettingForm(w.id, false);
+                            }
+                        });
+                    }
                 }
             });
         });
