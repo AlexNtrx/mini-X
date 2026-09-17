@@ -58,7 +58,12 @@ Kloonaa tai siirrä tämä projekti palvelimen juurikansioon:
 3. Valitse projektin juuresta tiedosto: `minisome.sql` ja klikkaa **Suorita** (Go / Import).  
    *(Tiedosto luo automaattisesti `minisome`-tietokannan, taulut sekä valmiin `admin`-testikäyttäjän).*
 
-### 4. Sovelluksen avaaminen
+### 4. Konfiguraatio (Asetustiedostot)
+Kopioi esimerkkikonfiguraatiot ja aseta omat tietokanta- ja sähköpostitunnuksesi:
+- Kopioi `config/database.example.php` nimelle `config/database.php`
+- Kopioi `config/mail.example.php` nimelle `config/mail.php`
+
+### 5. Sovelluksen avaaminen
 Avaa selain ja mene osoitteeseen:  
  **`http://localhost/mini-X/`**
 

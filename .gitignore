@@ -1,3 +1,22 @@
-# Configuration files with credentials and secrets
-config/
+# Configuration files with credentials and secrets (allow examples)
+config/*
+!config/*.example.php
+conflc/
 
+# Environment files
+.env
+.env.local
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+desktop.ini
+.DS_Store
+
+# Editor / IDE
+.vscode/
+.idea/
+
+# Logs & Cache
+*.log
+error_log
