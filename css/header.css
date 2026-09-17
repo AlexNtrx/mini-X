@@ -7,7 +7,8 @@
     width: 100%;
     min-height: 53px;
     padding: 0 16px;
-    display: flex;
+    display: grid;
+    grid-template-columns: 48px 1fr 48px;
     align-items: center;
     background-color: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
@@ -19,15 +20,19 @@
 .header-left {
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     width: 48px;
+    min-width: 48px;
 }
 
 .header-center {
     display: flex;
     align-items: center;
+    justify-content: center;
     min-width: 0;
-    flex: 1;
-    padding: 8px 12px;
+    width: 100%;
+    padding: 8px 4px;
+    text-align: center;
 }
 
 .header-title,
@@ -41,18 +46,23 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-align: left;
+    text-align: center;
+    width: 100%;
 }
 
 .header-right {
     display: flex;
     align-items: center;
+    justify-content: flex-end;
     width: 48px;
-    margin-left: auto;
+    min-width: 48px;
 }
 
 .header-dummy {
-    display: none;
+    display: block;
+    width: 48px;
+    height: 38px;
+    visibility: hidden;
 }
 
 /* Hamburger button inside header */
@@ -83,49 +93,15 @@
     transform: scale(0.95);
 }
 
-/* Tablet & Mobile (<= 900px): 3-Column Grid for Perfect Centering */
+/* Tablet & Mobile (<= 900px) */
 @media (max-width: 900px) {
     .app-header,
     .feed-header {
-        display: grid;
-        grid-template-columns: 48px 1fr 48px;
-        align-items: center;
         padding: 0 12px;
     }
 
     .hamburger-button {
         display: flex;
-    }
-
-    .header-left {
-        justify-content: flex-start;
-        min-width: 48px;
-    }
-
-    .header-center {
-        justify-content: center;
-        text-align: center;
-        width: 100%;
-        padding: 8px 4px;
-    }
-
-    .header-title,
-    .feed-header h1 {
-        text-align: center;
-        width: 100%;
-    }
-
-    .header-right {
-        justify-content: flex-end;
-        min-width: 48px;
-        margin-left: 0;
-    }
-
-    .header-dummy {
-        display: block;
-        width: 48px;
-        height: 38px;
-        visibility: hidden;
     }
 }
 
