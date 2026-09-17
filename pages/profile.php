@@ -129,7 +129,6 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                                     <button type="submit" name="update_display_name" class="save-profile-btn">Tallenna</button>
                                     <button type="button" class="cancel-avatar-btn" onclick="toggleProfileEditForm(false)">Peruuta</button>
                                 </div>
-                                <span class="profile-field-hint">Enintään 25 merkkiä. Käyttäjätunnusta (@<?= htmlspecialchars($profileUsername) ?>) ja salasanaa voit muokata <a href="index.php?page=setting" class="profile-setting-link">asetuksissa</a>.</span>
                             </div>
                         </form>
                     </div>

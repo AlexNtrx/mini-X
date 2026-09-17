@@ -125,7 +125,6 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                                     <button type="submit" name="update_display_name" class="setting-btn-primary">Tallenna</button>
                                     <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-display-name-wrapper', false)">Peruuta</button>
                                 </div>
-                                <span class="setting-field-hint">Enintään 25 merkkiä. Näkyy julkaisuissa ja profiilissa.</span>
                             </div>
                         </form>
                     </div>
@@ -150,7 +149,6 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                                     <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna</button>
                                     <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-username-wrapper', false)">Peruuta</button>
                                 </div>
-                                <span class="setting-field-hint">3–20 merkkiä (a–z, 0–9, _). Käytetään kirjautumiseen ja mainintoihin.</span>
                             </div>
                         </form>
                     </div>
