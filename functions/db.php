@@ -9,7 +9,8 @@ function dbConnect()
         die('Connection failed: ' . $conn->connect_error);
     }
     $conn->set_charset("utf8mb4");
-    // Asetetaan MySQL-aikavyöhyke vastaamaan Bangkokin aikaa (UTC+7)
-    $conn->query("SET time_zone = '+07:00'");
+    // Asetetaan MySQL-aikavyöhyke vastaamaan PHP:n aikavyöhykettä (Suomi: UTC+2 / UTC+3 DST)
+    $offset = date('P');
+    $conn->query("SET time_zone = '{$offset}'");
     return $conn;
 }

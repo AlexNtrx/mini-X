@@ -32,8 +32,8 @@ require_once __DIR__ . "/../functions/init.php";
                     <span class="post-handle">
                         @<?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?>
                     </span>
-                    <span class="post-date">
-                        · <?= htmlspecialchars($content["created_at"], ENT_QUOTES, "UTF-8") ?>
+                    <span class="post-date" title="<?= htmlspecialchars($content["created_at"], ENT_QUOTES, "UTF-8") ?>">
+                        · <?= formatTimeAgo($content["created_at"]) ?>
                     </span>
                 </div>
 
@@ -135,7 +135,7 @@ require_once __DIR__ . "/../functions/init.php";
                                     <div class="comment-header">
                                         <strong class="comment-author"><?= htmlspecialchars($comment['author_display_name'] ?? $comment['author'], ENT_QUOTES, 'UTF-8') ?></strong>
                                         <span class="comment-handle">@<?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?></span>
-                                        <span class="comment-date">· <?= htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        <span class="comment-date" title="<?= htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') ?>">· <?= formatTimeAgo($comment['created_at']) ?></span>
                                         <?php if (isset($_SESSION['user_id']) && (int)$_SESSION['user_id'] === (int)$comment['user_id']): ?>
                                             <form method="POST" class="delete-comment-form" onsubmit="return confirm('Poistetaanko kommentti?');">
                                                 <input type="hidden" name="comment_id" value="<?= $comment['id'] ?>">

@@ -26,6 +26,7 @@ if ($conn && $userId > 0) {
             'type' => $row['type'],
             'content_preview' => $row['content_preview'] ?? '',
             'created_at' => $row['created_at'],
+            'time_ago' => formatTimeAgo($row['created_at']),
             'is_read' => (int)$row['is_read']
         ];
     }

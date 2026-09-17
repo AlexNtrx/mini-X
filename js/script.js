@@ -294,7 +294,8 @@ function checkUnreadNotifications() {
 
                         const timeSpan = document.createElement("span");
                         timeSpan.className = "notif-time";
-                        timeSpan.textContent = notif.created_at;
+                        timeSpan.textContent = notif.time_ago || notif.created_at;
+                        if (notif.created_at) timeSpan.title = notif.created_at;
                         contentCol.appendChild(timeSpan);
 
                         item.appendChild(iconCol);

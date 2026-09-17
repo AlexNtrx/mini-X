@@ -1,6 +1,6 @@
 <?php
-// Asetetaan aikavyöhyke (Timezone: Bangkok UTC+7)
-date_default_timezone_set('Asia/Bangkok');
+// Asetetaan aikavyöhyke (Timezone: Suomi / Europe/Helsinki)
+date_default_timezone_set('Europe/Helsinki');
 
 /*
   Lataa kaikki funktiomoduulit
@@ -32,5 +32,75 @@ function getSafeRedirectUrl($default = 'index.php')
     }
 
     return $default;
+}
+
+/**
+ * Muotoilee aikaleiman lyhyeen ja selkeään Twitter/X-tyyliin (esim. 'nyt', '15 s', '5 min', '2 t', '3 pv', '17. syysk.')
+ *
+ * @param string|int|null $datetime Aikaleima (string tai UNIX-timestamp)
+ * @return string Lyhyt aikaleima
+ */
+function formatTimeAgo($datetime)
+{
+    if (empty($datetime)) {
+        return '';
+    }
+
+    $timestamp = is_numeric($datetime) ? (int)$datetime : strtotime($datetime);
+    if (!$timestamp) {
+        return htmlspecialchars((string)$datetime);
+    }
+
+    $now = time();
+    $diff = $now - $timestamp;
+
+    // Jos aikaleima on tulevaisuudessa tai alle 10 sekuntia sitten
+    if ($diff < 10) {
+        return 'nyt';
+    }
+
+    // Alle 1 minuutti (esim. 45 s)
+    if ($diff < 60) {
+        return $diff . ' s';
+    }
+
+    // Alle 1 tunti (esim. 15 min)
+    if ($diff < 3600) {
+        $mins = max(1, (int)floor($diff / 60));
+        return $mins . ' min';
+    }
+
+    // Alle 24 tuntia (esim. 2 t)
+    if ($diff < 86400) {
+        $hours = (int)floor($diff / 3600);
+        return $hours . ' t';
+    }
+
+    // Alle 7 päivää (esim. 3 pv)
+    if ($diff < 604800) {
+        $days = (int)floor($diff / 86400);
+        return $days . ' pv';
+    }
+
+    // Kuluva vuosi (esim. 17. syysk.)
+    $postYear = (int)date('Y', $timestamp);
+    $currentYear = (int)date('Y', $now);
+
+    $months = [
+        1 => 'tammik.', 2 => 'helmik.', 3 => 'maalisk.', 4 => 'huhtik.',
+        5 => 'toukok.', 6 => 'kesäk.', 7 => 'heinäk.', 8 => 'elok.',
+        9 => 'syysk.', 10 => 'lokak.', 11 => 'marrask.', 12 => 'jouluk.'
+    ];
+
+    $day = date('j', $timestamp);
+    $monthNum = (int)date('n', $timestamp);
+    $monthName = $months[$monthNum] ?? date('n', $timestamp) . '.';
+
+    if ($postYear === $currentYear) {
+        return $day . '. ' . $monthName;
+    }
+
+    // Eri vuosi (esim. 17. syysk. 2025)
+    return $day . '. ' . $monthName . ' ' . $postYear;
 }
 

@@ -81,7 +81,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
                                         "<?= htmlspecialchars($notif['content_preview'], ENT_QUOTES, 'UTF-8') ?>"
                                     </div>
                                 <?php endif; ?>
-                                <span class="notif-time"><?= htmlspecialchars($notif['created_at'], ENT_QUOTES, 'UTF-8') ?></span>
+                                <span class="notif-time" title="<?= htmlspecialchars($notif['created_at'], ENT_QUOTES, 'UTF-8') ?>"><?= formatTimeAgo($notif['created_at']) ?></span>
                             </div>
                         </a>
                     <?php endforeach; ?>
