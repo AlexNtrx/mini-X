@@ -69,32 +69,50 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                     <h2 class="setting-section-title">Tilitiedot</h2>
 
                     <!-- Profiilikuva -->
-                    <div class="setting-item">
+                    <div class="setting-item setting-item-avatar">
                         <div class="setting-avatar-left">
-                            <div class="setting-avatar-preview">
+                            <div class="setting-avatar-preview" id="setting-avatar-container">
                                 <?php if ($avatarUrl): ?>
-                                    <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img">
+                                    <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img" id="setting-avatar-img">
                                 <?php else: ?>
-                                    <div class="avatar-fallback">
+                                    <div class="avatar-fallback" id="setting-avatar-fallback">
                                         <?= getUserInitials($username) ?>
                                     </div>
                                 <?php endif; ?>
                             </div>
                             <div class="setting-item-info">
-                                <span class="setting-label">Profiilikuva</span>
-                                <span class="setting-desc">Muokkaa kuvaa profiilisivulla</span>
+                                <span class="setting-username-title"><?= htmlspecialchars($username) ?></span>
+                                <span class="setting-handle">@<?= htmlspecialchars($username) ?></span>
                             </div>
                         </div>
-                        <a href="index.php?page=profile" class="setting-action-link">Vaihda kuva</a>
+
+                        <form method="POST" enctype="multipart/form-data" class="setting-avatar-form" id="setting-avatar-form">
+                            <input type="file" id="setting-avatar-input" name="avatar" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;" onchange="previewSettingAvatar(this)">
+                            
+                            <div class="setting-avatar-actions">
+                                <div id="setting-avatar-save-actions" class="setting-avatar-save-actions" style="display: none;">
+                                    <button type="submit" name="update_avatar" class="setting-btn-primary">Tallenna uusi kuva</button>
+                                    <button type="button" class="setting-btn-secondary" onclick="cancelSettingAvatar()">Peruuta</button>
+                                </div>
+                                <label for="setting-avatar-input" class="setting-btn-secondary" id="btn-setting-change-avatar">
+                                    Vaihda kuva
+                                </label>
+                                <?php if ($avatarUrl): ?>
+                                    <button type="submit" name="delete_avatar" class="setting-btn-danger" id="btn-setting-delete-avatar" onclick="return confirm('Haluatko varmasti poistaa profiilikuvasi?');">Poista kuva</button>
+                                <?php endif; ?>
+                            </div>
+                        </form>
                     </div>
 
-                    <div class="setting-item">
-                        <div class="setting-item-info">
-                            <span class="setting-label">Käyttäjätunnus</span>
-                            <span class="setting-value">@<?= htmlspecialchars($username) ?></span>
+                    <form method="POST" class="setting-form">
+                        <div class="form-group">
+                            <label for="setting-username">Päivitä käyttäjätunnus</label>
+                            <div class="input-with-button">
+                                <input type="text" id="setting-username" name="username" value="<?= htmlspecialchars($username) ?>" placeholder="esim. kayttaja" required minlength="3" maxlength="20">
+                                <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna</button>
+                            </div>
                         </div>
-                        <a href="index.php?page=profile" class="setting-action-link">Muokkaa profiilia</a>
-                    </div>
+                    </form>
 
                     <div class="setting-item">
                         <div class="setting-item-info">
@@ -180,6 +198,51 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
 
     <script src="./js/script.js"></script>
     <script>
+        const originalSettingAvatarHtml = document.getElementById('setting-avatar-container') ? document.getElementById('setting-avatar-container').innerHTML : '';
+
+        function previewSettingAvatar(input) {
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                if (file.size > 3 * 1024 * 1024) {
+                    alert('Kuvan koko saa olla enintään 3 MB.');
+                    input.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const container = document.getElementById('setting-avatar-container');
+                    if (container) {
+                        container.innerHTML = `<img src="${e.target.result}" alt="Profiilikuva" class="avatar-preview-img">`;
+                    }
+                    
+                    const saveActions = document.getElementById('setting-avatar-save-actions');
+                    const changeBtn = document.getElementById('btn-setting-change-avatar');
+                    const deleteBtn = document.getElementById('btn-setting-delete-avatar');
+                    
+                    if (saveActions) saveActions.style.display = 'inline-flex';
+                    if (changeBtn) changeBtn.style.display = 'none';
+                    if (deleteBtn) deleteBtn.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function cancelSettingAvatar() {
+            const input = document.getElementById('setting-avatar-input');
+            if (input) input.value = '';
+            
+            const container = document.getElementById('setting-avatar-container');
+            if (container) container.innerHTML = originalSettingAvatarHtml;
+            
+            const saveActions = document.getElementById('setting-avatar-save-actions');
+            const changeBtn = document.getElementById('btn-setting-change-avatar');
+            const deleteBtn = document.getElementById('btn-setting-delete-avatar');
+            
+            if (saveActions) saveActions.style.display = 'none';
+            if (changeBtn) changeBtn.style.display = 'inline-flex';
+            if (deleteBtn) deleteBtn.style.display = 'inline-flex';
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const deleteModal = document.getElementById('delete-account-modal');
             const openDeleteBtn = document.getElementById('btn-open-delete-modal');
