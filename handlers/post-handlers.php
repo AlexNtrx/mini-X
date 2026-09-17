@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                 }
 
-                if (!isset($error)) {
+                if (empty($error)) {
                     if (addPost($conn, $userId, $content, $imageFileName)) {
                         header("Location: " . $redirectUrl);
                         exit;

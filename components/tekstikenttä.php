@@ -3,6 +3,7 @@ $createPostAvatar = getUserAvatarUrl($_SESSION['avatar'] ?? null);
 $createPostDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_name'] : ($_SESSION['username'] ?? '');
 ?>
 <form method="POST" class="create-post" enctype="multipart/form-data">
+    <input type="hidden" name="create_post" value="1">
 
     <a href="index.php?page=profile" class="create-post-avatar" aria-label="Siirry profiiliin" title="Näytä profiili">
         <?php if ($createPostAvatar): ?>
