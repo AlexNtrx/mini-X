@@ -88,3 +88,103 @@ body {
     color: #00ba7c;
     border: 1px solid #00ba7c;
 }
+
+/* Clickable Avatar */
+.clickable-avatar {
+    cursor: pointer !important;
+    transition: transform 0.2s ease, filter 0.2s ease;
+}
+
+.clickable-avatar:hover {
+    transform: scale(1.03);
+    filter: brightness(1.08);
+}
+
+/* Avatar Lightbox Modal */
+.avatar-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.88);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+}
+
+.avatar-modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.avatar-modal-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 90vw;
+    max-height: 90vh;
+    animation: avatarZoomIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes avatarZoomIn {
+    from {
+        opacity: 0;
+        transform: scale(0.88);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.avatar-modal-close {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: rgba(255, 255, 255, 0.15);
+    border: none;
+    color: #e7e9ea;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.avatar-modal-close:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.08);
+}
+
+.avatar-modal-image-wrapper {
+    width: min(85vw, 400px);
+    height: min(85vw, 400px);
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.9);
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatar-modal-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}

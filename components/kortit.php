@@ -13,7 +13,7 @@ require_once __DIR__ . "/../functions/init.php";
     <!-- Post Avatar -->
     <div class="post-avatar">
         <?php if ($postAvatarUrl): ?>
-            <img src="<?= $postAvatarUrl ?>" alt="Avatar" class="avatar-img">
+            <img src="<?= $postAvatarUrl ?>" alt="Avatar" class="avatar-img clickable-avatar" onclick="openAvatarModal('<?= htmlspecialchars($postAvatarUrl, ENT_QUOTES) ?>')" title="Näytä profiilikuva">
         <?php else: ?>
             <?= getUserInitials($content['author_display_name'] ?? ($content['author'] ?? '')) ?>
         <?php endif; ?>
@@ -126,7 +126,7 @@ require_once __DIR__ . "/../functions/init.php";
                             <div class="comment-item">
                                 <div class="comment-avatar">
                                     <?php if ($commentAvatarUrl): ?>
-                                        <img src="<?= $commentAvatarUrl ?>" alt="Avatar" class="avatar-img">
+                                        <img src="<?= $commentAvatarUrl ?>" alt="Avatar" class="avatar-img clickable-avatar" onclick="openAvatarModal('<?= htmlspecialchars($commentAvatarUrl, ENT_QUOTES) ?>')" title="Näytä profiilikuva">
                                     <?php else: ?>
                                         <?= getUserInitials($comment['author_display_name'] ?? ($comment['author'] ?? '')) ?>
                                     <?php endif; ?>

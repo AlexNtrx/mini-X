@@ -71,14 +71,13 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                 <div class="profile-details">
                     <div class="profile-avatar-row">
                         <div class="profile-avatar-wrapper">
-                            <div class="profile-avatar" id="profile-avatar-container">
+                            <div class="profile-avatar <?= $avatarUrl ? 'clickable-avatar' : '' ?>" id="profile-avatar-container" <?= $avatarUrl ? 'onclick="openAvatarModal(\'' . htmlspecialchars($avatarUrl, ENT_QUOTES) . '\')"' : '' ?> title="<?= $avatarUrl ? 'Näytä profiilikuva' : '' ?>">
                                 <?php if ($avatarUrl): ?>
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="profile-avatar-img" id="profile-avatar-img">
                                 <?php else: ?>
                                     <span id="profile-avatar-fallback"><?= getUserInitials($profileDisplayName) ?></span>
                                 <?php endif; ?>
                             </div>
-                       
                         </div>
 
                         <!-- Avatar Actions Form -->
@@ -213,7 +212,14 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     const container = document.getElementById('profile-avatar-container');
-                    container.innerHTML = `<img src="${e.target.result}" alt="Profiilikuva" class="profile-avatar-img">`;
+                    if (container) {
+                        container.classList.add('clickable-avatar');
+                        container.setAttribute('title', 'Näytä profiilikuva');
+                        container.onclick = function() {
+                            openAvatarModal(e.target.result);
+                        };
+                        container.innerHTML = `<img src="${e.target.result}" alt="Profiilikuva" class="profile-avatar-img">`;
+                    }
                     
                     const saveActions = document.getElementById('avatar-save-actions');
                     const changeBtn = document.getElementById('btn-change-avatar');
@@ -232,7 +238,20 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
             if (input) input.value = '';
             
             const container = document.getElementById('profile-avatar-container');
-            if (container) container.innerHTML = originalAvatarHtml;
+            if (container) {
+                container.innerHTML = originalAvatarHtml;
+                <?php if ($avatarUrl): ?>
+                container.classList.add('clickable-avatar');
+                container.setAttribute('title', 'Näytä profiilikuva');
+                container.onclick = function() {
+                    openAvatarModal(<?= json_encode($avatarUrl) ?>);
+                };
+                <?php else: ?>
+                container.classList.remove('clickable-avatar');
+                container.removeAttribute('title');
+                container.onclick = null;
+                <?php endif; ?>
+            }
             
             const saveActions = document.getElementById('avatar-save-actions');
             const changeBtn = document.getElementById('btn-change-avatar');

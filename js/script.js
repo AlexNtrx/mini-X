@@ -131,9 +131,14 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener("click", () => setSidebarOpen(false));
 }
 
-// Sulje sivupalkki ja postauksen muokkauslomakkeet painettaessa Escape-näppäintä
+// Sulje sivupalkki, avatar-modal ja postauksen muokkauslomakkeet painettaessa Escape-näppäintä
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
+        const avatarModal = document.getElementById("avatar-modal");
+        if (avatarModal && avatarModal.classList.contains("active")) {
+            closeAvatarModal();
+            return;
+        }
         if (sidebar && sidebar.classList.contains("open")) {
             setSidebarOpen(false);
         }
@@ -144,6 +149,52 @@ document.addEventListener("keydown", (e) => {
         });
     }
 });
+
+// Profiilikuvan katselu suurena (Avatar Lightbox Modal - vain pyöreä kuva)
+function openAvatarModal(imageSrc) {
+    if (!imageSrc) return;
+
+    let modal = document.getElementById('avatar-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'avatar-modal';
+        modal.className = 'avatar-modal-overlay';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <button type="button" class="avatar-modal-close" id="btn-close-avatar-modal" aria-label="Sulje">&times;</button>
+            <div class="avatar-modal-card">
+                <div class="avatar-modal-image-wrapper">
+                    <img src="" alt="Profiilikuva" id="avatar-modal-img" class="avatar-modal-img">
+                </div>
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.closest('#btn-close-avatar-modal')) {
+                closeAvatarModal();
+            }
+        });
+    }
+
+    const img = modal.querySelector('#avatar-modal-img');
+    if (img) img.src = imageSrc;
+
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeAvatarModal() {
+    const modal = document.getElementById('avatar-modal');
+    if (modal && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+}
 
 // Sulje sivupalkki mobiilissa, kun siirrytään sivulle navigaatiolinkistä
 document.querySelectorAll(".sidebar nav a").forEach((link) => {

@@ -72,7 +72,7 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                     <!-- Profiilikuva -->
                     <div class="setting-item setting-item-avatar">
                         <div class="setting-avatar-left">
-                            <div class="setting-avatar-preview" id="setting-avatar-container">
+                            <div class="setting-avatar-preview <?= $avatarUrl ? 'clickable-avatar' : '' ?>" id="setting-avatar-container" <?= $avatarUrl ? 'onclick="openAvatarModal(\'' . htmlspecialchars($avatarUrl, ENT_QUOTES) . '\')"' : '' ?> title="<?= $avatarUrl ? 'Näytä profiilikuva' : '' ?>">
                                 <?php if ($avatarUrl): ?>
                                     <img src="<?= $avatarUrl ?>" alt="Profiilikuva" class="avatar-preview-img" id="setting-avatar-img">
                                 <?php else: ?>
@@ -324,6 +324,11 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                 reader.onload = function(e) {
                     const container = document.getElementById('setting-avatar-container');
                     if (container) {
+                        container.classList.add('clickable-avatar');
+                        container.setAttribute('title', 'Näytä profiilikuva');
+                        container.onclick = function() {
+                            openAvatarModal(e.target.result);
+                        };
                         container.innerHTML = `<img src="${e.target.result}" alt="Profiilikuva" class="avatar-preview-img">`;
                     }
                     
@@ -344,7 +349,20 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
             if (input) input.value = '';
             
             const container = document.getElementById('setting-avatar-container');
-            if (container) container.innerHTML = originalSettingAvatarHtml;
+            if (container) {
+                container.innerHTML = originalSettingAvatarHtml;
+                <?php if ($avatarUrl): ?>
+                container.classList.add('clickable-avatar');
+                container.setAttribute('title', 'Näytä profiilikuva');
+                container.onclick = function() {
+                    openAvatarModal(<?= json_encode($avatarUrl) ?>);
+                };
+                <?php else: ?>
+                container.classList.remove('clickable-avatar');
+                container.removeAttribute('title');
+                container.onclick = null;
+                <?php endif; ?>
+            }
             
             const saveActions = document.getElementById('setting-avatar-save-actions');
             const changeBtn = document.getElementById('btn-setting-change-avatar');
