@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $success ? 'Salasana vaihdettu' : 'Aseta uusi salasana' ?> - Mini X</title>
-    <link rel="stylesheet" href="../css/forgot-password.css">
+    <link rel="stylesheet" href="../css/forgot-password.css?v=1.1.1">
 </head>
 <body class="reset-body">
     <div class="reset-card">

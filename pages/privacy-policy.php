@@ -13,7 +13,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini X:n tietosuojaseloste</title>
-    <link rel="stylesheet" href="./css/privacy.css">
+    <link rel="stylesheet" href="./css/privacy.css?v=1.1.1">
 </head>
 <body class="x-privacy-body">
 

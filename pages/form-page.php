@@ -12,8 +12,8 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
-    <link rel="stylesheet" href="./css/register.css" />
-    <link rel="stylesheet" href="./css/forgot-password.css" />
+    <link rel="stylesheet" href="./css/register.css?v=1.1.1" />
+    <link rel="stylesheet" href="./css/forgot-password.css?v=1.1.1" />
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -188,7 +188,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
     </div>
 
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
-    <script src="./js/lomakeet.js"></script>
-    <script src="./js/validation.js"></script>
+    <script src="./js/lomakeet.js?v=1.1.1"></script>
+    <script src="./js/validation.js?v=1.1.1"></script>
   </body>
 </html>
