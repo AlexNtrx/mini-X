@@ -4,8 +4,8 @@ require_once __DIR__ . "/../functions/init.php";
 $currentPage = $_GET['page'] ?? 'home';
 $unreadNotifs = (isset($conn) && isset($_SESSION['user_id'])) ? getUnreadNotificationCount($conn, (int)$_SESSION['user_id']) : 0;
 $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
-$sidebarDisplayName = $_SESSION['display_name'] ?? ($_SESSION['username'] ?? '');
 $sidebarUsername = $_SESSION['username'] ?? '';
+$sidebarDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_name'] : $sidebarUsername;
 ?>
 <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">

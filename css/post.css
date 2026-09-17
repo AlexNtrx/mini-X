@@ -21,6 +21,14 @@
     flex-shrink: 0;
     overflow: hidden;
     user-select: none;
+    text-decoration: none;
+    cursor: pointer;
+    transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.create-post-avatar:hover {
+    opacity: 0.85;
+    filter: brightness(1.1);
 }
 
 .avatar-img {
@@ -35,23 +43,6 @@
     min-width: 0;
 }
 
-.create-post-user-info {
-    margin-bottom: 6px;
-}
-
-.create-post-username {
-    font-size: 15px;
-    font-weight: 700;
-    color: #e7e9ea;
-}
-
-.create-post-handle {
-    font-size: 13px;
-    color: #71767b;
-    margin-left: 6px;
-    font-weight: 400;
-}
-
 .create-post textarea {
     width: 100%;
     min-height: 80px;
@@ -63,7 +54,7 @@
     font-size: 20px;
     font-family: inherit;
     line-height: 1.4;
-    padding: 4px 0;
+    padding: 8px 0;
 }
 
 .create-post textarea::placeholder {

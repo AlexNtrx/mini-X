@@ -1,22 +1,18 @@
 <?php 
 $createPostAvatar = getUserAvatarUrl($_SESSION['avatar'] ?? null); 
-$createPostDisplayName = $_SESSION['display_name'] ?? ($_SESSION['username'] ?? '');
+$createPostDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_name'] : ($_SESSION['username'] ?? '');
 ?>
 <form method="POST" class="create-post">
 
-    <div class="create-post-avatar">
+    <a href="index.php?page=profile" class="create-post-avatar" aria-label="Siirry profiiliin" title="Näytä profiili">
         <?php if ($createPostAvatar): ?>
             <img src="<?= $createPostAvatar ?>" alt="Avatar" class="avatar-img">
         <?php else: ?>
             <?= getUserInitials($createPostDisplayName) ?>
         <?php endif; ?>
-    </div>
+    </a>
 
     <div class="create-post-content">
-        <div class="create-post-user-info">
-            <span class="create-post-username"><?= htmlspecialchars($createPostDisplayName) ?></span>
-            <span class="create-post-handle">@<?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
-        </div>
         <textarea
             name="content"
             placeholder="Mitä tapahtuu?"

@@ -27,6 +27,22 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+// Päivitetään käyttäjän tiedot tietokannasta sessioon (varmistetaan aina tuore display_name, username ja avatar)
+if (isset($conn) && $conn) {
+    $sessionStmt = $conn->prepare("SELECT username, display_name, avatar FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+    if ($sessionStmt) {
+        $sessionStmt->bind_param("i", $_SESSION['user_id']);
+        $sessionStmt->execute();
+        $sessionUserData = $sessionStmt->get_result()->fetch_assoc();
+        $sessionStmt->close();
+        if ($sessionUserData) {
+            $_SESSION['username'] = $sessionUserData['username'];
+            $_SESSION['display_name'] = !empty($sessionUserData['display_name']) ? $sessionUserData['display_name'] : $sessionUserData['username'];
+            $_SESSION['avatar'] = $sessionUserData['avatar'];
+        }
+    }
+}
+
 require_once "handlers/post-handlers.php";
 require_once "handlers/interaction-handlers.php";
 require_once "handlers/setting-handlers.php";
