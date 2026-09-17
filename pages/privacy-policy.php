@@ -99,7 +99,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
 
             <!-- Hero-osio -->
             <div class="x-hero">
-                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.1</span>
+                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.2</span>
                 <h1 class="x-hero-title">Mini X:n tietosuojaseloste</h1>
                 <p class="x-hero-intro">
                     Tämä tietosuojaseloste kertoo, mitä henkilötietoja Mini X -palvelu kerää, miten niitä käytetään ja miten voit hallita omia tietojasi. Lue huolellisesti, jotta ymmärrät oikeutesi ja velvollisuutesi palvelun käyttäjänä.
@@ -303,8 +303,8 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                 <ul class="x-ul">
                     <li><strong>Aktiivinen tili:</strong> Säilytämme tilitietosi, julkaisusi ja viestisi niin kauan kuin tilisi on käytössä.</li>
                     <li><strong>Tilin poistaminen:</strong> Kun poistat tilisi Asetukset-sivulta, profiilisi ja julkaisusi piilotetaan välittömästi muilta käyttäjiltä. Voit kuitenkin halutessasi palauttaa tilisi kirjautumalla uudelleen sisään.</li>
-                    <li><strong>Tietojen pysyvä poisto:</strong> Mikäli pyydät rekisterinpitäjältä tietojesi lopullista hävittämistä, poistamme kaikki sinuun liittyvät tiedot järjestelmästä pysyvästi.</li>
-                    <li><strong>Säilytyspaikka:</strong> Kaikki tiedot ja profiilikuvat säilytetään palveluntarjoajan suojatuilla palvelimilla.</li>
+                    <li><strong>Tietojen pysyvä poisto:</strong> Mikäli pyydät rekisterinpitäjältä tietojesi lopullista hävittämistä tai poistat yksittäisen julkaisun, poistamme kyseiset tiedot ja niihin mahdollisesti liittyvät kuvatiedostot järjestelmästä pysyvästi.</li>
+                    <li><strong>Säilytyspaikka:</strong> Kaikki tiedot, profiilikuvat ja julkaisujen liitekuvat säilytetään palveluntarjoajan suojatuilla palvelimilla.</li>
                 </ul>
             </section>
 
@@ -356,7 +356,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <li><strong>Salasanojen suojaus:</strong> Salasanat tallennetaan aina vahvasti salattuina, eikä kukaan voi nähdä niitä selväkielisenä.</li>
                     <li><strong>Tietokannan suojaus:</strong> Tietokantayhteydet ja kyselyt on suojattu luvatonta manipulointia ja tietomurtoja vastaan.</li>
                     <li><strong>Sisällön turvallisuus:</strong> Kaikki palveluun syötetyt tekstit ja viestit puhdistetaan ja suojataan haitallisen sisällön estämiseksi.</li>
-                    <li><strong>Kuvatiedostojen turvallisuus:</strong> Palveluun ladattavien profiilikuvien turvallisuus tarkistetaan ennen tallennusta haittaohjelmien ja turvallisuusriskien välttämiseksi.</li>
+                    <li><strong>Kuvatiedostojen turvallisuus:</strong> Palveluun ladattavien profiili- ja julkaisukuvien turvallisuus ja sallitut tiedostomuodot (JPEG, PNG, WebP, GIF) tarkistetaan ennen tallennusta haittaohjelmien ja turvallisuusriskien välttämiseksi.</li>
                 </ul>
             </section>
 

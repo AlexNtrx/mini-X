@@ -11,7 +11,7 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu 2026
-- **Versio:** 1.2.0
+- **Versio:** 1.2.2
 ---
 
 ##  Käytetyt teknologiat
@@ -30,12 +30,14 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
    - Salasanojen turvallinen suojaus (`password_hash` / BCRYPT).
    - SQL-injektioiden esto parametroiduilla kyselyillä (`prepared statements`).
    - XSS-hyökkäysten esto tulosteissa (`htmlspecialchars`).
-   - Profiilikuvan lataus, nimikirjain-avatar sekä näyttönimi (display name).
+   - Profiilikuvan lataus, Lightbox-katselu, nimikirjain-avatar sekä näyttönimi (display name).
    - Tilin asettaminen tauolle (soft delete) ja mahdollisuus palauttaa tili kirjautumalla sisään 30 päivän kuluessa ennen tietojen pysyvää poistamista.
    - EU:n GDPR-asetuksen mukainen tietosuojaseloste ja omien tietojen hallinta.
 
 2. **Julkaisujen hallinta (CRUD):**
-   - Teksti- ja kuvajulkaisujen luominen (enintään 140 merkkiä tai kuvaliite), muokkaaminen ja poisto.
+   - Teksti- ja kuvajulkaisujen luominen (teksti, kuva tai molemmat), muokkaaminen ja poisto.
+   - Kuvien automaattinen koon rajoitus syötteessä ja Lightbox-täysikokoinen katselu.
+   - X/Twitter-tyyliset suhteelliset aikaleimat julkaisuissa ja ilmoituksissa (`nyt`, `15 s`, `5 min`, `2 t`, `3 pv`).
    - Julkaisujen haku käyttäjätunnuksen perusteella.
 
 3. **Vuorovaikutus ja reaaliaikaisuus:**
