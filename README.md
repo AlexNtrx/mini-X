@@ -11,7 +11,7 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu 2026
-- **Versio:** 1.1.0
+- **Versio:** 1.2.0
 ---
 
 ##  Käytetyt teknologiat
@@ -35,7 +35,7 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
    - EU:n GDPR-asetuksen mukainen tietosuojaseloste ja omien tietojen hallinta.
 
 2. **Julkaisujen hallinta (CRUD):**
-   - Viestien julkaisu (enintään 140 merkkiä), muokkaaminen ja poisto.
+   - Teksti- ja kuvajulkaisujen luominen (enintään 140 merkkiä tai kuvaliite), muokkaaminen ja poisto.
    - Julkaisujen haku käyttäjätunnuksen perusteella.
 
 3. **Vuorovaikutus ja reaaliaikaisuus:**

@@ -131,9 +131,14 @@ if (sidebarOverlay) {
     sidebarOverlay.addEventListener("click", () => setSidebarOpen(false));
 }
 
-// Sulje sivupalkki, avatar-modal ja postauksen muokkauslomakkeet painettaessa Escape-näppäintä
+// Sulje sivupalkki, modalit ja postauksen muokkauslomakkeet painettaessa Escape-näppäintä
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
+        const postModal = document.getElementById("post-image-modal");
+        if (postModal && postModal.classList.contains("active")) {
+            closePostImageModal();
+            return;
+        }
         const avatarModal = document.getElementById("avatar-modal");
         if (avatarModal && avatarModal.classList.contains("active")) {
             closeAvatarModal();
@@ -194,6 +199,104 @@ function closeAvatarModal() {
         modal.setAttribute('aria-hidden', 'true');
         document.body.style.overflow = '';
     }
+}
+
+// Julkaisun kuvan katselu suurena (Post Image Lightbox Modal)
+function openPostImageModal(imageSrc) {
+    if (!imageSrc) return;
+
+    let modal = document.getElementById('post-image-modal');
+    if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'post-image-modal';
+        modal.className = 'post-modal-overlay';
+        modal.setAttribute('role', 'dialog');
+        modal.setAttribute('aria-modal', 'true');
+        modal.setAttribute('aria-hidden', 'true');
+        modal.innerHTML = `
+            <button type="button" class="avatar-modal-close" id="btn-close-post-modal" aria-label="Sulje">&times;</button>
+            <div class="post-modal-card">
+                <img src="" alt="Julkaisun kuva" id="post-modal-img" class="post-modal-img">
+            </div>
+        `;
+        document.body.appendChild(modal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.closest('#btn-close-post-modal')) {
+                closePostImageModal();
+            }
+        });
+    }
+
+    const img = modal.querySelector('#post-modal-img');
+    if (img) img.src = imageSrc;
+
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+}
+
+function closePostImageModal() {
+    const modal = document.getElementById('post-image-modal');
+    if (modal && modal.classList.contains('active')) {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+}
+
+// Kuvan valinta ja esikatselu julkaisulomakkeessa
+function initComposerImageUpload() {
+    const mediaBtn = document.getElementById('btn-trigger-media');
+    const imageInput = document.getElementById('post-image-input');
+    const previewContainer = document.getElementById('post-preview-container');
+    const previewImg = document.getElementById('post-preview-img');
+    const removePreviewBtn = document.getElementById('btn-remove-preview');
+    const postTextarea = document.getElementById('create-post-textarea');
+
+    if (mediaBtn && imageInput) {
+        mediaBtn.addEventListener('click', () => {
+            imageInput.click();
+        });
+    }
+
+    if (imageInput && previewContainer && previewImg) {
+        imageInput.addEventListener('change', () => {
+            const file = imageInput.files && imageInput.files[0];
+            if (file) {
+                if (!file.type.startsWith('image/')) {
+                    alert('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
+                    imageInput.value = '';
+                    previewContainer.style.display = 'none';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    previewImg.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImg.src = '';
+                previewContainer.style.display = 'none';
+            }
+        });
+    }
+
+    if (removePreviewBtn && imageInput && previewContainer && previewImg) {
+        removePreviewBtn.addEventListener('click', () => {
+            imageInput.value = '';
+            previewImg.src = '';
+            previewContainer.style.display = 'none';
+            if (postTextarea) postTextarea.focus();
+        });
+    }
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initComposerImageUpload);
+} else {
+    initComposerImageUpload();
 }
 
 // Sulje sivupalkki mobiilissa, kun siirrytään sivulle navigaatiolinkistä

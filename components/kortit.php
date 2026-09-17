@@ -79,7 +79,25 @@ require_once __DIR__ . "/../functions/init.php";
             $comments = (isset($conn) && $conn) ? getCommentsByPost($conn, $postId) : [];
             $commentCount = count($comments);
             ?>
-            <p class="post-text"><?= htmlspecialchars(trim($content["content"] ?? ''), ENT_QUOTES, "UTF-8") ?></p>
+            <?php if (!empty(trim($content["content"] ?? ''))): ?>
+                <p class="post-text"><?= htmlspecialchars(trim($content["content"]), ENT_QUOTES, "UTF-8") ?></p>
+            <?php endif; ?>
+
+            <?php 
+            $postImageUrl = getPostImageUrl($content['image'] ?? null);
+            if ($postImageUrl): 
+            ?>
+                <div class="post-media-container">
+                    <img 
+                        src="<?= $postImageUrl ?>" 
+                        alt="Julkaisun kuva" 
+                        class="post-media-img" 
+                        loading="lazy"
+                        onclick="openPostImageModal(this.src)"
+                        title="Klikkaa nähdäksesi kuva suurena"
+                    >
+                </div>
+            <?php endif; ?>
 
             <!-- Action Bar (Likes & Comments) -->
             <div class="post-actions">

@@ -8,17 +8,31 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Luo uusi julkaisu
     if (isset($_POST["create_post"])) {
         $content = trim($_POST["content"] ?? "");
+        $hasImage = isset($_FILES["image"]) && is_array($_FILES["image"]) && ($_FILES["image"]["error"] !== UPLOAD_ERR_NO_FILE);
+
         if ($userId > 0) {
-            if ($content === "") {
-                $error = "Julkaisun teksti ei voi olla tyhjä.";
+            if ($content === "" && !$hasImage) {
+                $error = "Julkaisussa on oltava tekstiä tai kuva.";
             } elseif (mb_strlen($content) > 140) {
                 $error = "Julkaisun teksti saa olla enintään 140 merkkiä.";
             } else {
-                if (addPost($conn, $userId, $content)) {
-                    header("Location: " . $redirectUrl);
-                    exit;
-                } else {
-                    $error = "Julkaisun luominen epäonnistui.";
+                $imageFileName = null;
+                if ($hasImage) {
+                    $uploadResult = uploadPostImage($_FILES["image"], $userId);
+                    if (!empty($uploadResult['error'])) {
+                        $error = $uploadResult['error'];
+                    } else {
+                        $imageFileName = $uploadResult['filename'] ?? null;
+                    }
+                }
+
+                if (!isset($error)) {
+                    if (addPost($conn, $userId, $content, $imageFileName)) {
+                        header("Location: " . $redirectUrl);
+                        exit;
+                    } else {
+                        $error = "Julkaisun luominen epäonnistui.";
+                    }
                 }
             }
         }

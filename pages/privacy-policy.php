@@ -171,7 +171,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <h3 class="x-subchapter-heading">1.2 Tiedot, joita keräämme palvelua käyttäessäsi</h3>
                     <p class="x-p">Kun käytät Mini X -palvelua, järjestelmään tallentuu toimintaasi liittyviä tietoja:</p>
                     <ul class="x-ul">
-                        <li><strong>Julkaisut:</strong> Kirjoittamasi viestit (enintään 140 merkkiä) ja niiden julkaisuajankohta.</li>
+                        <li><strong>Julkaisut:</strong> Kirjoittamasi viestit (enintään 140 merkkiä), mahdolliset julkaisuihin liittämäsi kuvat ja niiden julkaisuajankohta.</li>
                         <li><strong>Kommentit:</strong> Toisten käyttäjien julkaisuihin kirjoittamasi vastaukset ja niiden aikaleimat.</li>
                         <li><strong>Tykkäykset:</strong> Tiedot siitä, mistä julkaisuista olet tykännyt.</li>
                         <li><strong>Ilmoitukset:</strong> Järjestelmän luomat ilmoitukset julkaisuihisi kohdistuneista tykkäyksistä ja kommenteista.</li>
@@ -249,7 +249,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                             <tr>
                                 <td><strong>Julkaisut ja kommentit</strong></td>
                                 <td><span class="x-badge x-badge-public">Julkinen</span></td>
-                                <td>Kaikki julkaisemasi viestit ja kommentit näkyvät sovelluksen etusivulla ja profiilissasi.</td>
+                                <td>Kaikki julkaisemasi viestit, kuvat ja kommentit näkyvät sovelluksen etusivulla ja profiilissasi.</td>
                             </tr>
                             <tr>
                                 <td><strong>Tykkäykset</strong></td>
