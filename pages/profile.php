@@ -49,6 +49,14 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
         <main class="feed">
             <!-- Profiili Header -->
             <header class="profile-header">
+                <button
+                    type="button"
+                    class="hamburger-button"
+                    id="hamburgerButton"
+                    aria-label="Avaa valikko"
+                    aria-expanded="false">
+                    &#9776;
+                </button>
                 <div class="header-info">
                     <h2><?= htmlspecialchars($_SESSION['username'] ?? '') ?></h2>
                     <span><?= count($contents) ?> julkaisua</span>

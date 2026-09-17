@@ -2,14 +2,42 @@
 .profile-header {
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 16px;
     padding: 10px 16px;
     border-bottom: 1px solid #2f3336;
     background-color: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.profile-header .hamburger-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: #e7e9ea;
+    border: none;
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.profile-header .hamburger-button:hover {
+    background-color: rgba(231, 233, 234, 0.1);
+}
+
+.profile-header .hamburger-button:active {
+    transform: scale(0.95);
 }
 
 /* Header Info */
@@ -296,7 +324,11 @@
 /* Tablet & Mobile (<= 900px) */
 @media (max-width: 900px) {
     .profile-header {
-        padding-left: 52px;
+        padding: 8px 12px;
+    }
+
+    .profile-header .hamburger-button {
+        display: flex;
     }
 }
 
