@@ -99,7 +99,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
 
             <!-- Hero-osio -->
             <div class="x-hero">
-                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.2.0</span>
+                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.1.0</span>
                 <h1 class="x-hero-title">Mini X:n tietosuojaseloste</h1>
                 <p class="x-hero-intro">
                     Tämä tietosuojaseloste kertoo, mitä henkilötietoja Mini X -palvelu kerää, miten niitä käytetään ja miten voit hallita omia tietojasi. Lue huolellisesti, jotta ymmärrät oikeutesi ja velvollisuutesi palvelun käyttäjänä.
