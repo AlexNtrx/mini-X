@@ -101,8 +101,15 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                     </div>
 
                     <div class="profile-name-section">
-                        <h3 class="profile-display-name"><?= htmlspecialchars($profileDisplayName) ?></h3>
-                        <span class="profile-handle">@<?= htmlspecialchars($profileUsername) ?></span>
+                        <div class="profile-name-header">
+                            <div>
+                                <h3 class="profile-display-name"><?= htmlspecialchars($profileDisplayName) ?></h3>
+                                <span class="profile-handle">@<?= htmlspecialchars($profileUsername) ?></span>
+                            </div>
+                            <button type="button" class="profile-edit-toggle-btn" id="btn-toggle-profile-edit" onclick="toggleProfileEditForm()">
+                                Muokkaa nimeä
+                            </button>
+                        </div>
                     </div>
 
                     <?php if (!empty($error)): ?>
@@ -112,16 +119,20 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
                         <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
                     <?php endif; ?>
 
-                    <!-- Edit Name Form -->
-                    <form method="POST" class="profile-edit-form">
-                        <div class="form-group">
-                            <label for="display_name">Muokkaa nimeä:</label>
-                            <div class="input-with-button">
-                                <input type="text" id="display_name" name="display_name" value="<?= htmlspecialchars($profileDisplayName) ?>" required minlength="1" maxlength="25" placeholder="Nimi (enintään 25 merkkiä)">
-                                <button type="submit" name="update_display_name" class="save-profile-btn">Tallenna</button>
+                    <!-- Edit Name Form (piilotettu oletuksena) -->
+                    <div id="profile-edit-form-wrapper" style="display: none;">
+                        <form method="POST" class="profile-edit-form">
+                            <div class="form-group">
+                                <label for="display_name">Muokkaa nimeä:</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="display_name" name="display_name" value="<?= htmlspecialchars($profileDisplayName) ?>" required minlength="1" maxlength="25" placeholder="Nimi (enintään 25 merkkiä)">
+                                    <button type="submit" name="update_display_name" class="save-profile-btn">Tallenna</button>
+                                    <button type="button" class="cancel-avatar-btn" onclick="toggleProfileEditForm(false)">Peruuta</button>
+                                </div>
+                                <span class="profile-field-hint">Enintään 25 merkkiä. Käyttäjätunnusta (@<?= htmlspecialchars($profileUsername) ?>) ja salasanaa voit muokata <a href="index.php?page=setting" class="profile-setting-link">asetuksissa</a>.</span>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
 
@@ -148,6 +159,28 @@ $avatarUrl = getUserAvatarUrl($profileUser['avatar'] ?? null);
 
     <script src="./js/script.js"></script>
     <script>
+        function toggleProfileEditForm(force) {
+            const wrapper = document.getElementById('profile-edit-form-wrapper');
+            const toggleBtn = document.getElementById('btn-toggle-profile-edit');
+            if (!wrapper) return;
+            const isCurrentlyOpen = wrapper.style.display !== 'none';
+            const nextState = force !== undefined ? force : !isCurrentlyOpen;
+            wrapper.style.display = nextState ? 'block' : 'none';
+            if (toggleBtn) {
+                toggleBtn.textContent = nextState ? 'Sulje' : 'Muokkaa nimeä';
+            }
+            if (nextState) {
+                const input = document.getElementById('display_name');
+                if (input) setTimeout(() => input.focus(), 100);
+            }
+        }
+
+        <?php if (!empty($error) && isset($_POST['update_display_name'])): ?>
+        document.addEventListener('DOMContentLoaded', () => {
+            toggleProfileEditForm(true);
+        });
+        <?php endif; ?>
+
         const originalAvatarHtml = document.getElementById('profile-avatar-container').innerHTML;
 
         function previewProfileAvatar(input) {

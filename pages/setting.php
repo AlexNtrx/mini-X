@@ -105,46 +105,79 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                         </form>
                     </div>
 
-                    <!-- Päivitä näyttönimi -->
-                    <form method="POST" class="setting-form">
-                        <div class="form-group">
-                            <label for="setting-display-name">Nimi</label>
-                            <div class="input-with-button">
-                                <input type="text" id="setting-display-name" name="display_name" value="<?= htmlspecialchars($displayName) ?>" placeholder="esim. Matti Meikäläinen" required minlength="1" maxlength="25">
-                                <button type="submit" name="update_display_name" class="setting-btn-primary">Tallenna nimi</button>
-                            </div>
-                            <span class="setting-field-hint">Näkyy julkaisuissa ja profiilissa.</span>
+                    <!-- Nimi -->
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-label">Nimi</span>
+                            <span class="setting-value"><?= htmlspecialchars($displayName) ?></span>
                         </div>
-                    </form>
+                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-display-name-wrapper')">
+                            Muokkaa
+                        </button>
+                    </div>
 
-                    <!-- Päivitä käyttäjätunnus -->
-                    <form method="POST" class="setting-form">
-                        <div class="form-group">
-                            <label for="setting-username">Käyttäjätunnus</label>
-                            <div class="input-with-button">
-                                <input type="text" id="setting-username" name="username" value="<?= htmlspecialchars($username) ?>" placeholder="esim. kayttaja" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+">
-                                <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna tunnus</button>
+                    <div id="form-display-name-wrapper" class="setting-collapsible-wrapper" style="display: none;">
+                        <form method="POST" class="setting-form">
+                            <div class="form-group">
+                                <label for="setting-display-name">Uusi nimi</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="setting-display-name" name="display_name" value="<?= htmlspecialchars($displayName) ?>" placeholder="esim. Matti Meikäläinen" required minlength="1" maxlength="25">
+                                    <button type="submit" name="update_display_name" class="setting-btn-primary">Tallenna</button>
+                                    <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-display-name-wrapper', false)">Peruuta</button>
+                                </div>
+                                <span class="setting-field-hint">Enintään 25 merkkiä. Näkyy julkaisuissa ja profiilissa.</span>
                             </div>
-                            <span class="setting-field-hint">Käytetään kirjautumiseen</span>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
 
+                    <!-- Käyttäjätunnus -->
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-label">Käyttäjätunnus</span>
+                            <span class="setting-value">@<?= htmlspecialchars($username) ?></span>
+                        </div>
+                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-username-wrapper')">
+                            Muokkaa
+                        </button>
+                    </div>
+
+                    <div id="form-username-wrapper" class="setting-collapsible-wrapper" style="display: none;">
+                        <form method="POST" class="setting-form">
+                            <div class="form-group">
+                                <label for="setting-username">Uusi käyttäjätunnus</label>
+                                <div class="input-with-button">
+                                    <input type="text" id="setting-username" name="username" value="<?= htmlspecialchars($username) ?>" placeholder="esim. kayttaja" required minlength="3" maxlength="20" pattern="[a-zA-Z0-9_]+">
+                                    <button type="submit" name="update_profile" class="setting-btn-primary">Tallenna</button>
+                                    <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-username-wrapper', false)">Peruuta</button>
+                                </div>
+                                <span class="setting-field-hint">3–20 merkkiä (a–z, 0–9, _). Käytetään kirjautumiseen ja mainintoihin.</span>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Sähköposti -->
                     <div class="setting-item">
                         <div class="setting-item-info">
                             <span class="setting-label">Sähköposti</span>
                             <span class="setting-value"><?= !empty($email) ? htmlspecialchars($email) : '<span class="text-muted">Ei asetettu</span>' ?></span>
                         </div>
+                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-email-wrapper')">
+                            Muokkaa
+                        </button>
                     </div>
 
-                    <form method="POST" class="setting-form">
-                        <div class="form-group">
-                            <label for="setting-email">Päivitä sähköpostiosoite</label>
-                            <div class="input-with-button">
-                                <input type="email" id="setting-email" name="email" value="<?= htmlspecialchars($email) ?>" placeholder="esim. kayttaja@example.com" required>
-                                <button type="submit" name="update_email" class="setting-btn-primary">Tallenna</button>
+                    <div id="form-email-wrapper" class="setting-collapsible-wrapper" style="display: none;">
+                        <form method="POST" class="setting-form">
+                            <div class="form-group">
+                                <label for="setting-email">Päivitä sähköpostiosoite</label>
+                                <div class="input-with-button">
+                                    <input type="email" id="setting-email" name="email" value="<?= htmlspecialchars($email) ?>" placeholder="esim. kayttaja@example.com" required>
+                                    <button type="submit" name="update_email" class="setting-btn-primary">Tallenna</button>
+                                    <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-email-wrapper', false)">Peruuta</button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                    </div>
 
                     <?php if (!empty($createdAt)): ?>
                     <div class="setting-item">
@@ -159,19 +192,32 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
                 <!-- Salasanan vaihto -->
                 <section class="setting-section">
                     <h2 class="setting-section-title">Turvallisuus</h2>
-                    <form method="POST" class="setting-form">
-                        <div class="form-group">
-                            <label for="setting-password">Uusi salasana</label>
-                            <input type="password" id="setting-password" name="password" placeholder="Vähintään 6 merkkiä" required minlength="6">
+                    <div class="setting-item">
+                        <div class="setting-item-info">
+                            <span class="setting-label">Salasana</span>
+                            <span class="setting-value">••••••••</span>
                         </div>
-                        <div class="form-group">
-                            <label for="setting-confirm-password">Vahvista uusi salasana</label>
-                            <input type="password" id="setting-confirm-password" name="confirm_password" placeholder="Toista uusi salasana" required minlength="6">
-                        </div>
-                        <div class="setting-form-actions">
-                            <button type="submit" name="update_password" class="setting-btn-primary">Vaihda salasana</button>
-                        </div>
-                    </form>
+                        <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-password-wrapper')">
+                            Vaihda salasana
+                        </button>
+                    </div>
+
+                    <div id="form-password-wrapper" class="setting-collapsible-wrapper" style="display: none;">
+                        <form method="POST" class="setting-form">
+                            <div class="form-group">
+                                <label for="setting-password">Uusi salasana</label>
+                                <input type="password" id="setting-password" name="password" placeholder="Vähintään 6 merkkiä" required minlength="6">
+                            </div>
+                            <div class="form-group">
+                                <label for="setting-confirm-password">Vahvista uusi salasana</label>
+                                <input type="password" id="setting-confirm-password" name="confirm_password" placeholder="Toista uusi salasana" required minlength="6">
+                            </div>
+                            <div class="setting-form-actions" style="display: flex; gap: 8px; justify-content: flex-end;">
+                                <button type="button" class="setting-btn-secondary" onclick="toggleSettingForm('form-password-wrapper', false)">Peruuta</button>
+                                <button type="submit" name="update_password" class="setting-btn-primary">Tallenna salasana</button>
+                            </div>
+                        </form>
+                    </div>
                 </section>
 
                 <!-- Tilin hallinta -->
@@ -213,6 +259,32 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
 
     <script src="./js/script.js"></script>
     <script>
+        function toggleSettingForm(id, force) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            const isCurrentlyOpen = el.style.display !== 'none';
+            const nextState = force !== undefined ? force : !isCurrentlyOpen;
+            el.style.display = nextState ? 'block' : 'none';
+            if (nextState) {
+                const input = el.querySelector('input:not([type="hidden"])');
+                if (input) setTimeout(() => input.focus(), 100);
+            }
+        }
+
+        <?php if (!empty($error)): ?>
+        document.addEventListener('DOMContentLoaded', () => {
+            <?php if (isset($_POST['update_display_name'])): ?>
+                toggleSettingForm('form-display-name-wrapper', true);
+            <?php elseif (isset($_POST['update_profile'])): ?>
+                toggleSettingForm('form-username-wrapper', true);
+            <?php elseif (isset($_POST['update_email'])): ?>
+                toggleSettingForm('form-email-wrapper', true);
+            <?php elseif (isset($_POST['update_password'])): ?>
+                toggleSettingForm('form-password-wrapper', true);
+            <?php endif; ?>
+        });
+        <?php endif; ?>
+
         const originalSettingAvatarHtml = document.getElementById('setting-avatar-container') ? document.getElementById('setting-avatar-container').innerHTML : '';
 
         function previewSettingAvatar(input) {

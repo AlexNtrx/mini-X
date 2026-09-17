@@ -153,6 +153,18 @@
 }
 
 /* Forms & Inputs */
+.setting-collapsible-wrapper {
+    background-color: #121417;
+    border: 1px solid #2f3336;
+    border-radius: 12px;
+    padding: 16px;
+    margin: 12px 0 16px 0;
+}
+
+.setting-collapsible-wrapper .setting-form {
+    margin-top: 0;
+}
+
 .setting-form,
 .setting-modal-card form {
     margin-top: 16px;
