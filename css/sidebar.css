@@ -16,9 +16,37 @@
     overflow-y: auto;
 }
 
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
 .logo {
     font-size: 30px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+    font-weight: 700;
+}
+
+.sidebar-close-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    color: #e7e9ea;
+    border: none;
+    border-radius: 50%;
+    font-size: 26px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.sidebar-close-btn:hover {
+    background-color: rgba(231, 233, 234, 0.1);
 }
 
 .sidebar nav {
@@ -34,8 +62,6 @@
     padding: 10px 14px;
     margin-bottom: 12px;
     border-radius: 9999px;
-
-  
 }
 
 .sidebar-avatar {
@@ -114,12 +140,6 @@
     line-height: 1.4;
 }
 
-
-/* Hamburger näkyy vain pienemmillä näytöillä */
-.hamburger-button {
-    display: none;
-}
-
 .sidebar-overlay {
     display: none;
     position: fixed;
@@ -139,30 +159,14 @@
     pointer-events: auto;
 }
 
-@media (max-width: 900px) {
-    .hamburger-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: fixed;
-        top: 8px;
-        left: 8px;
-        z-index: 1200;
-        width: 40px;
-        height: 40px;
-        padding: 0;
-        background: transparent;
-        color: #e7e9ea;
-        border: none;
-        border-radius: 50%;
-        font-size: 24px;
-        line-height: 1;
-        cursor: pointer;
-        transition: background-color 0.2s ease;
-    }
+/* Body lock when mobile drawer is open */
+body.drawer-open {
+    overflow: hidden;
+}
 
-    .hamburger-button:hover {
-        background-color: rgba(231, 233, 234, 0.1);
+@media (max-width: 900px) {
+    .sidebar-close-btn {
+        display: flex;
     }
 
     .sidebar-overlay {
@@ -172,19 +176,15 @@
     .sidebar {
         width: min(280px, 85vw);
         transform: translateX(-100%);
-        transition: transform 0.2s ease;
-        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.35);
+        transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 8px 0 24px rgba(0, 0, 0, 0.5);
     }
 
     .sidebar.open {
         transform: translateX(0);
     }
 
-    .sidebar .logo {
-        display: flex;
-        align-items: center;
-        min-height: 40px;
-        padding-left: 44px;
+    .sidebar-header {
         margin-bottom: 16px;
     }
 }
@@ -198,7 +198,6 @@
 
     .logo {
         font-size: 36px;
-        margin-bottom: 28px;
     }
 
     .sidebar a {

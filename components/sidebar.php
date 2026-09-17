@@ -5,16 +5,17 @@ $currentPage = $_GET['page'] ?? 'home';
 $unreadNotifs = (isset($conn) && isset($_SESSION['user_id'])) ? getUnreadNotificationCount($conn, (int)$_SESSION['user_id']) : 0;
 $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
 ?>
-<button
-    type="button"
-    class="hamburger-button"
-    id="hamburgerButton"
-    aria-label="Avaa valikko"
-    aria-expanded="false">
-    ☰
-</button>
 <aside class="sidebar" id="sidebar">
-    <div class="logo">Mini X</div>
+    <div class="sidebar-header">
+        <div class="logo">Mini X</div>
+        <button
+            type="button"
+            class="sidebar-close-btn"
+            id="sidebarCloseButton"
+            aria-label="Sulje valikko">
+            &times;
+        </button>
+    </div>
 
     <nav>
         <div class="sidebar-user-badge">

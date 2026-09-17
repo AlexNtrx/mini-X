@@ -68,26 +68,48 @@ document.addEventListener("DOMContentLoaded", () => {
 const hamburgerButton = document.getElementById("hamburgerButton");
 const sidebar = document.querySelector(".sidebar");
 const sidebarOverlay = document.getElementById("sidebarOverlay");
+const sidebarCloseButton = document.getElementById("sidebarCloseButton");
 
 function setSidebarOpen(isOpen) {
     if (sidebar) sidebar.classList.toggle("open", isOpen);
-    if (hamburgerButton) {
-        hamburgerButton.setAttribute("aria-expanded", isOpen);
-        hamburgerButton.innerHTML = isOpen ? "&times;" : "&#9776;";
-    }
     if (sidebarOverlay) sidebarOverlay.classList.toggle("active", isOpen);
+    if (hamburgerButton) {
+        hamburgerButton.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+    document.body.classList.toggle("drawer-open", isOpen);
 }
 
 if (hamburgerButton) {
-    hamburgerButton.addEventListener("click", () => {
+    hamburgerButton.addEventListener("click", (e) => {
+        e.stopPropagation();
         const isOpen = sidebar && sidebar.classList.contains("open");
         setSidebarOpen(!isOpen);
     });
 }
 
+if (sidebarCloseButton) {
+    sidebarCloseButton.addEventListener("click", () => setSidebarOpen(false));
+}
+
 if (sidebarOverlay) {
     sidebarOverlay.addEventListener("click", () => setSidebarOpen(false));
 }
+
+// Sulje sivupalkki painettaessa Escape-näppäintä
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && sidebar && sidebar.classList.contains("open")) {
+        setSidebarOpen(false);
+    }
+});
+
+// Sulje sivupalkki mobiilissa, kun siirrytään sivulle navigaatiolinkistä
+document.querySelectorAll(".sidebar nav a").forEach((link) => {
+    link.addEventListener("click", () => {
+        if (window.innerWidth <= 900) {
+            setSidebarOpen(false);
+        }
+    });
+});
 
 // Ilmoitusten reaaliaikainen tarkistus ja automaattinen päivitys
 let isCheckingNotifications = false;
