@@ -51,9 +51,10 @@ $createdAt = !empty($currentUser['created_at']) ? date("d.m.Y", strtotime($curre
         <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
-            <header class="feed-header">
-                <h1>Asetukset</h1>
-            </header>
+            <?php
+            $headerTitle = 'Asetukset';
+            include __DIR__ . '/../components/header.php';
+            ?>
 
             <div class="setting-container">
                 <?php if (!empty($error)): ?>

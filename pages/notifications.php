@@ -43,9 +43,10 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
         <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
-            <header class="feed-header">
-                <h1>Ilmoitukset</h1>
-            </header>
+            <?php
+            $headerTitle = 'Ilmoitukset';
+            include __DIR__ . '/../components/header.php';
+            ?>
 
             <?php if (!empty($error)): ?>
                 <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>

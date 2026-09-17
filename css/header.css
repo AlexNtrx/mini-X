@@ -1,26 +1,156 @@
-.feed-header { 
-    display: flex;
-    justify-content: center;
-    align-items: center;
+/* Unified Top Header / Navbar */
+.app-header,
+.feed-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
     width: 100%;
-    padding: 16px 0;
+    min-height: 53px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid #2f3336;
-    background-color: #000;
     box-sizing: border-box;
 }
 
+.header-left {
+    display: flex;
+    align-items: center;
+    width: 48px;
+}
+
+.header-center {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+    padding: 8px 12px;
+}
+
+.header-title,
 .feed-header h1 {
     margin: 0;
     font-size: 20px;
     font-weight: 700;
     color: #e7e9ea;
-    text-align: center;
+    line-height: 1.2;
     font-family: inherit;
-    line-height: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
 }
 
+.header-right {
+    display: flex;
+    align-items: center;
+    width: 48px;
+    margin-left: auto;
+}
+
+.header-dummy {
+    display: none;
+}
+
+/* Hamburger button inside header */
+.hamburger-button {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    color: #e7e9ea;
+    border: none;
+    border-radius: 50%;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+    flex-shrink: 0;
+}
+
+.hamburger-button:hover {
+    background-color: rgba(231, 233, 234, 0.1);
+}
+
+.hamburger-button:active {
+    transform: scale(0.95);
+}
+
+/* Tablet & Mobile (<= 900px): 3-Column Grid for Perfect Centering */
 @media (max-width: 900px) {
+    .app-header,
     .feed-header {
-        padding-left: 56px; /* Offset for mobile hamburger button */
+        display: grid;
+        grid-template-columns: 48px 1fr 48px;
+        align-items: center;
+        padding: 0 12px;
+    }
+
+    .hamburger-button {
+        display: flex;
+    }
+
+    .header-left {
+        justify-content: flex-start;
+        min-width: 48px;
+    }
+
+    .header-center {
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        padding: 8px 4px;
+    }
+
+    .header-title,
+    .feed-header h1 {
+        text-align: center;
+        width: 100%;
+    }
+
+    .header-right {
+        justify-content: flex-end;
+        min-width: 48px;
+        margin-left: 0;
+    }
+
+    .header-dummy {
+        display: block;
+        width: 48px;
+        height: 38px;
+        visibility: hidden;
+    }
+}
+
+/* Small mobile (<= 600px) */
+@media (max-width: 600px) {
+    .header-title,
+    .feed-header h1 {
+        font-size: 18px;
+    }
+}
+
+/* Projector / Large Screen Presentation (1800px+) */
+@media (min-width: 1800px) {
+    .app-header,
+    .feed-header {
+        min-height: 60px;
+        padding: 0 20px;
+    }
+
+    .header-center {
+        min-height: 60px;
+    }
+
+    .header-title,
+    .feed-header h1 {
+        font-size: 24px;
     }
 }

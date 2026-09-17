@@ -45,9 +45,10 @@ if ($q !== '' && isset($conn) && $conn) {
         <?php include __DIR__ . '/../components/sidebar.php'; ?>
 
         <main class="feed">
-            <header class="feed-header">
-                <h1>Selaa käyttäjiä</h1>
-            </header>
+            <?php
+            $headerTitle = 'Selaa käyttäjiä';
+            include __DIR__ . '/../components/header.php';
+            ?>
 
             <?php if (!empty($error)): ?>
                 <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>
