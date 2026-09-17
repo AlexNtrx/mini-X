@@ -55,6 +55,7 @@
     gap: 8px;
 }
 
+.sidebar a.sidebar-user-badge,
 .sidebar-user-badge {
     display: flex;
     align-items: center;
@@ -62,6 +63,22 @@
     padding: 10px 14px;
     margin-bottom: 12px;
     border-radius: 9999px;
+    text-decoration: none;
+    color: inherit;
+    font-size: inherit;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.sidebar a.sidebar-user-badge:hover,
+.sidebar-user-badge:hover {
+    background-color: #181818;
+}
+
+.sidebar a.sidebar-user-badge:active,
+.sidebar-user-badge:active {
+    background-color: #202327;
+    transform: scale(0.98);
 }
 
 .sidebar-avatar {
@@ -203,5 +220,10 @@ body.drawer-open {
     .sidebar a {
         font-size: 22px;
         padding: 14px 20px;
+    }
+
+    .sidebar a.sidebar-user-badge {
+        font-size: inherit;
+        padding: 12px 16px;
     }
 }

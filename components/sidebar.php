@@ -18,7 +18,7 @@ $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
     </div>
 
     <nav>
-        <div class="sidebar-user-badge">
+        <a href="index.php?page=profile" class="sidebar-user-badge" aria-label="Siirry profiiliin" title="Näytä profiili">
             <div class="sidebar-avatar">
                 <?php if ($sidebarAvatarUrl): ?>
                     <img src="<?= $sidebarAvatarUrl ?>" alt="Avatar" class="sidebar-avatar-img">
@@ -30,7 +30,7 @@ $sidebarAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                 <span class="sidebar-username"><?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
                 <span class="sidebar-handle">@<?= htmlspecialchars($_SESSION['username'] ?? '') ?></span>
             </div>
-        </div>
+        </a>
         <a href="index.php?page=home" class="<?= $currentPage === 'home' ? 'active' : '' ?>">Etusivu</a>
         <a href="index.php?page=selaa" class="<?= $currentPage === 'selaa' ? 'active' : '' ?>">Selaa</a>
         <a href="index.php?page=notifications" class="nav-item-notif <?= $currentPage === 'notifications' ? 'active' : '' ?>">
