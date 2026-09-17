@@ -15,7 +15,7 @@ Mini-X on selaimessa toimiva mikroblogipalvelu (inspiraationa X / Twitter), joka
 
 ##  Käytetyt teknologiat
 - **Backend:** PHP 8.2+
-- **Tietokanta:** MySQL(minisome)
+- **Tietokanta:** MySQL / MariaDB (minisome, InnoDB, utf8mb4)
 - **Palvelinympäristö:** WampServer tai XAMPP
 - **Frontend:** HTML5, CSS3 (tumma teema, responsiivinen mobiilinäkymä), JavaScript (Vanilla JS)
 - **Kirjastot:** PHPMailer, JustValidate
@@ -54,9 +54,9 @@ Kloonaa tai siirrä tämä projekti palvelimen juurikansioon:
 
 ### 3. Tietokannan tuonti
 1. Avaa selaimessa phpMyAdmin: `http://localhost/phpmyadmin/`
-2. Luo uusi tietokanta nimellä: `minisome` (merkistö: `utf8mb4_unicode_ci`)
-3. Valitse luotu `minisome`-tietokanta ja klikkaa yläpalkista **Tuo** (Import).
-4. Valitse projektin juuresta tiedosto: `minisome.sql` ja klikkaa sivun alalaidasta **Suorita** (Go / Import).
+2. Valitse yläpalkista **Tuo** (Import).
+3. Valitse projektin juuresta tiedosto: `minisome.sql` ja klikkaa **Suorita** (Go / Import).  
+   *(Tiedosto luo automaattisesti `minisome`-tietokannan, taulut sekä valmiin `admin`-testikäyttäjän).*
 
 ### 4. Sovelluksen avaaminen
 Avaa selain ja mene osoitteeseen:  
