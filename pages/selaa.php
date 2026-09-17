@@ -19,6 +19,14 @@ if (!isset($conn) || !$conn) {
 $q = trim($_GET['q'] ?? '');
 $allUsers = (isset($conn) && $conn) ? getAllUsers($conn) : [];
 
+// Näytetään pikavalinnoissa vain admin-käyttäjä
+$displayUsers = array_values(array_filter($allUsers, function ($u) {
+    return strtolower($u['username'] ?? '') === 'admin';
+}));
+if (empty($displayUsers) && !empty($allUsers)) {
+    $displayUsers = [reset($allUsers)];
+}
+
 // taulukko, johon tallennetaan haetut julkaisut
 $contents = [];
 
@@ -75,17 +83,17 @@ if ($q !== '' && isset($conn) && $conn) {
                 </form>
 
                 <!-- Nopeat käyttäjävalinnat -->
-                <?php if (!empty($allUsers)): ?>
+                <?php if (!empty($displayUsers)): ?>
                     <div class="user-chips-section">
                         <div class="user-chips-title">Käyttäjät:</div>
                         <div class="user-chips">
-                            <?php foreach ($allUsers as $u): ?>
+                            <?php foreach ($displayUsers as $u): ?>
                                 <a 
                                     href="index.php?page=selaa&q=<?= urlencode($u['username']) ?>" 
                                     class="user-chip <?= ($q === $u['username']) ? 'active' : '' ?>"
                                     title="@<?= htmlspecialchars($u['username']) ?>"
                                 >
-                                    <?= htmlspecialchars($u['display_name']) ?> <span style="opacity: 0.7; font-size: 12px;">@<?= htmlspecialchars($u['username']) ?></span>
+                                    @<?= htmlspecialchars($u['username']) ?>
                                 </a>
                             <?php endforeach; ?>
                         </div>
