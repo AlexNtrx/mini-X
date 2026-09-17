@@ -105,6 +105,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `username` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+  `display_name` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
   `email` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `avatar` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -121,8 +122,8 @@ CREATE TABLE IF NOT EXISTS `users` (
 -- Vedos taulusta `users`
 --
 
-INSERT INTO `users` (`id`, `username`, `password`, `email`, `avatar`, `created_at`, `reset_token_hash`, `reset_token_expires_at`, `deleted_at`) VALUES
-(1, 'admin', '$2y$10$lsZZtVEGk/vnw9NqgwDPl.SOPuqQrCUd2r/hBoQSX9eDpyVrZZO7q', 'admin@gmail.com', NULL, '2026-09-17 09:17:25', NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `username`, `display_name`, `password`, `email`, `avatar`, `created_at`, `reset_token_hash`, `reset_token_expires_at`, `deleted_at`) VALUES
+(1, 'admin', 'admin', '$2y$10$lsZZtVEGk/vnw9NqgwDPl.SOPuqQrCUd2r/hBoQSX9eDpyVrZZO7q', 'admin@gmail.com', NULL, '2026-09-17 09:17:25', NULL, NULL, NULL);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
