@@ -23,11 +23,11 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>miniX</title>
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/kortit.css">
-    <link rel="stylesheet" href="./css/sidebar.css">
-    <link rel="stylesheet" href="./css/post.css">
-    <link rel="stylesheet" href="./css/header.css">
+    <link rel="stylesheet" href="./css/main.css?v=1.2.1">
+    <link rel="stylesheet" href="./css/kortit.css?v=1.2.1">
+    <link rel="stylesheet" href="./css/sidebar.css?v=1.2.1">
+    <link rel="stylesheet" href="./css/post.css?v=1.2.1">
+    <link rel="stylesheet" href="./css/header.css?v=1.2.1">
 </head>
 <body>
     <div class="layout">

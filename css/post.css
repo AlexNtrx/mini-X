@@ -191,8 +191,19 @@
         font-size: 22px;
         min-height: 100px;
     }
-    .create-post button {
+    .create-post .btn-publish-post {
         font-size: 16px;
         padding: 10px 22px;
+    }
+    .create-post .btn-media-action {
+        width: 42px !important;
+        height: 42px !important;
+        min-width: 42px !important;
+        min-height: 42px !important;
+        padding: 0 !important;
+    }
+    .create-post .btn-media-action svg {
+        width: 24px !important;
+        height: 24px !important;
     }
 }
