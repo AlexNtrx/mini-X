@@ -41,11 +41,11 @@ if ($q !== '' && isset($conn) && $conn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selaa - Mini X</title>
-    <link rel="stylesheet" href="./css/main.css">
-    <link rel="stylesheet" href="./css/kortit.css">
-    <link rel="stylesheet" href="./css/sidebar.css">
-    <link rel="stylesheet" href="./css/header.css">
-    <link rel="stylesheet" href="./css/selaa.css">
+    <link rel="stylesheet" href="./css/main.css?v=1.2.2">
+    <link rel="stylesheet" href="./css/kortit.css?v=1.2.2">
+    <link rel="stylesheet" href="./css/sidebar.css?v=1.2.2">
+    <link rel="stylesheet" href="./css/header.css?v=1.2.2">
+    <link rel="stylesheet" href="./css/selaa.css?v=1.2.2">
 </head>
 <body>
     <div class="layout">

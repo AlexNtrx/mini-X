@@ -458,8 +458,8 @@ textarea.post-text:focus {
     border-radius: 16px;
     overflow: hidden;
     border: 1px solid #2f3336;
-    background-color: #000;
-    max-height: 480px;
+    background-color: #0b0e11;
+    max-height: 380px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -474,7 +474,7 @@ textarea.post-text:focus {
 
 .post-media-img {
     width: 100%;
-    max-height: 480px;
+    max-height: 380px;
     object-fit: cover;
     display: block;
 }
@@ -490,6 +490,11 @@ textarea.post-text:focus {
     .post-user span {
         font-size: 13px;
     }
+    .post-media-container,
+    .post-media-img {
+        max-height: 280px;
+        border-radius: 12px;
+    }
 }
 
 
@@ -501,5 +506,9 @@ textarea.post-text:focus {
     }
     .post-user span {
         font-size: 15px;
+    }
+    .post-media-container,
+    .post-media-img {
+        max-height: 440px;
     }
 }
