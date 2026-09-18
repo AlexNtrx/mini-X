@@ -26,12 +26,14 @@ require_once __DIR__ . "/../functions/init.php";
             <div class="post-top">
 
                 <div class="post-user">
-                    <strong class="post-author">
-                        <?= htmlspecialchars($content["author_display_name"] ?? $content["author"], ENT_QUOTES, "UTF-8") ?>
-                    </strong>
-                    <span class="post-handle">
-                        @<?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?>
-                    </span>
+                    <a href="index.php?page=profile&u=<?= urlencode($content['author']) ?>" class="post-author-link" style="color: inherit; text-decoration: none;">
+                        <strong class="post-author">
+                            <?= htmlspecialchars($content["author_display_name"] ?? $content["author"], ENT_QUOTES, "UTF-8") ?>
+                        </strong>
+                        <span class="post-handle">
+                            @<?= htmlspecialchars($content["author"], ENT_QUOTES, "UTF-8") ?>
+                        </span>
+                    </a>
                     <span class="post-date" title="<?= htmlspecialchars($content["created_at"], ENT_QUOTES, "UTF-8") ?>">
                         · <?= formatTimeAgo($content["created_at"]) ?>
                     </span>
@@ -128,7 +130,7 @@ require_once __DIR__ . "/../functions/init.php";
                             <?php if ($currentCommentUserAvatar): ?>
                                 <img src="<?= $currentCommentUserAvatar ?>" alt="Avatar" class="avatar-img">
                             <?php else: ?>
-                                <?= getUserInitials($_SESSION['username'] ?? '') ?>
+                                <?= getUserInitials(!empty($_SESSION['display_name']) ? $_SESSION['display_name'] : ($_SESSION['username'] ?? '')) ?>
                             <?php endif; ?>
                         </div>
                         <input type="text" name="comment_content" class="comment-input" placeholder="Kirjoita kommentti..." maxlength="140" required autocomplete="off">
@@ -151,8 +153,10 @@ require_once __DIR__ . "/../functions/init.php";
                                 </div>
                                 <div class="comment-body">
                                     <div class="comment-header">
-                                        <strong class="comment-author"><?= htmlspecialchars($comment['author_display_name'] ?? $comment['author'], ENT_QUOTES, 'UTF-8') ?></strong>
-                                        <span class="comment-handle">@<?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        <a href="index.php?page=profile&u=<?= urlencode($comment['author']) ?>" style="color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 4px;">
+                                            <strong class="comment-author"><?= htmlspecialchars($comment['author_display_name'] ?? $comment['author'], ENT_QUOTES, 'UTF-8') ?></strong>
+                                            <span class="comment-handle">@<?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?></span>
+                                        </a>
                                         <span class="comment-date" title="<?= htmlspecialchars($comment['created_at'], ENT_QUOTES, 'UTF-8') ?>">· <?= formatTimeAgo($comment['created_at']) ?></span>
                                         <?php if (isset($_SESSION['user_id']) && (int)$_SESSION['user_id'] === (int)$comment['user_id']): ?>
                                             <form method="POST" class="delete-comment-form" onsubmit="return confirm('Poistetaanko kommentti?');">

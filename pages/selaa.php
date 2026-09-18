@@ -41,11 +41,11 @@ if ($q !== '' && isset($conn) && $conn) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selaa - Mini X</title>
-    <link rel="stylesheet" href="./css/main.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/kortit.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/sidebar.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/header.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/selaa.css?v=1.1.1">
+    <link rel="stylesheet" href="./css/main.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/kortit.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/header.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/selaa.css?v=1.1.2">
 </head>
 <body>
     <div class="layout">
@@ -59,10 +59,10 @@ if ($q !== '' && isset($conn) && $conn) {
             ?>
 
             <?php if (!empty($error)): ?>
-                <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <?php if (!empty($success)): ?>
-                <div class="alert alert-success" style="margin: 12px 16px;"><?= htmlspecialchars($success) ?></div>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
             <?php endif; ?>
 
             <!-- Hakukenttä -->
@@ -101,6 +101,15 @@ if ($q !== '' && isset($conn) && $conn) {
                 <?php endif; ?>
             </section>
 
+            <?php if (!empty($q)): ?>
+                <div style="margin: 0 0 16px; padding: 12px 16px; background: #16181c; border: 1px solid #2f3336; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
+                    <span style="color: #e7e9ea; font-size: 14px;">Käyttäjä <strong>@<?= htmlspecialchars($q) ?></strong></span>
+                    <a href="index.php?page=profile&u=<?= urlencode($q) ?>" class="setting-btn-secondary" style="text-decoration: none; font-size: 12px; padding: 6px 14px; border-color: #1d9bf0; color: #1d9bf0;">
+                        ✨ Avaa profiili & Musiikki
+                    </a>
+                </div>
+            <?php endif; ?>
+
             <!-- Julkaisut -->
             <section class="posts">
                 <?php if (!empty($contents)): ?>
@@ -115,6 +124,6 @@ if ($q !== '' && isset($conn) && $conn) {
             </section>
         </main>
     </div>
-    <script src="./js/script.js?v=1.1.1"></script>
+    <script src="./js/script.js?v=1.1.2"></script>
 </body>
 </html>

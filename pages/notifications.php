@@ -31,10 +31,10 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ilmoitukset - Mini X</title>
-    <link rel="stylesheet" href="./css/main.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/sidebar.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/header.css?v=1.1.1">
-    <link rel="stylesheet" href="./css/notifications.css?v=1.1.1">
+    <link rel="stylesheet" href="./css/main.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/header.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/notifications.css?v=1.1.2">
 </head>
 
 <body>
@@ -49,10 +49,10 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             ?>
 
             <?php if (!empty($error)): ?>
-                <div class="alert alert-error" style="margin: 12px 16px;"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
             <?php if (!empty($success)): ?>
-                <div class="alert alert-success" style="margin: 12px 16px;"><?= htmlspecialchars($success) ?></div>
+                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
             <?php endif; ?>
 
             <!-- ilmoitukset -->
@@ -95,7 +95,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             </section>
         </main>
     </div>
-    <script src="./js/script.js?v=1.1.1"></script>
+    <script src="./js/script.js?v=1.1.2"></script>
 </body>
 
 </html>

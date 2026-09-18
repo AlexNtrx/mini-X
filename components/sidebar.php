@@ -44,7 +44,7 @@ $sidebarDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_nam
         <a href="index.php?page=profile" class="<?= $currentPage === 'profile' ? 'active' : '' ?>">Profiili</a>
         <a href="index.php?page=setting" class="<?= $currentPage === 'setting' ? 'active' : '' ?>">Asetukset</a>
         <a href="index.php?page=privacy" class="<?= $currentPage === 'privacy' ? 'active' : '' ?>">Tietosuojaseloste</a>
-        <a href="logout.php" onclick="return confirm('Haluatko varmasti kirjautua ulos?');">Kirjaudu ulos</a>
+        <a href="index.php?page=logout" onclick="return confirm('Haluatko varmasti kirjautua ulos?');">Kirjaudu ulos</a>
     </nav>
 </aside>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>

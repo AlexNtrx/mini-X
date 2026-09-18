@@ -12,8 +12,8 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
-    <link rel="stylesheet" href="./css/register.css?v=1.1.1" />
-    <link rel="stylesheet" href="./css/forgot-password.css?v=1.1.1" />
+    <link rel="stylesheet" href="./css/register.css?v=1.1.2" />
+    <link rel="stylesheet" href="./css/forgot-password.css?v=1.1.2" />
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -116,7 +116,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
                 />
               </div>
               <div class="form-row-links">
-                <a href="pages/forgot-password.php" id="forgot-password-link" class="forgot-link">Unohditko salasanan?</a>
+                <a href="index.php?page=forgot-password" id="forgot-password-link" class="forgot-link">Unohditko salasanan?</a>
                 <a href="index.php?page=privacy" class="auth-privacy-link" target="_blank" rel="noopener">Tietosuojakäytäntö</a>
               </div>
               <div class="form-element form-submit">
@@ -175,7 +175,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
             <p class="modal-subtitle">
               Käyttäjätilisi <strong>@<?= htmlspecialchars($_SESSION['pending_reactivation_username'] ?? '') ?></strong> on tällä hetkellä tauolla. Sinulla on 30 päivää aikaa palauttaa tilisi, minkä jälkeen käyttäjätilisi ja kaikki julkaisusi poistetaan automaattisesti ja pysyvästi.
             </p>
-            <p class="modal-subtitle" style="margin-top: 10px; margin-bottom: 0;">
+            <p class="modal-subtitle">
               Haluatko aktivoida tilisi nyt ja palauttaa julkaisusi näkyviin?
             </p>
           </div>
@@ -188,7 +188,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
     </div>
 
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
-    <script src="./js/lomakeet.js?v=1.1.1"></script>
-    <script src="./js/validation.js?v=1.1.1"></script>
+    <script src="./js/lomakeet.js?v=1.1.2"></script>
+    <script src="./js/validation.js?v=1.1.2"></script>
   </body>
 </html>
