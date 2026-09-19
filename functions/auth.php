@@ -274,3 +274,74 @@ function deleteUserAvatar($conn, $userId)
 
     return false;
 }
+
+/**
+ * Tallentaa käyttäjän profiilikuvan base64 DataURL -muodosta (Canvas Crop).
+ *
+ * @param mysqli $conn
+ * @param int $userId
+ * @param string $dataUrl
+ * @return bool|string True onnistuessa, virheilmoitus epäonnistuessa.
+ */
+function updateUserAvatarFromDataUrl($conn, $userId, $dataUrl)
+{
+    if (empty($dataUrl) || !is_string($dataUrl)) {
+        return "Kuvan tiedot puuttuvat.";
+    }
+
+    if (!preg_match('/^data:image\/(png|jpeg|jpg|webp);base64,(.+)$/i', $dataUrl, $matches)) {
+        return "Virheellinen kuvaformaatti.";
+    }
+
+    $rawExt = strtolower($matches[1]);
+    $ext = ($rawExt === 'jpeg' || $rawExt === 'jpg') ? 'jpg' : ($rawExt === 'webp' ? 'webp' : 'png');
+    $imageData = base64_decode($matches[2]);
+
+    if ($imageData === false || strlen($imageData) === 0) {
+        return "Kuvan purkaminen epäonnistui.";
+    }
+
+    // Maksimikoko 4 MB
+    if (strlen($imageData) > 4 * 1024 * 1024) {
+        return "Kuvan koko saa olla enintään 4 MB.";
+    }
+
+    $uploadDir = __DIR__ . "/../uploads/avatars/";
+    if (!is_dir($uploadDir)) {
+        mkdir($uploadDir, 0755, true);
+    }
+
+    // Haetaan vanha kuva poistettavaksi
+    $stmt = $conn->prepare("SELECT avatar FROM users WHERE id = ? LIMIT 1");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $oldUser = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if (!empty($oldUser['avatar'])) {
+        $oldFilePath = $uploadDir . $oldUser['avatar'];
+        if (file_exists($oldFilePath)) {
+            @unlink($oldFilePath);
+        }
+    }
+
+    $newFileName = "avatar_" . $userId . "_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $ext;
+    $targetPath = $uploadDir . $newFileName;
+
+    if (file_put_contents($targetPath, $imageData) === false) {
+        return "Kuvan tallentaminen palvelimelle epäonnistui.";
+    }
+
+    // Päivitetään tietokanta
+    $updateStmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
+    $updateStmt->bind_param("si", $newFileName, $userId);
+    $success = $updateStmt->execute();
+    $updateStmt->close();
+
+    if ($success) {
+        $_SESSION['avatar'] = $newFileName;
+        return true;
+    }
+
+    return "Tietokannan päivitys epäonnistui.";
+}
