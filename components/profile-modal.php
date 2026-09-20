@@ -156,13 +156,6 @@
                             </div>
                         </div>
 
-                        <!-- Tähtisade-kursori -->
-                        <div class="modal-sparkles-card" onclick="document.getElementById('modal-theme-sparkles-input').click()">
-                            <div class="modal-sparkles-info">
-                                <span class="modal-sparkles-title">Tähtisade-kursori</span>
-                            </div>
-                            <input type="checkbox" name="theme_sparkles" id="modal-theme-sparkles-input" value="1" <?= $customization['theme_sparkles'] ? 'checked' : '' ?> class="modal-sparkles-checkbox" onclick="event.stopPropagation()">
-                        </div>
                     </div>
 
                     <!-- TAB 2: Tausta & Teema -->

@@ -66,16 +66,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         // 4. Bio, Musiikki ja Teema (Customization)
         if (!$hasError) {
-            $bio           = trim($_POST["bio"] ?? "");
-            $themeAccent   = sanitizeHexColor($_POST["theme_accent"] ?? "#1d9bf0");
-            $themeSparkles = isset($_POST["theme_sparkles"]) ? 1 : 0;
-            $bannerPosY    = isset($_POST["banner_pos_y"]) ? max(0, min(100, (int)$_POST["banner_pos_y"])) : 50;
+            $bio         = trim($_POST["bio"] ?? "");
+            $themeAccent = sanitizeHexColor($_POST["theme_accent"] ?? "#1d9bf0");
+            $bannerPosY  = isset($_POST["banner_pos_y"]) ? max(0, min(100, (int)$_POST["banner_pos_y"])) : 50;
 
             $customData = [
-                'bio'            => $bio,
-                'theme_accent'   => $themeAccent,
-                'theme_sparkles' => $themeSparkles,
-                'banner_pos_y'   => $bannerPosY
+                'bio'          => $bio,
+                'theme_accent' => $themeAccent,
+                'banner_pos_y' => $bannerPosY
             ];
 
             // Taustan päivitys tai poisto (Preset tai oma kuva)

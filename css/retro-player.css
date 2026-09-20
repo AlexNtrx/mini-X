@@ -1,0 +1,267 @@
+/* Mini-X - Instagram Story Style Music Sticker */
+:root {
+    --profile-accent: #1d9bf0;
+    --profile-accent-rgb: 29, 155, 240;
+}
+
+.ig-music-wrapper {
+    margin: 10px 0 8px;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+}
+
+/* Instagram Story Music Sticker Chassis */
+.ig-music-sticker {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(18, 22, 30, 0.82);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 8px 14px 8px 8px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    cursor: default;
+    user-select: none;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    overflow: hidden;
+}
+
+.ig-music-sticker:hover {
+    background: rgba(26, 31, 42, 0.9);
+    border-color: rgba(var(--profile-accent-rgb, 29, 155, 240), 0.35);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.ig-music-sticker.is-playing {
+    border-color: var(--profile-accent);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5), 0 0 20px rgba(var(--profile-accent-rgb, 29, 155, 240), 0.25);
+}
+
+/* Album Cover Squircle */
+.ig-music-cover-wrapper {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: #14171f;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.ig-music-cover-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.ig-music-sticker:hover .ig-music-cover-img {
+    transform: scale(1.06);
+}
+
+.ig-music-cover-fallback {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, rgba(var(--profile-accent-rgb, 29, 155, 240), 0.2), #14171f);
+    color: var(--profile-accent);
+}
+
+/* Always-Visible Play / Pause Action Button */
+.ig-music-play-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    outline: none;
+}
+
+.ig-music-play-btn:hover {
+    background: var(--profile-accent);
+    border-color: var(--profile-accent);
+    transform: scale(1.08);
+    box-shadow: 0 0 12px rgba(var(--profile-accent-rgb, 29, 155, 240), 0.6);
+}
+
+.ig-music-play-btn:active {
+    transform: scale(0.92);
+}
+
+.ig-music-play-btn:focus-visible {
+    outline: 2px solid var(--profile-accent);
+    outline-offset: 2px;
+}
+
+.ig-music-sticker.is-playing .ig-music-play-btn {
+    background: var(--profile-accent);
+    border-color: var(--profile-accent);
+    color: #ffffff;
+    box-shadow: 0 0 12px rgba(var(--profile-accent-rgb, 29, 155, 240), 0.6);
+}
+
+.ig-btn-icon-play {
+    margin-left: 1.5px; /* optical centering */
+}
+
+
+/* Metadata: Title & Artist */
+.ig-music-meta {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+}
+
+.ig-music-title-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ig-music-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #ffffff;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    letter-spacing: -0.2px;
+}
+
+.ig-music-artist-wrap {
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.ig-music-artist {
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #8b98a5;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ig-music-sticker:hover .ig-music-artist {
+    color: #a0acba;
+}
+
+/* Instagram-style Sound Wave (Equalizer bars) */
+.ig-music-wave {
+    display: flex;
+    align-items: flex-end;
+    gap: 2.5px;
+    height: 16px;
+    padding: 0 4px;
+    flex-shrink: 0;
+}
+
+.ig-wave-bar {
+    width: 3px;
+    height: 4px;
+    background: #71767b;
+    border-radius: 3px;
+    transition: background-color 0.2s ease, height 0.2s ease;
+}
+
+.ig-music-sticker.is-playing .ig-wave-bar {
+    background: var(--profile-accent);
+    box-shadow: 0 0 6px rgba(var(--profile-accent-rgb, 29, 155, 240), 0.5);
+}
+
+.ig-music-sticker.is-playing .ig-wave-bar:nth-child(1) {
+    animation: igWave 0.65s ease-in-out infinite alternate;
+}
+.ig-music-sticker.is-playing .ig-wave-bar:nth-child(2) {
+    animation: igWave 0.45s ease-in-out infinite 0.15s alternate;
+}
+.ig-music-sticker.is-playing .ig-wave-bar:nth-child(3) {
+    animation: igWave 0.75s ease-in-out infinite 0.3s alternate;
+}
+.ig-music-sticker.is-playing .ig-wave-bar:nth-child(4) {
+    animation: igWave 0.55s ease-in-out infinite 0.08s alternate;
+}
+
+@keyframes igWave {
+    0%   { height: 4px; }
+    50%  { height: 16px; }
+    100% { height: 7px; }
+}
+
+/* Micro Progress Bar */
+.ig-music-progress-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.06);
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.ig-music-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--profile-accent);
+    box-shadow: 0 0 8px rgba(var(--profile-accent-rgb, 29, 155, 240), 0.8);
+    transition: width 0.1s linear;
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 520px) {
+    .ig-music-sticker {
+        padding: 6px 12px 6px 6px;
+        gap: 10px;
+        border-radius: 14px;
+    }
+
+    .ig-music-cover-wrapper {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+    }
+
+    .ig-music-title {
+        font-size: 13px;
+    }
+
+    .ig-music-artist {
+        font-size: 11px;
+    }
+
+    .ig-music-wave {
+        gap: 2px;
+        height: 14px;
+    }
+
+    .ig-wave-bar {
+        width: 2.5px;
+    }
+
+    .ig-music-play-btn {
+        width: 28px;
+        height: 28px;
+    }
+}

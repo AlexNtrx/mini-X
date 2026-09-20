@@ -125,6 +125,30 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `username`, `display_name`, `password`, `email`, `avatar`, `created_at`, `reset_token_hash`, `reset_token_expires_at`, `deleted_at`) VALUES
 (1, 'admin', 'admin', '$2y$10$lsZZtVEGk/vnw9NqgwDPl.SOPuqQrCUd2r/hBoQSX9eDpyVrZZO7q', 'admin@gmail.com', NULL, '2026-09-17 09:17:25', NULL, NULL, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Rakenne taululle `profile_customizations` (Hi5-teema ja musiikki)
+--
+
+DROP TABLE IF EXISTS `profile_customizations`;
+CREATE TABLE IF NOT EXISTS `profile_customizations` (
+  `user_id` int NOT NULL,
+  `bio` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `song_title` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `song_artist` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `song_artwork` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `song_url` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `theme_accent` varchar(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '#1d9bf0',
+  `theme_banner` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `banner_pos_y` int NOT NULL DEFAULT '50',
+  `theme_bg_type` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT 'default',
+  `theme_bg_val` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `updated_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

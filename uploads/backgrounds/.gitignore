@@ -1,0 +1,4 @@
+# Ignore uploaded user content but keep folder
+*
+!.gitignore
+!.gitkeep
