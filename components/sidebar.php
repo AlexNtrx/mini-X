@@ -48,3 +48,4 @@ $sidebarDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_nam
     </nav>
 </aside>
 <div class="sidebar-overlay" id="sidebarOverlay"></div>
+<?php include __DIR__ . '/toast.php'; ?>

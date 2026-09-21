@@ -109,7 +109,11 @@ function previewSettingAvatar(input) {
     if (input.files && input.files[0]) {
         const file = input.files[0];
         if (file.size > 3 * 1024 * 1024) {
-            alert('Kuvan koko saa olla enintään 3 MB.');
+            if (typeof Toast !== 'undefined') {
+                Toast.error('Kuvan koko saa olla enintään 3 MB.');
+            } else {
+                alert('Kuvan koko saa olla enintään 3 MB.');
+            }
             input.value = '';
             return;
         }

@@ -106,13 +106,16 @@ document.addEventListener('DOMContentLoaded', () => {
       const data = await response.json();
 
       if (data.success) {
+        if (typeof Toast !== 'undefined') {
+          Toast.success(data.message || 'Palautuslinkki lähetetty sähköpostiisi!');
+        }
         if (modalAlertContainer) {
-          modalAlertContainer.innerHTML = `<div class="alert alert-success">${data.message || 'Palautuslinkki lähetetty sähköpostiisi!'}</div>`;
+          modalAlertContainer.innerHTML = '';
         }
         if (forgotForm) forgotForm.reset();
       } else {
-        if (modalAlertContainer) {
-          modalAlertContainer.innerHTML = `<div class="alert alert-error">${data.message || 'Sähköpostiosoitetta ei löytynyt.'}</div>`;
+        if (typeof Toast !== 'undefined') {
+          Toast.error(data.message || 'Sähköpostiosoitetta ei löytynyt.');
         }
       }
     } catch {

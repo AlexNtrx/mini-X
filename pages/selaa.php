@@ -41,6 +41,7 @@ if ($q !== '' && isset($conn) && $conn) {
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/header.css?v=1.1.2">
     <link rel="stylesheet" href="./css/selaa.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
 </head>
 <body>
     <div class="layout">
@@ -52,13 +53,6 @@ if ($q !== '' && isset($conn) && $conn) {
             $headerTitle = 'Selaa käyttäjiä';
             include __DIR__ . '/../components/header.php';
             ?>
-
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-            <?php endif; ?>
 
             <!-- Hakukenttä -->
             <section class="search-container">
@@ -119,6 +113,7 @@ if ($q !== '' && isset($conn) && $conn) {
             </section>
         </main>
     </div>
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="./js/script.js?v=1.1.2"></script>
 </body>
 </html>

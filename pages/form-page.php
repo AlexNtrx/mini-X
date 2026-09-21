@@ -5,6 +5,9 @@ if (basename($_SERVER['SCRIPT_FILENAME'] ?? '') === 'form-page.php') {
     exit;
 }
 $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['status']) && $_GET['status'] === 'account_deleted') || (isset($_GET['tab']) && $_GET['tab'] === 'login') || isset($_POST['cancel_reactivation'])) ? 'login' : 'signup';
+if (isset($_GET['status']) && $_GET['status'] === 'account_deleted' && empty($success)) {
+    $success = 'Tilisi on poistettu onnistuneesti. Voit aktivoida tilisi uudelleen kirjautumalla sisään.';
+}
 ?>
 <!doctype html>
 <html lang="fi">
@@ -14,6 +17,7 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
     <title>Kirjaudu sisään & Rekisteröidy - Mini X</title>
     <link rel="stylesheet" href="./css/register.css?v=1.1.2" />
     <link rel="stylesheet" href="./css/forgot-password.css?v=1.1.2" />
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2" />
   </head>
   <body data-active-tab="<?= htmlspecialchars($activeTab) ?>">
     <!-- Background split layer -->
@@ -33,9 +37,6 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
         <div class="left">
           <div class="content">
             <h2>Sign Up</h2>
-            <?php if (!empty($error) && isset($_POST['register_post'])): ?>
-              <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
             <form id="form-signup" method="post">
               <input type="hidden" name="register_post" value="1" />
               <div class="form-element form-stack">
@@ -85,15 +86,6 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
         <div class="right">
           <div class="content">
             <h2>Login</h2>
-            <?php if (isset($_GET['status']) && $_GET['status'] === 'account_deleted'): ?>
-              <div class="alert alert-success">Tilisi on poistettu onnistuneesti. Voit aktivoida tilisi uudelleen kirjautumalla sisään.</div>
-            <?php endif; ?>
-            <?php if (!empty($error) && isset($_POST['login_post'])): ?>
-              <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($success)): ?>
-              <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-            <?php endif; ?>
             <form id="form-login" method="post">
               <input type="hidden" name="login_post" value="1" />
               <div class="form-element form-stack">
@@ -187,6 +179,9 @@ $activeTab = (isset($_POST['login_post']) || !empty($success) || (isset($_GET['s
       </div>
     </div>
 
+    <?php include __DIR__ . '/../components/toast.php'; ?>
+
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
     <script src="./js/lomakeet.js?v=1.1.2"></script>
     <script src="./js/validation.js?v=1.1.2"></script>

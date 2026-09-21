@@ -19,6 +19,7 @@ require_once __DIR__ . "/comments.php";
 require_once __DIR__ . "/notifications.php";
 require_once __DIR__ . "/password-reset.php";
 require_once __DIR__ . "/theme.php";
+require_once __DIR__ . "/toast.php";
 
 // Palauttaa turvallisen uudelleenohjausosoitteen (estää Open Redirect -haavoittuvuuden)
 function getSafeRedirectUrl($default = 'index.php')

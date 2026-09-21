@@ -57,6 +57,7 @@ if (!empty($error)) {
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/header.css?v=1.1.2">
     <link rel="stylesheet" href="./css/setting.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
 </head>
 
 <body>
@@ -71,13 +72,6 @@ if (!empty($error)) {
             ?>
 
             <div class="setting-container"<?= $autoOpenFormId ? ' data-auto-open="' . htmlspecialchars($autoOpenFormId) . '"' : '' ?>>
-                <?php if (!empty($error)): ?>
-                    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-                <?php endif; ?>
-                <?php if (!empty($success)): ?>
-                    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-                <?php endif; ?>
-
                 <!-- Tilitiedot -->
                 <section class="setting-section">
                     <h2 class="setting-section-title">Tilitiedot</h2>
@@ -268,6 +262,7 @@ if (!empty($error)) {
         </div>
     </div>
 
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="./js/script.js?v=1.1.2"></script>
     <script src="./js/setting.js?v=1.1.2"></script>
 </body>

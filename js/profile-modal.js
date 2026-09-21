@@ -180,7 +180,11 @@ function handleBannerSelect(input) {
     const file = input.files[0];
 
     if (file.size > 5 * 1024 * 1024) {
-        alert('Bannerikuvan koko saa olla enintään 5 MB.');
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Bannerikuvan koko saa olla enintään 5 MB.');
+        } else {
+            alert('Bannerikuvan koko saa olla enintään 5 MB.');
+        }
         input.value = '';
         return;
     }
@@ -257,7 +261,11 @@ function handleAvatarSelect(input) {
     const file = input.files[0];
 
     if (file.size > 10 * 1024 * 1024) {
-        alert('Profiilikuvan koko saa olla enintään 10 MB.');
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Profiilikuvan koko saa olla enintään 10 MB.');
+        } else {
+            alert('Profiilikuvan koko saa olla enintään 10 MB.');
+        }
         input.value = '';
         return;
     }
@@ -777,7 +785,11 @@ function handleCustomBgSelect(input) {
     const file = input.files[0];
 
     if (file.size > 8 * 1024 * 1024) {
-        alert('Taustakuvan koko saa olla enintään 8 MB.');
+        if (typeof Toast !== 'undefined') {
+            Toast.error('Taustakuvan koko saa olla enintään 8 MB.');
+        } else {
+            alert('Taustakuvan koko saa olla enintään 8 MB.');
+        }
         input.value = '';
         return;
     }

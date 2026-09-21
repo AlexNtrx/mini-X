@@ -68,30 +68,6 @@ body {
     }
 }
 
-/* Universal Alert Styles */
-.alert {
-    padding: 10px 14px;
-    border-radius: 8px;
-    margin-bottom: 12px;
-    font-size: 14px;
-    line-height: 1.45;
-}
-
-.feed > .alert {
-    margin: 12px 16px;
-}
-
-.alert-error {
-    background-color: rgba(244, 33, 46, 0.15);
-    color: #f4212e;
-    border: 1px solid #f4212e;
-}
-
-.alert-success {
-    background-color: rgba(0, 186, 124, 0.15);
-    color: #00ba7c;
-    border: 1px solid #00ba7c;
-}
 
 /* Clickable Avatar */
 .clickable-avatar {

@@ -35,6 +35,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/header.css?v=1.1.2">
     <link rel="stylesheet" href="./css/notifications.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
 </head>
 
 <body>
@@ -47,13 +48,6 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             $headerTitle = 'Ilmoitukset';
             include __DIR__ . '/../components/header.php';
             ?>
-
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-            <?php endif; ?>
 
             <!-- ilmoitukset -->
             <section class="notifications-list" data-latest-id="<?= $latestId ?>">
@@ -95,6 +89,7 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             </section>
         </main>
     </div>
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="./js/script.js?v=1.1.2"></script>
 </body>
 

@@ -252,7 +252,11 @@ function handlePostImageSelect(input) {
     if (input && input.files && input.files[0]) {
         const file = input.files[0];
         if (!file.type.startsWith('image/')) {
-            alert('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
+            if (typeof Toast !== 'undefined') {
+                Toast.error('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
+            } else {
+                alert('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
+            }
             input.value = '';
             if (previewContainer) previewContainer.style.display = 'none';
             return;

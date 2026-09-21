@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
 
     $result = resetPasswordWithToken($conn, $token, $password, $passwordConfirmation);
     if ($result === true) {
-        $success = true;
+        $success = "Salasana päivitetty onnistuneesti! Voit nyt kirjautua sisään uudella salasanallasi.";
     } else {
         $error = $result;
     }
@@ -35,34 +35,25 @@ $formAction = $isDirectAccess ? ('reset-password.php?token=' . urlencode($token)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $success ? 'Salasana vaihdettu' : 'Aseta uusi salasana' ?> - Mini X</title>
+    <title><?= !empty($success) ? 'Salasana vaihdettu' : 'Aseta uusi salasana' ?> - Mini X</title>
     <link rel="stylesheet" href="<?= $assetPrefix ?>css/forgot-password.css?v=1.1.2">
+    <link rel="stylesheet" href="<?= $assetPrefix ?>css/toast.css?v=1.1.2">
 </head>
 <body class="reset-body">
     <div class="reset-card">
         <div class="brand-logo">Mini X</div>
 
         <?php if ($success): ?>
-            <div class="alert-box alert-success">
-                <strong>Salasana päivitetty onnistuneesti!</strong><br>
-                Voit nyt kirjautua sisään uudella salasanallasi.
-            </div>
+            <h1 class="reset-title" style="color: #00ba7c;">Salasana päivitetty!</h1>
+            <p class="reset-subtitle">Voit nyt kirjautua sisään uudella salasanallasi.</p>
             <a href="<?= $indexPath ?>" class="action-btn">Siirry kirjautumiseen</a>
         <?php elseif ($error && !isset($_POST["reset_password_post"])): ?>
             <h1 class="reset-title">Virhe palautuslinkissä</h1>
-            <div class="alert-box alert-error">
-                <strong>Virhe:</strong> <?= htmlspecialchars($error) ?>
-            </div>
+            <p class="reset-subtitle" style="color: #f4212e;"><?= htmlspecialchars($error) ?></p>
             <a href="<?= $indexPath ?>" class="back-link">← Palaa kirjautumiseen</a>
         <?php else: ?>
             <h1 class="reset-title">Aseta uusi salasana</h1>
             <p class="reset-subtitle">Kirjoita uusi salasana alla oleviin kenttiin.</p>
-
-            <?php if ($error): ?>
-                <div class="alert-box alert-error">
-                    <strong>Virhe:</strong> <?= htmlspecialchars($error) ?>
-                </div>
-            <?php endif; ?>
 
             <form method="post" action="<?= $formAction ?>">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
@@ -83,5 +74,8 @@ $formAction = $isDirectAccess ? ('reset-password.php?token=' . urlencode($token)
             </form>
         <?php endif; ?>
     </div>
+
+    <?php include __DIR__ . '/../components/toast.php'; ?>
+    <script src="<?= $assetPrefix ?>js/toast.js?v=1.1.2"></script>
 </body>
 </html>

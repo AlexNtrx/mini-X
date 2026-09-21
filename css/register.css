@@ -237,25 +237,6 @@ button.off:hover {
   background: rgba(255, 255, 255, 0.08);
 }
 
-.alert {
-  padding: 10px 14px;
-  border-radius: 4px;
-  margin-bottom: 1.2em;
-  font-size: 0.85em;
-  line-height: 1.4;
-}
-
-.alert-error {
-  background-color: #fde8e8;
-  color: #c81e1e;
-  border: 1px solid #f8b4b4;
-}
-
-.alert-success {
-  background-color: #def7ec;
-  color: #03543f;
-  border: 1px solid #84e1bc;
-}
 
 /* Responsive styles for Mobile & Tablet */
 @media (max-width: 768px) {

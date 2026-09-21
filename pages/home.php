@@ -28,6 +28,7 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/post.css?v=1.1.2">
     <link rel="stylesheet" href="./css/header.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
 </head>
 <body>
     <div class="layout">
@@ -39,13 +40,6 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
             $headerTitle = 'Etusivu';
             include __DIR__ . '/../components/header.php';
             ?>
-
-            <?php if (!empty($error)): ?>
-                <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-            <?php endif; ?>
-            <?php if (!empty($success)): ?>
-                <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-            <?php endif; ?>
 
             <!-- Luo julkaisu -->
             <?php include __DIR__ . '/../components/create-post.php'; ?>
@@ -62,6 +56,7 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
             </section>
         </main>
     </div>
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="./js/script.js?v=1.1.2"></script>
 </body>
 </html>

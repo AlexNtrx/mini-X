@@ -98,6 +98,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/profile.css?v=1.1.2">
     <link rel="stylesheet" href="./css/profile-modal.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
     <?php if (!empty($customization['song_url'])): ?>
         <link rel="stylesheet" href="./css/retro-player.css?v=1.1.2">
     <?php endif; ?>
@@ -184,13 +185,6 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
 
                         <!-- Instagram Story Style Music Sticker Component -->
                         <?php include __DIR__ . '/../components/music-player.php'; ?>
-
-                        <?php if (!empty($error)): ?>
-                            <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
-                        <?php endif; ?>
-                        <?php if (!empty($success)): ?>
-                            <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -224,6 +218,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
         <?php include __DIR__ . '/../components/avatar-cropper-modal.php'; ?>
     <?php endif; ?>
 
+    <script src="./js/toast.js?v=1.1.2"></script>
     <script src="./js/script.js?v=1.1.2"></script>
     <?php if (!empty($customization['song_url'])): ?>
         <script src="./js/retro-player.js?v=1.1.2"></script>

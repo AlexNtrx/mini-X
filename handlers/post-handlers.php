@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                 if (empty($error)) {
                     if (addPost($conn, $userId, $content, $imageFileName)) {
+                        setFlashToast("Julkaisu luotu onnistuneesti!", "success");
                         header("Location: " . $redirectUrl);
                         exit;
                     } else {
@@ -48,6 +49,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $error = "Julkaisun teksti saa olla enintään 140 merkkiä.";
             } else {
                 if (updatePost($conn, $id, $content, $userId)) {
+                    setFlashToast("Julkaisu päivitetty onnistuneesti!", "success");
                     header("Location: " . $redirectUrl);
                     exit;
                 } else {
@@ -60,7 +62,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["delete_post"])) {
         $id = (int)($_POST["id"] ?? 0);
         if ($id > 0 && $userId > 0) {
-            deletePost($conn, $id, $userId);
+            if (deletePost($conn, $id, $userId)) {
+                setFlashToast("Julkaisu poistettu onnistuneesti!", "success");
+            } else {
+                setFlashToast("Julkaisun poistaminen epäonnistui.", "error");
+            }
             header("Location: " . $redirectUrl);
             exit;
         }
