@@ -76,19 +76,28 @@
     gap: 8px;
 }
 
+.post-image-input {
+    display: none;
+}
+
 .btn-media-action {
     background: transparent;
     border: none;
     color: #1d9bf0;
     width: 36px;
     height: 36px;
+    min-width: 36px;
+    min-height: 36px;
     border-radius: 50%;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
     padding: 0;
+    margin: 0;
+    flex-shrink: 0;
+    box-sizing: border-box;
 }
 
 .btn-media-action:hover {
@@ -122,9 +131,9 @@
 
 /* Image preview in composer */
 .post-preview-container {
+    display: none;
     margin: 10px 0;
     position: relative;
-    display: inline-block;
     max-width: 100%;
 }
 

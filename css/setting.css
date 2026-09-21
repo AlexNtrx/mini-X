@@ -62,6 +62,10 @@
     margin: 0;
 }
 
+#setting-avatar-input {
+    display: none;
+}
+
 .setting-avatar-actions {
     display: flex;
     align-items: center;
@@ -70,7 +74,7 @@
 }
 
 .setting-avatar-save-actions {
-    display: inline-flex;
+    display: none;
     align-items: center;
     gap: 8px;
     flex-wrap: wrap;
@@ -244,9 +248,14 @@
     min-width: 0;
 }
 
+.setting-collapsible-wrapper {
+    display: none;
+}
+
 .setting-form-actions {
     display: flex;
     justify-content: flex-end;
+    gap: 8px;
     margin-top: 8px;
 }
 
@@ -519,4 +528,5 @@
         padding: 11px 24px;
     }
 }
+
 

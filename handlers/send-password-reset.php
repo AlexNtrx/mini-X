@@ -1,5 +1,8 @@
 <?php
 // Käsittelee salasanan palautuspyynnön ja lähettää sähköpostin
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 require_once __DIR__ . "/../functions/init.php";
 $conn = dbConnect();
 
@@ -12,7 +15,7 @@ if (empty($email)) {
         echo json_encode(['success' => false, 'message' => 'Ole hyvä ja anna sähköpostiosoite.']);
         exit;
     }
-    header('Location: ../pages/forgot-password.php');
+    header('Location: ../index.php?page=forgot-password');
     exit;
 }
 
@@ -46,31 +49,12 @@ if ($isAjax) {
     }
     exit;
 }
-?>
-<!DOCTYPE html>
-<html lang="fi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?= $success ? 'Sähköposti lähetetty' : 'Virhe' ?> - Mini X</title>
-    <link rel="stylesheet" href="../css/forgot-password.css">
-</head>
-<body class="reset-body">
-    <div class="status-card">
-        <div class="brand-logo">Mini X</div>
-        <?php if ($success): ?>
-            <div class="alert-box alert-success">
-                <strong>Sähköposti lähetetty onnistuneesti!</strong><br>
-                Tarkista postilaatikkosi palautuslinkkiä varten.
-            </div>
-            <a href="../index.php" class="action-btn">Palaa etusivulle</a>
-        <?php else: ?>
-            <div class="alert-box alert-error">
-                <strong>Virhe:</strong><br>
-                <?= htmlspecialchars($errorMessage) ?>
-            </div>
-            <a href="../pages/forgot-password.php" class="action-btn">Yritä uudelleen</a>
-        <?php endif; ?>
-    </div>
-</body>
-</html>
+
+// Normaali lomakelähetys (ei-AJAX): uudelleenohjaus sivulle ilman HTML:ää handler-kansiossa
+if ($success) {
+    header('Location: ../index.php?page=forgot-password&status=sent');
+} else {
+    $_SESSION['reset_error'] = $errorMessage;
+    header('Location: ../index.php?page=forgot-password&status=error');
+}
+exit();

@@ -795,3 +795,37 @@ body.x-privacy-body {
     padding: 2px 0;
   }
 }
+
+/* Callout, Contacts & Link Utilities */
+.x-callout {
+  background-color: var(--x-bg-card);
+  border-left: 4px solid var(--x-blue);
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 16px 0;
+}
+
+.x-callout-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.x-callout p {
+  margin: 0;
+  color: #fff;
+}
+
+.x-link-blue {
+  color: var(--x-blue);
+  text-decoration: none;
+}
+
+.x-link-blue:hover {
+  text-decoration: underline;
+}
+
+.x-mt-14 {
+  margin-top: 14px;
+}

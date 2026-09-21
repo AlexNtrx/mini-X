@@ -246,13 +246,44 @@ function closePostImageModal() {
 }
 
 // Kuvan valinta ja esikatselu julkaisulomakkeessa
+function handlePostImageSelect(input) {
+    const previewContainer = document.getElementById('post-preview-container');
+    const previewImg = document.getElementById('post-preview-img');
+    if (input && input.files && input.files[0]) {
+        const file = input.files[0];
+        if (!file.type.startsWith('image/')) {
+            alert('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
+            input.value = '';
+            if (previewContainer) previewContainer.style.display = 'none';
+            return;
+        }
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (previewImg) previewImg.src = e.target.result;
+            if (previewContainer) previewContainer.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        if (previewImg) previewImg.src = '';
+        if (previewContainer) previewContainer.style.display = 'none';
+    }
+}
+
+function handlePostImageRemove() {
+    const input = document.getElementById('post-image-input');
+    const previewContainer = document.getElementById('post-preview-container');
+    const previewImg = document.getElementById('post-preview-img');
+    const postTextarea = document.getElementById('create-post-textarea');
+    if (input) input.value = '';
+    if (previewImg) previewImg.src = '';
+    if (previewContainer) previewContainer.style.display = 'none';
+    if (postTextarea) postTextarea.focus();
+}
+
 function initComposerImageUpload() {
     const mediaBtn = document.getElementById('btn-trigger-media');
     const imageInput = document.getElementById('post-image-input');
-    const previewContainer = document.getElementById('post-preview-container');
-    const previewImg = document.getElementById('post-preview-img');
     const removePreviewBtn = document.getElementById('btn-remove-preview');
-    const postTextarea = document.getElementById('create-post-textarea');
 
     if (mediaBtn && imageInput && !mediaBtn.hasAttribute('onclick')) {
         mediaBtn.addEventListener('click', () => {
@@ -260,35 +291,15 @@ function initComposerImageUpload() {
         });
     }
 
-    if (imageInput && previewContainer && previewImg) {
+    if (imageInput) {
         imageInput.addEventListener('change', () => {
-            const file = imageInput.files && imageInput.files[0];
-            if (file) {
-                if (!file.type.startsWith('image/')) {
-                    alert('Valitse kuvatiedosto (JPG, PNG, WEBP tai GIF).');
-                    imageInput.value = '';
-                    previewContainer.style.display = 'none';
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewImg.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                previewImg.src = '';
-                previewContainer.style.display = 'none';
-            }
+            handlePostImageSelect(imageInput);
         });
     }
 
-    if (removePreviewBtn && imageInput && previewContainer && previewImg) {
+    if (removePreviewBtn) {
         removePreviewBtn.addEventListener('click', () => {
-            imageInput.value = '';
-            previewImg.src = '';
-            previewContainer.style.display = 'none';
-            if (postTextarea) postTextarea.focus();
+            handlePostImageRemove();
         });
     }
 }

@@ -93,6 +93,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         unset(
             $_SESSION['pending_reactivation_user_id'],
             $_SESSION['pending_reactivation_username'],
+            $_SESSION['pending_reactivation_display_name'],
             $_SESSION['pending_reactivation_avatar']
         );
         $showReactivationModal = false;

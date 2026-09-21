@@ -24,6 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
         $error = $tokenCheck['error'];
     }
 }
+
+$isDirectAccess = (basename($_SERVER['SCRIPT_NAME'] ?? '') !== 'index.php');
+$assetPrefix = $isDirectAccess ? '../' : './';
+$indexPath = $isDirectAccess ? '../index.php' : 'index.php';
+$formAction = $isDirectAccess ? ('reset-password.php?token=' . urlencode($token)) : ('index.php?page=reset-password&token=' . urlencode($token));
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -31,7 +36,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $success ? 'Salasana vaihdettu' : 'Aseta uusi salasana' ?> - Mini X</title>
-    <link rel="stylesheet" href="../css/forgot-password.css?v=1.1.1">
+    <link rel="stylesheet" href="<?= $assetPrefix ?>css/forgot-password.css?v=1.1.2">
 </head>
 <body class="reset-body">
     <div class="reset-card">
@@ -42,13 +47,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
                 <strong>Salasana päivitetty onnistuneesti!</strong><br>
                 Voit nyt kirjautua sisään uudella salasanallasi.
             </div>
-            <a href="../index.php" class="action-btn">Siirry kirjautumiseen</a>
+            <a href="<?= $indexPath ?>" class="action-btn">Siirry kirjautumiseen</a>
         <?php elseif ($error && !isset($_POST["reset_password_post"])): ?>
             <h1 class="reset-title">Virhe palautuslinkissä</h1>
             <div class="alert-box alert-error">
                 <strong>Virhe:</strong> <?= htmlspecialchars($error) ?>
             </div>
-            <a href="../index.php" class="back-link">← Palaa kirjautumiseen</a>
+            <a href="<?= $indexPath ?>" class="back-link">← Palaa kirjautumiseen</a>
         <?php else: ?>
             <h1 class="reset-title">Aseta uusi salasana</h1>
             <p class="reset-subtitle">Kirjoita uusi salasana alla oleviin kenttiin.</p>
@@ -59,7 +64,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
                 </div>
             <?php endif; ?>
 
-            <form method="post" action="reset-password.php?token=<?= htmlspecialchars($token) ?>">
+            <form method="post" action="<?= $formAction ?>">
                 <input type="hidden" name="token" value="<?= htmlspecialchars($token) ?>">
                 <input type="hidden" name="reset_password_post" value="1">
 
@@ -74,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
                 </div>
 
                 <button type="submit" class="submit-btn">Tallenna uusi salasana</button>
-                <a href="../index.php" class="back-link">← Peruuta ja palaa kirjautumiseen</a>
+                <a href="<?= $indexPath ?>" class="back-link">← Peruuta ja palaa kirjautumiseen</a>
             </form>
         <?php endif; ?>
     </div>

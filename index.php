@@ -12,7 +12,9 @@ require_once "handlers/auth-handlers.php";
 
 // Julkiset sivut, joita voi tarkastella myös ilman sisäänkirjautumista
 $publicPages = [
-    'privacy' => 'pages/privacy-policy.php'
+    'privacy'         => 'pages/privacy-policy.php',
+    'forgot-password' => 'pages/forgot-password.php',
+    'reset-password'  => 'pages/reset-password.php',
 ];
 
 $page = trim($_GET['page'] ?? '');
@@ -46,6 +48,7 @@ if (isset($conn) && $conn) {
 require_once "handlers/post-handlers.php";
 require_once "handlers/interaction-handlers.php";
 require_once "handlers/setting-handlers.php";
+require_once "handlers/profile-handlers.php";
 
 // Oletussivu kirjautuneelle käyttäjälle on 'home'
 if (empty($page)) {
@@ -60,6 +63,7 @@ $routes = [
     'selaa'         => 'pages/selaa.php',
     'setting'       => 'pages/setting.php',
     'privacy'       => 'pages/privacy-policy.php',
+    'logout'        => 'handlers/logout.php',
 ];
 
 // Jos sivu-parametri on määritelty reiteissä, sisällytä vastaava tiedosto

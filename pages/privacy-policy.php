@@ -13,7 +13,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mini X:n tietosuojaseloste</title>
-    <link rel="stylesheet" href="./css/privacy.css?v=1.1.1">
+    <link rel="stylesheet" href="./css/privacy.css?v=1.1.2">
 </head>
 <body class="x-privacy-body">
 
@@ -99,7 +99,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
 
             <!-- Hero-osio -->
             <div class="x-hero">
-                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.1.1</span>
+                <span class="x-hero-date">Voimassa alkaen: 17. syyskuuta 2026 &bull; Versio 1.1.2</span>
                 <h1 class="x-hero-title">Mini X:n tietosuojaseloste</h1>
                 <p class="x-hero-intro">
                     Tämä tietosuojaseloste kertoo, mitä henkilötietoja Mini X -palvelu kerää, miten niitä käytetään ja miten voit hallita omia tietojasi. Lue huolellisesti, jotta ymmärrät oikeutesi ja velvollisuutesi palvelun käyttäjänä.
@@ -201,7 +201,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <h3 class="x-subchapter-heading">2.3 Käsittelyn oikeusperuste (GDPR Art. 6)</h3>
                     <div class="x-callout">
                         <div class="x-callout-title">Tietojenkäsittelyn lainmukainen peruste:</div>
-                        <p class="x-p" style="margin: 0;">
+                        <p class="x-p">
                             &bull; <strong>Sopimus (Art. 6(1)(b)):</strong> Käsittely on välttämätöntä käyttäjäsopimuksen täyttämiseksi, jotta voimme tarjota sinulle pyytämäsi Mini X -palvelut.<br>
                             &bull; <strong>Suostumus (Art. 6(1)(a)):</strong> Vapaaehtoisten lisätietojen, kuten profiilikuvan, lataaminen perustuu suostumukseesi.<br>
                             &bull; <strong>Oikeutettu etu (Art. 6(1)(f)):</strong> Palvelun tietoturvan ja luotettavan teknisen toiminnan ylläpitäminen.
@@ -338,7 +338,7 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <li><strong>Oikeus tietojen poistamiseen ("oikeus tulla unohdetuksi", Art. 17):</strong> Voit poistaa tilisi itse Asetukset-sivun "Poista tili" -painikkeella tai pyytää rekisterinpitäjää poistamaan kaikki tietosi peruuttamattomasti.</li>
                     <li><strong>Oikeus käsittelyn rajoittamiseen ja vastustamiseen (Art. 18 & 21):</strong> Voit pyytää tietojesi käsittelyn rajoittamista tai vastustaa käsittelyä.</li>
                     <li><strong>Oikeus siirtää tiedot järjestelmästä toiseen (Art. 20):</strong> Sinulla on oikeus saada meille antamasi henkilötiedot jäsennellyssä muodossa.</li>
-                    <li><strong>Oikeus tehdä valitus valvontaviranomaiselle (Art. 77):</strong> Mikäli koet henkilötietojesi käsittelyn lainvastaiseksi, sinulla on oikeus tehdä valitus Tietosuojavaltuutetun toimistolle (<a href="https://tietosuoja.fi" target="_blank" rel="noopener" style="color: var(--x-blue);">www.tietosuoja.fi</a>, PL 800, 00531 Helsinki, sähköposti: tietosuoja@om.fi).</li>
+                    <li><strong>Oikeus tehdä valitus valvontaviranomaiselle (Art. 77):</strong> Mikäli koet henkilötietojesi käsittelyn lainvastaiseksi, sinulla on oikeus tehdä valitus Tietosuojavaltuutetun toimistolle (<a href="https://tietosuoja.fi" target="_blank" rel="noopener" class="x-link-blue">www.tietosuoja.fi</a>, PL 800, 00531 Helsinki, sähköposti: tietosuoja@om.fi).</li>
                 </ul>
             </section>
 
@@ -367,16 +367,15 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
                     <p class="x-chapter-lead">Kuka vastaa sovelluksesta ja miten tavoitat meidät.</p>
                 </div>
 
-                <div class="x-callout" style="background-color: var(--x-bg-card); border-left-color: var(--x-blue);">
-                    <div class="x-callout-title" style="font-size: 16px; margin-bottom: 8px;">Rekisterinpitäjän yhteystiedot:</div>
-                    <p class="x-p" style="margin: 0; color: #fff;">
+                <div class="x-callout">
+                    <div class="x-callout-title">Rekisterinpitäjän yhteystiedot:</div>
+                    <p class="x-p">
                         <strong>Palvelu:</strong> Mini X<br>
                         <strong>Rekisterinpitäjä:</strong> Nithitorn Kaosaard<br>
-                        <strong>Sähköposti:</strong> <a href="mailto:alextunder2561@gmail.com" style="color: var(--x-blue);">alextunder2561@gmail.com</a><br>
-                        
+                        <strong>Sähköposti:</strong> <a href="mailto:alextunder2561@gmail.com" class="x-link-blue">alextunder2561@gmail.com</a><br>
                     </p>
                 </div>
-                <p class="x-p" style="margin-top: 14px;">
+                <p class="x-p x-mt-14">
                     Voit ottaa meihin yhteyttä sähköpostitse kaikissa tietosuojaan ja henkilötietojesi käsittelyyn liittyvissä asioissa. Vastaamme yhteydenottoihin ilman aiheetonta viivytystä ja viimeistään 30 päivän kuluessa.
                 </p>
             </section>
@@ -394,63 +393,6 @@ $backText = $isLoggedIn ? ' Takaisin etusivulle' : ' Kirjaudu / Rekisteröidy';
     </footer>
 
 
-    <script>
-    // Hamburger-valikon ohjaus
-    const hamburgerBtn = document.getElementById('xPrivacyHamburger');
-    const drawer = document.getElementById('xPrivacyDrawer');
-    const overlay = document.getElementById('xPrivacyOverlay');
-    const closeBtn = document.getElementById('xPrivacyClose');
-
-    function toggleXDrawer(open) {
-        const isOpen = open !== undefined ? open : !drawer.classList.contains('open');
-        if (drawer) drawer.classList.toggle('open', isOpen);
-        if (overlay) overlay.classList.toggle('open', isOpen);
-        if (hamburgerBtn) {
-            hamburgerBtn.setAttribute('aria-expanded', isOpen);
-        }
-        document.body.style.overflow = isOpen ? 'hidden' : '';
-    }
-
-    if (hamburgerBtn) hamburgerBtn.addEventListener('click', () => toggleXDrawer(true));
-    if (closeBtn) closeBtn.addEventListener('click', () => toggleXDrawer(false));
-    if (overlay) overlay.addEventListener('click', () => toggleXDrawer(false));
-
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && drawer && drawer.classList.contains('open')) {
-            toggleXDrawer(false);
-        }
-    });
-
-    // Drawer linkit: sulje valikko ja vieritä
-    document.querySelectorAll('.x-drawer-link').forEach(link => {
-        link.addEventListener('click', e => {
-            const targetId = link.getAttribute('href');
-            if (targetId && targetId.startsWith('#')) {
-                toggleXDrawer(false);
-                const targetEl = document.querySelector(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    setTimeout(() => {
-                        targetEl.scrollIntoView({ behavior: 'smooth' });
-                    }, 150);
-                }
-            }
-        });
-    });
-
-    // Sujuva vieritys sisällysluettelosta
-    document.querySelectorAll('.x-chapter-item a').forEach(link => {
-        link.addEventListener('click', e => {
-            const targetId = link.getAttribute('href');
-            if (targetId && targetId.startsWith('#')) {
-                const targetEl = document.querySelector(targetId);
-                if (targetEl) {
-                    e.preventDefault();
-                    targetEl.scrollIntoView({ behavior: 'smooth' });
-                }
-            }
-        });
-    });
-    </script>
+    <script src="./js/privacy.js?v=1.1.2"></script>
 </body>
 </html>
