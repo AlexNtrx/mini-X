@@ -19,13 +19,8 @@ if (!isset($conn) || !$conn) {
 $q = trim($_GET['q'] ?? '');
 $allUsers = (isset($conn) && $conn) ? getAllUsers($conn) : [];
 
-// Näytetään pikavalinnoissa vain admin-käyttäjä
-$displayUsers = array_values(array_filter($allUsers, function ($u) {
-    return strtolower($u['username'] ?? '') === 'admin';
-}));
-if (empty($displayUsers) && !empty($allUsers)) {
-    $displayUsers = [reset($allUsers)];
-}
+// Näytetään pikavalinnoissa suodatetut käyttäjät (admin tai ensimmäinen käyttäjä)
+$displayUsers = getQuickSelectUsers($allUsers);
 
 // taulukko, johon tallennetaan haetut julkaisut
 $contents = [];
@@ -102,9 +97,9 @@ if ($q !== '' && isset($conn) && $conn) {
             </section>
 
             <?php if (!empty($q)): ?>
-                <div style="margin: 0 0 16px; padding: 12px 16px; background: #16181c; border: 1px solid #2f3336; border-radius: 12px; display: flex; align-items: center; justify-content: space-between;">
-                    <span style="color: #e7e9ea; font-size: 14px;">Käyttäjä <strong>@<?= htmlspecialchars($q) ?></strong></span>
-                    <a href="index.php?page=profile&u=<?= urlencode($q) ?>" class="setting-btn-secondary" style="text-decoration: none; font-size: 12px; padding: 6px 14px; border-color: #1d9bf0; color: #1d9bf0;">
+                <div class="selaa-user-card">
+                    <span class="selaa-user-card-title">Käyttäjä <strong>@<?= htmlspecialchars($q) ?></strong></span>
+                    <a href="index.php?page=profile&u=<?= urlencode($q) ?>" class="setting-btn-secondary selaa-user-card-btn">
                         ✨ Avaa profiili & Musiikki
                     </a>
                 </div>

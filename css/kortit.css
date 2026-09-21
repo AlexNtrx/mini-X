@@ -512,3 +512,17 @@ textarea.post-text:focus {
         max-height: 440px;
     }
 }
+
+/* Author Links */
+.post-author-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.comment-author-link {
+    color: inherit;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}

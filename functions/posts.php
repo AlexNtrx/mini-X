@@ -226,3 +226,18 @@ function getAllUsers($conn)
     }
     return $users;
 }
+
+// Suodattaa selaussivun pikavalintakäyttäjät (oletuksena admin tai ensimmäinen käyttäjä)
+function getQuickSelectUsers(array $allUsers): array
+{
+    $adminUsers = [];
+    foreach ($allUsers as $u) {
+        if (strtolower($u['username'] ?? '') === 'admin') {
+            $adminUsers[] = $u;
+        }
+    }
+    if (!empty($adminUsers)) {
+        return $adminUsers;
+    }
+    return !empty($allUsers) ? [reset($allUsers)] : [];
+}

@@ -57,7 +57,7 @@ if (!empty($customization['song_url'])): ?>
         </div>
     </div>
 <?php elseif (!empty($isOwnProfile)): ?>
-    <button type="button" class="profile-add-hint-btn" onclick="openEditProfileModal()" style="margin-top: 10px;">
+    <button type="button" class="profile-add-hint-btn profile-add-music-btn" onclick="openEditProfileModal()">
         + Lisää profiilimusiikki
     </button>
 <?php endif; ?>

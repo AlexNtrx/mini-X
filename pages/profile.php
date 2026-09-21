@@ -102,43 +102,8 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
         <link rel="stylesheet" href="./css/retro-player.css?v=1.4.2">
     <?php endif; ?>
 
-    <style>
-        :root {
-            --profile-accent: <?= $accentHex ?>;
-            --profile-accent-rgb: <?= $accentRgb ?>;
-        }
-
-        .profile-avatar {
-            border-color: var(--profile-accent) !important;
-        }
-
-        .profile-tab.active {
-            color: var(--profile-accent) !important;
-            border-color: var(--profile-accent) !important;
-        }
-
-        .profile-edit-btn {
-            border-color: var(--profile-accent) !important;
-            color: var(--profile-accent) !important;
-        }
-
-        .profile-edit-btn:hover {
-            background-color: rgba(var(--profile-accent-rgb), 0.15) !important;
-        }
-
-        <?php if (!empty($bgStyle)): ?>
-        html, body.hi5-profile-page {
-            <?= $bgStyle ?>
-        }
-        body.hi5-profile-page .feed {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
-        <?php endif; ?>
-    </style>
 </head>
-<body class="<?= !empty($bgStyle) ? 'hi5-profile-page' : '' ?>">
+<body class="<?= !empty($bgStyle) ? 'hi5-profile-page' : '' ?>" style="--profile-accent: <?= $accentHex ?>; --profile-accent-rgb: <?= $accentRgb ?>;<?= !empty($bgStyle) ? ' ' . $bgStyle : '' ?>">
     <div class="layout">
         <!-- Sivupalkki -->
         <?php include __DIR__ . '/../components/sidebar.php'; ?>
@@ -152,10 +117,10 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
                         <h2>Profiili</h2>
                     </div>
                 </header>
-                <div style="padding: 40px 20px; text-align: center;">
-                    <h3 style="color: #e7e9ea; margin-bottom: 12px;">Käyttäjää ei löytynyt</h3>
-                    <p style="color: #71767b; margin-bottom: 24px;">Etsimääsi käyttäjätunnusta ei ole olemassa tai tili on poistettu.</p>
-                    <a href="index.php?page=selaa" class="setting-btn-primary" style="text-decoration: none; display: inline-block;">Selaa käyttäjiä</a>
+                <div class="profile-not-found">
+                    <h3 class="profile-not-found-title">Käyttäjää ei löytynyt</h3>
+                    <p class="profile-not-found-desc">Etsimääsi käyttäjätunnusta ei ole olemassa tai tili on poistettu.</p>
+                    <a href="index.php?page=selaa" class="setting-btn-primary profile-not-found-btn">Selaa käyttäjiä</a>
                 </div>
             <?php else: ?>
                 <!-- Profiili Header -->
@@ -176,7 +141,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
 
                 <!-- Profiilikortti / Banner -->
                 <div class="profile-card">
-                    <div class="profile-banner" <?= !empty($bannerUrl) ? 'style="background-image: url(\'' . $bannerUrl . '\'); background-size: cover; background-position: center ' . (int)($customization['banner_pos_y'] ?? 50) . '%; height: 160px;"' : '' ?>></div>
+                    <div class="profile-banner <?= !empty($bannerUrl) ? 'has-custom-banner' : '' ?>" <?= !empty($bannerUrl) ? 'style="--banner-bg: url(\'' . htmlspecialchars($bannerUrl, ENT_QUOTES) . '\'); --banner-pos-y: ' . (int)($customization['banner_pos_y'] ?? 50) . '%;"' : '' ?>></div>
                     <div class="profile-details">
                         <div class="profile-avatar-row">
                             <div class="profile-avatar-wrapper">
@@ -193,7 +158,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
                                 <?php if ($isOwnProfile): ?>
                                     <button type="button" class="profile-edit-btn" onclick="openEditProfileModal()">Muokkaa profiilia</button>
                                 <?php else: ?>
-                                    <span style="font-size: 12px; color: var(--profile-accent); font-weight: 600; padding: 6px 14px; border-radius: 9999px; border: 1px solid var(--profile-accent); background: rgba(var(--profile-accent-rgb), 0.1);">
+                                    <span class="profile-badge-hi5">
                                         Hi5 Profile
                                     </span>
                                 <?php endif; ?>

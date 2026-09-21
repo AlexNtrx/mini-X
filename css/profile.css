@@ -384,3 +384,70 @@
     border-color: var(--profile-accent, #1d9bf0);
 }
 
+/* Dynamic Accent & Hi5 Profile Page Overrides */
+:root {
+    --profile-accent: #1d9bf0;
+    --profile-accent-rgb: 29, 155, 240;
+}
+
+.profile-avatar {
+    border-color: var(--profile-accent, #1d9bf0) !important;
+}
+
+.profile-tab.active {
+    color: var(--profile-accent, #1d9bf0) !important;
+    border-color: var(--profile-accent, #1d9bf0) !important;
+}
+
+.profile-edit-btn {
+    border-color: var(--profile-accent, #1d9bf0) !important;
+    color: var(--profile-accent, #1d9bf0) !important;
+}
+
+.profile-edit-btn:hover {
+    background-color: rgba(var(--profile-accent-rgb, 29, 155, 240), 0.15) !important;
+}
+
+.profile-badge-hi5 {
+    font-size: 12px;
+    color: var(--profile-accent, #1d9bf0);
+    font-weight: 600;
+    padding: 6px 14px;
+    border-radius: 9999px;
+    border: 1px solid var(--profile-accent, #1d9bf0);
+    background: rgba(var(--profile-accent-rgb, 29, 155, 240), 0.1);
+}
+
+.profile-banner.has-custom-banner {
+    background-image: var(--banner-bg);
+    background-size: cover;
+    background-position: center var(--banner-pos-y, 50%);
+    height: 160px;
+}
+
+.profile-not-found {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.profile-not-found-title {
+    color: #e7e9ea;
+    margin-bottom: 12px;
+}
+
+.profile-not-found-desc {
+    color: #71767b;
+    margin-bottom: 24px;
+}
+
+.profile-not-found-btn {
+    text-decoration: none;
+    display: inline-block;
+}
+
+body.hi5-profile-page .feed {
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+}
+
