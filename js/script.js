@@ -370,8 +370,8 @@ function checkUnreadNotifications() {
                     // data.notifications on ID-järjestyksessä (ASC),
                     // joten prependaamalla järjestyksessä uusin tulee listan ylimmäksi
                     data.notifications.forEach((notif) => {
-                        const item = document.createElement("a");
-                        item.href = `index.php?page=home#${notif.type === 'comment' ? 'comments-' : 'post-'}${encodeURIComponent(notif.post_id)}`;
+                        const targetAnchor = (notif.type === 'comment' || notif.type === 'comment_reply' || notif.type === 'best_answer') ? 'comments-' : 'post-';
+                        item.href = `index.php?page=home#${targetAnchor}${encodeURIComponent(notif.post_id)}`;
                         item.className = "notification-item unread";
                         item.setAttribute("data-id", notif.id);
 
@@ -381,6 +381,12 @@ function checkUnreadNotifications() {
                         if (notif.type === "like") {
                             iconSpan.className = "notif-icon notif-like";
                             iconSpan.innerHTML = "&#10084;&#65039;";
+                        } else if (notif.type === "best_answer") {
+                            iconSpan.className = "notif-icon notif-best-answer";
+                            iconSpan.innerHTML = "⭐";
+                        } else if (notif.type === "comment_reply") {
+                            iconSpan.className = "notif-icon notif-reply";
+                            iconSpan.innerHTML = "↩️";
                         } else {
                             iconSpan.className = "notif-icon notif-comment";
                             iconSpan.innerHTML = "&#128172;";
@@ -399,7 +405,17 @@ function checkUnreadNotifications() {
                         textDiv.appendChild(document.createTextNode(" "));
 
                         const actionSpan = document.createElement("span");
-                        actionSpan.textContent = notif.type === "like" ? "tykkäsi julkaisustasi" : "kommentoi julkaisuasi";
+                        if (notif.type === "like") {
+                            actionSpan.textContent = "tykkäsi julkaisustasi";
+                        } else if (notif.type === "best_answer") {
+                            actionSpan.textContent = "valitsi vastauksesi parhaaksi! ⭐";
+                            actionSpan.style.color = "#ffd700";
+                            actionSpan.style.fontWeight = "600";
+                        } else if (notif.type === "comment_reply") {
+                            actionSpan.textContent = "vastasi kommenttiisi";
+                        } else {
+                            actionSpan.textContent = "kommentoi julkaisuasi";
+                        }
                         textDiv.appendChild(actionSpan);
                         contentCol.appendChild(textDiv);
 
@@ -486,3 +502,25 @@ document.addEventListener("DOMContentLoaded", () => {
     checkUnreadNotifications();
     setInterval(checkUnreadNotifications, 2000); 
 });
+
+/**
+ * Avaa tai sulkee alikommentin vastauslomakkeen (Reply Box)
+ */
+function toggleCommentReplyBox(boxId, mentionText) {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+
+    const isHidden = (window.getComputedStyle(box).display === 'none');
+    if (isHidden) {
+        box.style.display = 'block';
+        const input = box.querySelector('input[name="comment_content"]');
+        if (input) {
+            if (mentionText && !input.value) {
+                input.value = mentionText;
+            }
+            input.focus();
+        }
+    } else {
+        box.style.display = 'none';
+    }
+}

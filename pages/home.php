@@ -15,7 +15,12 @@ if (!isset($conn) || !$conn) {
     $conn = dbConnect();
 }
 /** @var mysqli $conn */
-$contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
+$availableRooms = function_exists('getAvailableRooms') ? getAvailableRooms() : [];
+$activeRoom = trim($_GET['room'] ?? 'all');
+if ($activeRoom !== 'all' && !isset($availableRooms[$activeRoom])) {
+    $activeRoom = 'all';
+}
+$contents = (isset($conn) && $conn) ? getShowContents($conn, $activeRoom) : [];
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -41,6 +46,20 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
             include __DIR__ . '/../components/header.php';
             ?>
 
+            <!-- Huoneiden suodatuspalkki (Pantip Room Pills) -->
+            <div class="rooms-bar">
+                <a href="index.php?page=home" class="room-chip <?= $activeRoom === 'all' ? 'active' : '' ?>">
+                    <span class="room-chip-icon">🌐</span>
+                    <span class="room-chip-text">Kaikki</span>
+                </a>
+                <?php foreach ($availableRooms as $rKey => $rData): ?>
+                    <a href="index.php?page=home&room=<?= urlencode($rKey) ?>" class="room-chip <?= $activeRoom === $rKey ? 'active' : '' ?>" title="<?= htmlspecialchars($rData['desc'], ENT_QUOTES, 'UTF-8') ?>">
+                        <span class="room-chip-icon"><?= $rData['icon'] ?></span>
+                        <span class="room-chip-text"><?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?></span>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+
             <!-- Luo julkaisu -->
             <?php include __DIR__ . '/../components/create-post.php'; ?>
 
@@ -51,7 +70,7 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn) : [];
                         <?php include __DIR__ . '/../components/kortit.php'; ?>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    <p class="empty-feed">Ei julkaisuja vielä.</p>
+                    <p class="empty-feed"><?= $activeRoom !== 'all' ? 'Ei julkaisuja tässä huoneessa vielä.' : 'Ei julkaisuja vielä.' ?></p>
                 <?php endif; ?>
             </section>
         </main>

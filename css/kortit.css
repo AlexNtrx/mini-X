@@ -377,11 +377,19 @@ textarea.post-text:focus {
 
 .comment-item {
     display: flex;
-    gap: 10px;
+    flex-direction: column;
+    gap: 8px;
     background-color: #121417;
     border: 1px solid #23272b;
     border-radius: 12px;
-    padding: 8px 12px;
+    padding: 10px 12px;
+    transition: border-color 0.2s ease;
+}
+
+.comment-main-row {
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
 }
 
 .comment-avatar {
@@ -525,4 +533,234 @@ textarea.post-text:focus {
     display: inline-flex;
     align-items: center;
     gap: 4px;
+}
+
+/* ===================================================
+   Pantip Style - Post Badges, Best Answer & Replies
+   =================================================== */
+
+/* Post Header Badges */
+.post-badge-room {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(29, 155, 240, 0.12);
+    color: #1d9bf0;
+    border: 1px solid rgba(29, 155, 240, 0.3);
+    text-decoration: none;
+    margin-left: 4px;
+    transition: all 0.2s ease;
+}
+
+.post-badge-room:hover {
+    background: rgba(29, 155, 240, 0.22);
+    border-color: #1d9bf0;
+}
+
+.post-badge-question {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(255, 140, 0, 0.15);
+    color: #ff8c00;
+    border: 1px solid rgba(255, 140, 0, 0.35);
+    margin-left: 4px;
+}
+
+.post-badge-resolved {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(0, 186, 124, 0.15);
+    color: #00ba7c;
+    border: 1px solid rgba(0, 186, 124, 0.35);
+    margin-left: 4px;
+}
+
+/* Best Answer Card Highlight */
+.comment-item.best-answer-card {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.06), #121417) !important;
+    border: 1px solid rgba(255, 215, 0, 0.45) !important;
+    box-shadow: 0 2px 14px rgba(255, 215, 0, 0.08);
+}
+
+.best-answer-ribbon {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #ffd700;
+    background: rgba(255, 215, 0, 0.12);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    margin-bottom: 4px;
+    align-self: flex-start;
+}
+
+.best-answer-ribbon-icon {
+    font-size: 12px;
+}
+
+.best-answer-form {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+}
+
+.btn-best-answer-action {
+    background: transparent;
+    border: 1px solid rgba(255, 215, 0, 0.35);
+    color: #ffd700;
+    font-size: 11px;
+    font-family: inherit;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-best-answer-action:hover {
+    background: rgba(255, 215, 0, 0.18);
+    border-color: #ffd700;
+}
+
+.btn-best-answer-action.active {
+    background: #ffd700;
+    color: #000;
+    border-color: #ffd700;
+    font-weight: 700;
+}
+
+/* Reply Action Button */
+.btn-reply-action {
+    background: transparent;
+    border: none;
+    color: #71767b;
+    font-size: 11.5px;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.btn-reply-action:hover {
+    color: #1d9bf0;
+    background-color: rgba(29, 155, 240, 0.1);
+}
+
+/* Inline Reply Form */
+.comment-reply-box {
+    margin-top: 6px;
+    margin-left: 38px;
+    padding: 6px 10px;
+    background-color: #16181c;
+    border: 1px solid #2f3336;
+    border-radius: 12px;
+}
+
+.inline-reply-input-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+.inline-reply-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #e7e9ea;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    padding: 4px 6px;
+}
+
+.inline-reply-submit-btn {
+    background-color: #1d9bf0;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 4px 12px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.inline-reply-submit-btn:hover {
+    background-color: #1a8cd8;
+}
+
+.inline-reply-cancel-btn {
+    background: transparent;
+    border: none;
+    color: #71767b;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 0 4px;
+    line-height: 1;
+}
+
+.inline-reply-cancel-btn:hover {
+    color: #e7e9ea;
+}
+
+/* Threaded Replies List (Sub-comments 1-1, 1-2) */
+.comment-replies-list {
+    margin-top: 8px;
+    margin-left: 14px;
+    padding-left: 14px;
+    border-left: 2px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reply-comment-item {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 8px 10px;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+.reply-comment-item .comment-avatar {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+}
+
+@media (max-width: 600px) {
+    .comment-reply-box {
+        margin-left: 0;
+    }
+    .comment-replies-list {
+        margin-left: 6px;
+        padding-left: 8px;
+    }
+    .btn-best-answer-action {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
 }

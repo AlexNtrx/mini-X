@@ -53,10 +53,14 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             <section class="notifications-list" data-latest-id="<?= $latestId ?>">
                 <?php if (!empty($notifications)): ?>
                     <?php foreach ($notifications as $notif): ?>
-                        <a href="index.php?page=home#<?= $notif['type'] === 'comment' ? 'comments-' : 'post-' ?><?= (int)$notif['post_id'] ?>" class="notification-item <?= !$notif['is_read'] ? 'unread' : '' ?>" data-id="<?= (int)$notif['id'] ?>">
+                        <a href="index.php?page=home#<?= ($notif['type'] === 'comment' || $notif['type'] === 'comment_reply' || $notif['type'] === 'best_answer') ? 'comments-' : 'post-' ?><?= (int)$notif['post_id'] ?>" class="notification-item <?= !$notif['is_read'] ? 'unread' : '' ?>" data-id="<?= (int)$notif['id'] ?>">
                             <div class="notif-icon-col">
                                 <?php if ($notif['type'] === 'like'): ?>
                                     <span class="notif-icon notif-like">&#10084;&#65039;</span>
+                                <?php elseif ($notif['type'] === 'best_answer'): ?>
+                                    <span class="notif-icon notif-best-answer">⭐</span>
+                                <?php elseif ($notif['type'] === 'comment_reply'): ?>
+                                    <span class="notif-icon notif-reply">↩️</span>
                                 <?php else: ?>
                                     <span class="notif-icon notif-comment">&#128172;</span>
                                 <?php endif; ?>
@@ -66,6 +70,10 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
                                     <strong><?= htmlspecialchars($notif['actor_name'], ENT_QUOTES, 'UTF-8') ?></strong>
                                     <?php if ($notif['type'] === 'like'): ?>
                                         <span>tykkäsi julkaisustasi</span>
+                                    <?php elseif ($notif['type'] === 'best_answer'): ?>
+                                        <span style="color: #ffd700; font-weight: 600;">valitsi vastauksesi parhaaksi! ⭐</span>
+                                    <?php elseif ($notif['type'] === 'comment_reply'): ?>
+                                        <span>vastasi kommenttiisi</span>
                                     <?php else: ?>
                                         <span>kommentoi julkaisuasi</span>
                                     <?php endif; ?>

@@ -1,8 +1,95 @@
 <?php
 
-// Hakee kaikki julkaisut etusivulle (käyttäjänimi ja avatar haetaan users-taulusta JOINilla)
-function getShowContents($conn)
+/**
+ * Varmistaa että Pantip-tyylin sarakkeet ovat olemassa tietokannassa.
+ *
+ * @param mysqli $conn
+ * @return bool
+ */
+function ensurePantipSchema($conn)
 {
+    static $checked = false;
+    if ($checked || !$conn) {
+        return true;
+    }
+
+    // 1. posts.room
+    $col1 = $conn->query("SHOW COLUMNS FROM `posts` LIKE 'room'");
+    if ($col1 && $col1->num_rows === 0) {
+        $conn->query("ALTER TABLE `posts` ADD COLUMN `room` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'general' AFTER `image`");
+    }
+
+    // 2. posts.post_type
+    $col2 = $conn->query("SHOW COLUMNS FROM `posts` LIKE 'post_type'");
+    if ($col2 && $col2->num_rows === 0) {
+        $conn->query("ALTER TABLE `posts` ADD COLUMN `post_type` VARCHAR(20) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT 'general' AFTER `room`");
+    }
+
+    // 3. posts.best_comment_id
+    $col3 = $conn->query("SHOW COLUMNS FROM `posts` LIKE 'best_comment_id'");
+    if ($col3 && $col3->num_rows === 0) {
+        $conn->query("ALTER TABLE `posts` ADD COLUMN `best_comment_id` INT DEFAULT NULL AFTER `post_type`");
+    }
+
+    // 4. comments.parent_id
+    $col4 = $conn->query("SHOW COLUMNS FROM `comments` LIKE 'parent_id'");
+    if ($col4 && $col4->num_rows === 0) {
+        $conn->query("ALTER TABLE `comments` ADD COLUMN `parent_id` INT DEFAULT NULL AFTER `post_id`");
+    }
+
+    $checked = true;
+    return true;
+}
+
+/**
+ * Palauttaa kaikki saatavilla olevat huoneet / aihealueet (Rooms).
+ *
+ * @return array
+ */
+function getAvailableRooms()
+{
+    return [
+        'general'       => ['name' => 'Yleinen',        'icon' => '💬', 'desc' => 'Vapaa keskustelu ja sekalaiset aiheet'],
+        'tech'          => ['name' => 'Teknologia',     'icon' => '💻', 'desc' => 'IT, ohjelmointi, laitteet ja teknologia'],
+        'food'          => ['name' => 'Ruoka & Juoma',  'icon' => '🍳', 'desc' => 'Ruoanlaitto, reseptit ja ravintolat'],
+        'gaming'        => ['name' => 'Pelaaminen',     'icon' => '🎮', 'desc' => 'Videopelit, konsolit ja e-urheilu'],
+        'entertainment' => ['name' => 'Viihde',         'icon' => '🎬', 'desc' => 'Elokuvat, sarjat, musiikki ja popkulttuuri'],
+        'lifestyle'     => ['name' => 'Elämäntapa',     'icon' => '✨', 'desc' => 'Hyvinvointi, arki ja matkailu'],
+    ];
+}
+
+// Hakee kaikki julkaisut etusivulle huonesuodatuksella (käyttäjänimi ja avatar haetaan users-taulusta JOINilla)
+function getShowContents($conn, $room = 'all')
+{
+    if (!$conn) return [];
+    ensurePantipSchema($conn);
+
+    $availableRooms = getAvailableRooms();
+    $filterRoom = (is_string($room) && $room !== 'all' && isset($availableRooms[$room])) ? $room : null;
+
+    if ($filterRoom) {
+        $sql = "SELECT posts.*, 
+                       users.username AS author, 
+                       COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
+                       users.avatar AS author_avatar 
+                FROM posts 
+                JOIN users ON posts.user_id = users.id 
+                WHERE users.deleted_at IS NULL AND posts.room = ? 
+                ORDER BY posts.id DESC";
+        $stmt = $conn->prepare($sql);
+        if ($stmt) {
+            $stmt->bind_param("s", $filterRoom);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $contents = [];
+            while ($row = $result->fetch_assoc()) {
+                $contents[] = $row;
+            }
+            $stmt->close();
+            return $contents;
+        }
+    }
+
     $sql = "SELECT posts.*, 
                    users.username AS author, 
                    COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
@@ -115,12 +202,25 @@ function uploadPostImage($file, $userId)
     return ['filename' => $fileName];
 }
 
-// Lisää uuden julkaisun (teksti, kuva tai molemmat)
-function addPost($conn, $userId, $content = null, $image = null)
+// Lisää uuden julkaisun (teksti, kuva tai molemmat, huone ja julkaisutyyppi)
+function addPost($conn, $userId, $content = null, $image = null, $room = 'general', $postType = 'general')
 {
+    if (!$conn || $userId <= 0) return false;
+    ensurePantipSchema($conn);
+
+    $availableRooms = getAvailableRooms();
+    if (!isset($availableRooms[$room])) {
+        $room = 'general';
+    }
+
+    if ($postType !== 'question') {
+        $postType = 'general';
+    }
+
     $content = ($content !== null && trim($content) !== '') ? trim($content) : null;
-    $stmt = $conn->prepare("INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)");
-    $stmt->bind_param("iss", $userId, $content, $image);
+    $stmt = $conn->prepare("INSERT INTO posts (user_id, content, image, room, post_type) VALUES (?, ?, ?, ?, ?)");
+    if (!$stmt) return false;
+    $stmt->bind_param("issss", $userId, $content, $image, $room, $postType);
     $res = $stmt->execute();
     $stmt->close();
     return $res;

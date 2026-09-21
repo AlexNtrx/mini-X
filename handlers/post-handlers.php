@@ -26,8 +26,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                 }
 
+                $room = trim($_POST["room"] ?? "general");
+                $postType = trim($_POST["post_type"] ?? "general");
+
                 if (empty($error)) {
-                    if (addPost($conn, $userId, $content, $imageFileName)) {
+                    if (addPost($conn, $userId, $content, $imageFileName, $room, $postType)) {
                         setFlashToast("Julkaisu luotu onnistuneesti!", "success");
                         header("Location: " . $redirectUrl);
                         exit;
