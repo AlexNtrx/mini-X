@@ -56,7 +56,7 @@ if (!empty($error)) {
     <link rel="stylesheet" href="./css/main.css?v=1.1.2">
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
     <link rel="stylesheet" href="./css/header.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/setting.css?v=1.1.3">
+    <link rel="stylesheet" href="./css/setting.css?v=1.1.2">
 </head>
 
 <body>
@@ -269,7 +269,7 @@ if (!empty($error)) {
     </div>
 
     <script src="./js/script.js?v=1.1.2"></script>
-    <script src="./js/setting.js?v=1.1.3"></script>
+    <script src="./js/setting.js?v=1.1.2"></script>
 </body>
 
 </html>

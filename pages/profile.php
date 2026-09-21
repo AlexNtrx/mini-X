@@ -96,10 +96,10 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
     <link rel="stylesheet" href="./css/main.css?v=1.1.2">
     <link rel="stylesheet" href="./css/kortit.css?v=1.1.2">
     <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/profile.css?v=1.2.0">
-    <link rel="stylesheet" href="./css/profile-modal.css?v=1.3.2">
+    <link rel="stylesheet" href="./css/profile.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/profile-modal.css?v=1.1.2">
     <?php if (!empty($customization['song_url'])): ?>
-        <link rel="stylesheet" href="./css/retro-player.css?v=1.4.2">
+        <link rel="stylesheet" href="./css/retro-player.css?v=1.1.2">
     <?php endif; ?>
 
 </head>
@@ -226,10 +226,10 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
 
     <script src="./js/script.js?v=1.1.2"></script>
     <?php if (!empty($customization['song_url'])): ?>
-        <script src="./js/retro-player.js?v=1.4.2"></script>
+        <script src="./js/retro-player.js?v=1.1.2"></script>
     <?php endif; ?>
     <?php if ($isOwnProfile): ?>
-        <script src="./js/profile-modal.js?v=1.3.3"></script>
+        <script src="./js/profile-modal.js?v=1.1.2"></script>
     <?php endif; ?>
 </body>
 </html>

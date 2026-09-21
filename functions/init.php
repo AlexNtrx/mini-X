@@ -2,6 +2,11 @@
 // Asetetaan aikavyöhyke (Timezone: Suomi / Europe/Helsinki)
 date_default_timezone_set('Europe/Helsinki');
 
+// Asetetaan sovelluksen versio
+if (!defined('APP_VERSION')) {
+    define('APP_VERSION', '1.1.2');
+}
+
 /*
   Lataa kaikki funktiomoduulit
  */
