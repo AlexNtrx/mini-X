@@ -49,12 +49,10 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn, $activeRoom) : [];
             <!-- Huoneiden suodatuspalkki (Pantip Room Pills) -->
             <div class="rooms-bar">
                 <a href="index.php?page=home" class="room-chip <?= $activeRoom === 'all' ? 'active' : '' ?>">
-                    <span class="room-chip-icon">🌐</span>
                     <span class="room-chip-text">Kaikki</span>
                 </a>
                 <?php foreach ($availableRooms as $rKey => $rData): ?>
                     <a href="index.php?page=home&room=<?= urlencode($rKey) ?>" class="room-chip <?= $activeRoom === $rKey ? 'active' : '' ?>" title="<?= htmlspecialchars($rData['desc'], ENT_QUOTES, 'UTF-8') ?>">
-                        <span class="room-chip-icon"><?= $rData['icon'] ?></span>
                         <span class="room-chip-text"><?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?></span>
                     </a>
                 <?php endforeach; ?>

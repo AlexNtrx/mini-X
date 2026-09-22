@@ -30,19 +30,19 @@ if ($currentPostRoom === 'all' || !isset($availableRooms[$currentPostRoom])) {
                 <select name="room" id="create-post-room-select" class="create-post-room-select" aria-label="Valitse huone">
                     <?php foreach ($availableRooms as $rKey => $rData): ?>
                         <option value="<?= htmlspecialchars($rKey, ENT_QUOTES, 'UTF-8') ?>" <?= $currentPostRoom === $rKey ? 'selected' : '' ?>>
-                            <?= $rData['icon'] ?> <?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?>
+                            <?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
 
-            <!-- Julkaisutyyppi (Post Type Toggle: 💬 Yleinen / ❓ Kysymys) -->
+            <!-- Julkaisutyyppi (Post Type Toggle: Yleinen / Kysymys) -->
             <div class="create-post-type-toggle">
                 <button type="button" class="type-toggle-btn active" id="btn-type-general" onclick="setPostType('general', this)">
-                    💬 Yleinen
+                    Yleinen
                 </button>
                 <button type="button" class="type-toggle-btn" id="btn-type-question" onclick="setPostType('question', this)">
-                    ❓ Kysymys
+                    Kysymys
                 </button>
             </div>
         </div>

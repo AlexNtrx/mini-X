@@ -49,12 +49,12 @@ function ensurePantipSchema($conn)
 function getAvailableRooms()
 {
     return [
-        'general'       => ['name' => 'Yleinen',        'icon' => '💬', 'desc' => 'Vapaa keskustelu ja sekalaiset aiheet'],
-        'tech'          => ['name' => 'Teknologia',     'icon' => '💻', 'desc' => 'IT, ohjelmointi, laitteet ja teknologia'],
-        'food'          => ['name' => 'Ruoka & Juoma',  'icon' => '🍳', 'desc' => 'Ruoanlaitto, reseptit ja ravintolat'],
-        'gaming'        => ['name' => 'Pelaaminen',     'icon' => '🎮', 'desc' => 'Videopelit, konsolit ja e-urheilu'],
-        'entertainment' => ['name' => 'Viihde',         'icon' => '🎬', 'desc' => 'Elokuvat, sarjat, musiikki ja popkulttuuri'],
-        'lifestyle'     => ['name' => 'Elämäntapa',     'icon' => '✨', 'desc' => 'Hyvinvointi, arki ja matkailu'],
+        'general'       => ['name' => 'Yleinen',        'icon' => '', 'desc' => 'Vapaa keskustelu ja sekalaiset aiheet'],
+        'tech'          => ['name' => 'Teknologia',     'icon' => '', 'desc' => 'IT, ohjelmointi, laitteet ja teknologia'],
+        'food'          => ['name' => 'Ruoka & Juoma',  'icon' => '', 'desc' => 'Ruoanlaitto, reseptit ja ravintolat'],
+        'gaming'        => ['name' => 'Pelaaminen',     'icon' => '', 'desc' => 'Videopelit, konsolit ja e-urheilu'],
+        'entertainment' => ['name' => 'Viihde',         'icon' => '', 'desc' => 'Elokuvat, sarjat, musiikki ja popkulttuuri'],
+        'lifestyle'     => ['name' => 'Elämäntapa',     'icon' => '', 'desc' => 'Hyvinvointi, arki ja matkailu'],
     ];
 }
 

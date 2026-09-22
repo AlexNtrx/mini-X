@@ -278,11 +278,6 @@
     font-weight: 600;
 }
 
-.room-chip-icon {
-    font-size: 14px;
-    line-height: 1;
-}
-
 /* Create Post Room Picker */
 .create-post-room-picker {
     display: inline-flex;
@@ -314,7 +309,7 @@
     color: #e7e9ea;
 }
 
-/* Post Type Toggle (💬 Yleinen / ❓ Kysymys) */
+/* Post Type Toggle (Yleinen / Kysymys) */
 .create-post-type-toggle {
     display: inline-flex;
     align-items: center;

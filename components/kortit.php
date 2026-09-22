@@ -46,12 +46,12 @@ require_once __DIR__ . "/../functions/init.php";
                     ?>
                     <?php if ($postRoom !== 'general' && isset($availableRooms[$postRoom])): ?>
                         <a href="index.php?page=home&room=<?= urlencode($postRoom) ?>" class="post-badge-room" title="<?= htmlspecialchars($availableRooms[$postRoom]['desc'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-                            <?= $availableRooms[$postRoom]['icon'] ?> <?= htmlspecialchars($availableRooms[$postRoom]['name'], ENT_QUOTES, 'UTF-8') ?>
+                            <?= htmlspecialchars($availableRooms[$postRoom]['name'], ENT_QUOTES, 'UTF-8') ?>
                         </a>
                     <?php endif; ?>
 
                     <?php if ($postType === 'question'): ?>
-                        <span class="post-badge-question" title="Kysymysjulkaisu">❓ Kysymys</span>
+                        <span class="post-badge-question" title="Kysymysjulkaisu">Kysymys</span>
                         <?php if ($bestCommentId): ?>
                             <span class="post-badge-resolved" title="Ratkaistu (paras vastaus valittu)">✓ Ratkaistu</span>
                         <?php endif; ?>
