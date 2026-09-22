@@ -23,6 +23,30 @@ if ($currentPostRoom === 'all' || !isset($availableRooms[$currentPostRoom])) {
     </a>
 
     <div class="create-post-content">
+        <!-- Yläpalkki: Huone & Julkaisutyyppi (Meta Bar) -->
+        <div class="create-post-meta-bar">
+            <!-- Valitse huone (Rooms Dropdown) -->
+            <div class="create-post-room-picker" title="Valitse huone">
+                <select name="room" id="create-post-room-select" class="create-post-room-select" aria-label="Valitse huone">
+                    <?php foreach ($availableRooms as $rKey => $rData): ?>
+                        <option value="<?= htmlspecialchars($rKey, ENT_QUOTES, 'UTF-8') ?>" <?= $currentPostRoom === $rKey ? 'selected' : '' ?>>
+                            <?= $rData['icon'] ?> <?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <!-- Julkaisutyyppi (Post Type Toggle: 💬 Yleinen / ❓ Kysymys) -->
+            <div class="create-post-type-toggle">
+                <button type="button" class="type-toggle-btn active" id="btn-type-general" onclick="setPostType('general', this)">
+                    💬 Yleinen
+                </button>
+                <button type="button" class="type-toggle-btn" id="btn-type-question" onclick="setPostType('question', this)">
+                    ❓ Kysymys
+                </button>
+            </div>
+        </div>
+
         <textarea
             name="content"
             id="create-post-textarea"
@@ -47,27 +71,6 @@ if ($currentPostRoom === 'all' || !isset($availableRooms[$currentPostRoom])) {
                         <path d="M5 17.5L10 11.5L18.5 17.5"/>
                     </svg>
                 </button>
-
-                <!-- Valitse huone (Rooms Dropdown) -->
-                <div class="create-post-room-picker" title="Valitse huone">
-                    <select name="room" id="create-post-room-select" class="create-post-room-select">
-                        <?php foreach ($availableRooms as $rKey => $rData): ?>
-                            <option value="<?= htmlspecialchars($rKey, ENT_QUOTES, 'UTF-8') ?>" <?= $currentPostRoom === $rKey ? 'selected' : '' ?>>
-                                <?= $rData['icon'] ?> <?= htmlspecialchars($rData['name'], ENT_QUOTES, 'UTF-8') ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-
-                <!-- Julkaisutyyppi (Post Type Toggle: 💬 Yleinen / ❓ Kysymys) -->
-                <div class="create-post-type-toggle">
-                    <button type="button" class="type-toggle-btn active" id="btn-type-general" onclick="setPostType('general', this)">
-                        💬 Yleinen
-                    </button>
-                    <button type="button" class="type-toggle-btn" id="btn-type-question" onclick="setPostType('question', this)">
-                        ❓ Kysymys
-                    </button>
-                </div>
             </div>
 
             <button type="submit" name="create_post" class="btn-publish-post">
