@@ -21,6 +21,23 @@ if ($activeRoom !== 'all' && !isset($availableRooms[$activeRoom])) {
     $activeRoom = 'all';
 }
 $contents = (isset($conn) && $conn) ? getShowContents($conn, $activeRoom) : [];
+
+if (isAjaxRequest()) {
+    ob_start();
+    if (!empty($contents)) {
+        foreach ($contents as $content) {
+            include __DIR__ . '/../components/kortit.php';
+        }
+    } else {
+        echo '<p class="empty-feed">' . ($activeRoom !== 'all' ? 'Ei julkaisuja tässä huoneessa vielä.' : 'Ei julkaisuja vielä.') . '</p>';
+    }
+    $html = ob_get_clean();
+    sendJsonResponse([
+        'success' => true,
+        'room' => $activeRoom,
+        'html' => $html
+    ]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -73,7 +90,8 @@ $contents = (isset($conn) && $conn) ? getShowContents($conn, $activeRoom) : [];
             </section>
         </main>
     </div>
-    <script src="./js/toast.js?v=1.1.2"></script>
-    <script src="./js/script.js?v=1.1.2"></script>
+    <?php include __DIR__ . '/../components/report-modal.php'; ?>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
 </body>
 </html>

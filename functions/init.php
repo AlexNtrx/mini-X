@@ -4,7 +4,7 @@ date_default_timezone_set('Europe/Helsinki');
 
 // Asetetaan sovelluksen versio
 if (!defined('APP_VERSION')) {
-    define('APP_VERSION', '1.1.2');
+    define('APP_VERSION', '1.2.0');
 }
 
 /*
@@ -20,6 +20,7 @@ require_once __DIR__ . "/notifications.php";
 require_once __DIR__ . "/password-reset.php";
 require_once __DIR__ . "/theme.php";
 require_once __DIR__ . "/toast.php";
+require_once __DIR__ . "/admin.php";
 
 // Palauttaa turvallisen uudelleenohjausosoitteen (estää Open Redirect -haavoittuvuuden)
 function getSafeRedirectUrl($default = 'index.php')
@@ -39,6 +40,34 @@ function getSafeRedirectUrl($default = 'index.php')
     }
 
     return $default;
+}
+
+/**
+ * Tarkistaa onko pyyntö AJAX-pyyntö (Fetch / XMLHttpRequest)
+ *
+ * @return bool
+ */
+function isAjaxRequest()
+{
+    return (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+        || isset($_POST['ajax'])
+        || isset($_GET['ajax'])
+        || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+}
+
+/**
+ * Lähettää JSON-vastauksen ja lopettaa suorituksen
+ *
+ * @param array $data
+ * @param int $statusCode
+ * @return void
+ */
+function sendJsonResponse(array $data, int $statusCode = 200)
+{
+    http_response_code($statusCode);
+    header('Content-Type: application/json; charset=UTF-8');
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    exit;
 }
 
 /**

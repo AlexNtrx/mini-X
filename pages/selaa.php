@@ -29,6 +29,35 @@ $contents = [];
 if ($q !== '' && isset($conn) && $conn) {
     $contents = searchPostsByUsername($conn, $q);
 }
+
+if (isAjaxRequest()) {
+    ob_start();
+    if (!empty($contents)) {
+        foreach ($contents as $content) {
+            include __DIR__ . '/../components/kortit.php';
+        }
+    } else {
+        echo '<p class="empty-search">' . ($q !== '' ? 'Ei julkaisuja käyttäjältä "@' . htmlspecialchars($q) . '".' : 'Kirjoita käyttäjänimi tai valitse käyttäjä ylhäältä nähdäksesi julkaisut.') . '</p>';
+    }
+    $postsHtml = ob_get_clean();
+
+    $userCardHtml = '';
+    if (!empty($q)) {
+        $userCardHtml = '<div class="selaa-user-card">'
+            . '<span class="selaa-user-card-title">Käyttäjä <strong>@' . htmlspecialchars($q) . '</strong></span>'
+            . '<a href="index.php?page=profile&u=' . urlencode($q) . '" class="setting-btn-secondary selaa-user-card-btn">'
+            . '✨ Avaa profiili & Musiikki'
+            . '</a>'
+            . '</div>';
+    }
+
+    sendJsonResponse([
+        'success' => true,
+        'q' => $q,
+        'posts_html' => $postsHtml,
+        'user_card_html' => $userCardHtml
+    ]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="fi">
@@ -113,7 +142,8 @@ if ($q !== '' && isset($conn) && $conn) {
             </section>
         </main>
     </div>
-    <script src="./js/toast.js?v=1.1.2"></script>
-    <script src="./js/script.js?v=1.1.2"></script>
+    <?php include __DIR__ . '/../components/report-modal.php'; ?>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
 </body>
 </html>

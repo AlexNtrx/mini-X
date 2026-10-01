@@ -262,9 +262,9 @@ if (!empty($error)) {
         </div>
     </div>
 
-    <script src="./js/toast.js?v=1.1.2"></script>
-    <script src="./js/script.js?v=1.1.2"></script>
-    <script src="./js/setting.js?v=1.1.2"></script>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
+    <script src="./js/setting.js?v=<?= filemtime(__DIR__ . '/../js/setting.js') ?>"></script>
 </body>
 
 </html>

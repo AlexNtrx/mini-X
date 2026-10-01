@@ -370,6 +370,7 @@ function checkUnreadNotifications() {
                     // data.notifications on ID-järjestyksessä (ASC),
                     // joten prependaamalla järjestyksessä uusin tulee listan ylimmäksi
                     data.notifications.forEach((notif) => {
+                        const item = document.createElement("a");
                         const targetAnchor = (notif.type === 'comment' || notif.type === 'comment_reply' || notif.type === 'best_answer') ? 'comments-' : 'post-';
                         item.href = `index.php?page=home#${targetAnchor}${encodeURIComponent(notif.post_id)}`;
                         item.className = "notification-item unread";
@@ -524,3 +525,687 @@ function toggleCommentReplyBox(boxId, mentionText) {
         box.style.display = 'none';
     }
 }
+
+// ==========================================
+// AJAX EVENT DELEGATION FOR ALL POST & COMMENT ACTIONS
+// ==========================================
+
+document.addEventListener('submit', async (e) => {
+    const form = e.target;
+    if (!form || !(form instanceof HTMLFormElement)) return;
+
+    // 1. Tykkäys (Like / Unlike)
+    if (form.classList.contains('action-form') && (form.querySelector('input[name="post_id"]') || form.querySelector('button[name="like_post"]'))) {
+        e.preventDefault();
+        const btn = form.querySelector('.like-btn') || form.querySelector('button[type="submit"]');
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('like_post')) formData.append('like_post', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (btn) {
+                    btn.classList.toggle('liked', data.is_liked);
+                    btn.setAttribute('title', data.is_liked ? 'Peruuta tykkäys' : 'Tykkää');
+                    const icon = btn.querySelector('.action-icon');
+                    if (icon) icon.innerHTML = data.is_liked ? '&#9829;' : '&#9825;';
+                    const count = btn.querySelector('.action-count');
+                    if (count) count.textContent = data.like_count > 0 ? data.like_count : '';
+                }
+            } else if (data.redirect) {
+                window.location.href = data.redirect;
+            }
+        } catch (err) {
+            console.error('AJAX Like error:', err);
+        }
+        return;
+    }
+
+    // 2. Kommentin tai alikommentin lisäys (Add comment / Reply)
+    if (form.classList.contains('add-comment-form') || form.classList.contains('inline-reply-form')) {
+        e.preventDefault();
+        const input = form.querySelector('input[name="comment_content"]');
+        const content = input ? input.value.trim() : '';
+        if (!content) {
+            if (typeof Toast !== 'undefined') Toast.error('Kommentti ei voi olla tyhjä.');
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Lähetetään...';
+        }
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('add_comment')) formData.append('add_comment', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                const postId = data.post_id;
+                const wrapper = document.getElementById(`comments-list-wrapper-${postId}`);
+                if (wrapper) {
+                    wrapper.innerHTML = data.comments_html || '';
+                }
+                const postArticle = document.getElementById(`post-${postId}`);
+                if (postArticle) {
+                    const countSpan = postArticle.querySelector('.comment-btn .action-count');
+                    if (countSpan) {
+                        countSpan.textContent = data.comment_count > 0 ? data.comment_count : '';
+                    }
+                }
+                if (input) input.value = '';
+                if (form.classList.contains('inline-reply-form')) {
+                    const replyBox = form.closest('.comment-reply-box');
+                    if (replyBox) replyBox.style.display = 'none';
+                }
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Kommentti lisätty onnistuneesti!');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Kommentin lisääminen epäonnistui.');
+                }
+                if (data.redirect) window.location.href = data.redirect;
+            }
+        } catch (err) {
+            console.error('AJAX Comment error:', err);
+            if (typeof Toast !== 'undefined') Toast.error('Verkkovirhe kommentoidessa.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        }
+        return;
+    }
+
+    // 3. Paras vastaus (Best Answer Toggle)
+    if (form.classList.contains('best-answer-form')) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('toggle_best_answer')) formData.append('toggle_best_answer', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                const postId = data.post_id;
+                const wrapper = document.getElementById(`comments-list-wrapper-${postId}`);
+                if (wrapper) {
+                    wrapper.innerHTML = data.comments_html || '';
+                }
+                const postArticle = document.getElementById(`post-${postId}`);
+                if (postArticle) {
+                    const postUser = postArticle.querySelector('.post-user');
+                    let resolvedBadge = postUser?.querySelector('.post-badge-resolved');
+                    if (data.is_resolved) {
+                        if (!resolvedBadge && postUser) {
+                            resolvedBadge = document.createElement('span');
+                            resolvedBadge.className = 'post-badge-resolved';
+                            resolvedBadge.title = 'Ratkaistu (paras vastaus valittu)';
+                            resolvedBadge.textContent = '✓ Ratkaistu';
+                            postUser.appendChild(resolvedBadge);
+                        }
+                    } else if (resolvedBadge) {
+                        resolvedBadge.remove();
+                    }
+                }
+                if (typeof Toast !== 'undefined') {
+                    if (data.action === 'marked') {
+                        Toast.success(data.message || 'Valittu parhaaksi vastaukseksi! ⭐');
+                    } else {
+                        Toast.info(data.message || 'Parhaan vastauksen merkintä poistettu.');
+                    }
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Toiminto epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Best answer error:', err);
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+        return;
+    }
+
+    // 4. Kommentin poisto (Delete comment)
+    if (form.classList.contains('delete-comment-form')) {
+        e.preventDefault();
+        if (!confirm('Poistetaanko kommentti?')) return;
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('delete_comment')) formData.append('delete_comment', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                const postId = data.post_id;
+                const wrapper = document.getElementById(`comments-list-wrapper-${postId}`);
+                if (wrapper) {
+                    wrapper.innerHTML = data.comments_html || '';
+                }
+                const postArticle = document.getElementById(`post-${postId}`);
+                if (postArticle) {
+                    const countSpan = postArticle.querySelector('.comment-btn .action-count');
+                    if (countSpan) {
+                        countSpan.textContent = data.comment_count > 0 ? data.comment_count : '';
+                    }
+                }
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Kommentti poistettu onnistuneesti!');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Kommentin poisto epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Delete comment error:', err);
+        }
+        return;
+    }
+
+    // 5. Julkaisun luonti (Create post)
+    if (form.classList.contains('create-post')) {
+        e.preventDefault();
+        const textarea = form.querySelector('textarea[name="content"]');
+        const imageInput = form.querySelector('input[type="file"][name="image"]');
+        const content = textarea ? textarea.value.trim() : '';
+        const hasImage = imageInput && imageInput.files && imageInput.files.length > 0;
+
+        if (!content && !hasImage) {
+            if (typeof Toast !== 'undefined') Toast.error('Julkaisussa on oltava tekstiä tai kuva.');
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalBtnText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Julkaistaan...';
+        }
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('create_post')) formData.append('create_post', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success && data.html) {
+                const postsSection = document.querySelector('.posts');
+                if (postsSection) {
+                    const emptyMsg = postsSection.querySelector('.empty-feed, .empty-posts, .empty-search');
+                    if (emptyMsg) emptyMsg.remove();
+
+                    const temp = document.createElement('div');
+                    temp.innerHTML = data.html.trim();
+                    const newPostEl = temp.firstElementChild;
+                    if (newPostEl) {
+                        postsSection.prepend(newPostEl);
+                    }
+                }
+                if (textarea) textarea.value = '';
+                handlePostImageRemove();
+
+                const generalBtn = document.getElementById('btn-type-general');
+                if (generalBtn && typeof setPostType === 'function') {
+                    setPostType('general', generalBtn);
+                }
+
+                const profileHeaderCount = document.querySelector('.profile-header .header-info span');
+                if (profileHeaderCount) {
+                    const curPosts = document.querySelectorAll('.posts .post').length;
+                    profileHeaderCount.textContent = `${curPosts} ${curPosts === 1 ? 'julkaisu' : 'julkaisua'}`;
+                }
+
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Julkaisu luotu onnistuneesti!');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Julkaisun luominen epäonnistui.');
+                }
+                if (data.redirect) window.location.href = data.redirect;
+            }
+        } catch (err) {
+            console.error('AJAX Create post error:', err);
+            if (typeof Toast !== 'undefined') Toast.error('Verkkovirhe julkaistaessa.');
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalBtnText;
+            }
+        }
+        return;
+    }
+
+    // 6. Julkaisun muokkaus (Edit post)
+    if (form.classList.contains('edit-form')) {
+        e.preventDefault();
+        const textarea = form.querySelector('textarea[name="content"]');
+        const content = textarea ? textarea.value.trim() : '';
+        if (!content) {
+            if (typeof Toast !== 'undefined') Toast.error('Julkaisun teksti ei voi olla tyhjä.');
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('update_post')) formData.append('update_post', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                const postArticle = form.closest('.post');
+                if (postArticle) {
+                    const textEl = postArticle.querySelector('.post-view .post-text');
+                    if (textEl) {
+                        textEl.textContent = data.content;
+                    } else {
+                        const newTextEl = document.createElement('p');
+                        newTextEl.className = 'post-text';
+                        newTextEl.textContent = data.content;
+                        const media = postArticle.querySelector('.post-media-container');
+                        if (media) {
+                            media.before(newTextEl);
+                        } else {
+                            const actions = postArticle.querySelector('.post-actions');
+                            if (actions) actions.before(newTextEl);
+                        }
+                    }
+                    cancelEditForm(form);
+                }
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Julkaisu päivitetty onnistuneesti!');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Päivitys epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Update post error:', err);
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+        return;
+    }
+
+    // 7. Julkaisun poisto (Delete post)
+    const deletePostBtn = form.querySelector('button[name="delete_post"]');
+    if (deletePostBtn) {
+        e.preventDefault();
+        if (!confirm('Haluatko varmasti poistaa tämän julkaisun?')) return;
+
+        const postArticle = form.closest('.post');
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('delete_post')) formData.append('delete_post', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (postArticle) {
+                    postArticle.style.transition = 'opacity 0.3s, transform 0.3s';
+                    postArticle.style.opacity = '0';
+                    postArticle.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        postArticle.remove();
+                        const remainingPosts = document.querySelectorAll('.posts .post');
+                        if (remainingPosts.length === 0) {
+                            const postsSection = document.querySelector('.posts');
+                            if (postsSection) {
+                                postsSection.innerHTML = '<p class="empty-feed">Ei julkaisuja vielä.</p>';
+                            }
+                        }
+                        const profileHeaderCount = document.querySelector('.profile-header .header-info span');
+                        if (profileHeaderCount) {
+                            const count = remainingPosts.length;
+                            profileHeaderCount.textContent = `${count} ${count === 1 ? 'julkaisu' : 'julkaisua'}`;
+                        }
+                    }, 300);
+                }
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Julkaisu poistettu onnistuneesti!');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Julkaisun poistaminen epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Delete post error:', err);
+        }
+        return;
+    }
+
+    // 8. Salasanan palautus (Reset Password Form)
+    if (form.querySelector('input[name="reset_password_post"]')) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+
+        try {
+            const res = await fetch(form.action || window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Salasana päivitetty onnistuneesti!');
+                }
+                setTimeout(() => {
+                    window.location.href = data.redirect || 'index.php?tab=login';
+                }, 1200);
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Salasanan palautus epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Reset password error:', err);
+            form.submit();
+        } finally {
+            if (submitBtn) submitBtn.disabled = false;
+        }
+        return;
+    }
+
+    // 9. Palautteen lähetys (Feedback Form)
+    if (form.querySelector('input[name="submit_feedback"]')) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const origText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Lähetetään...';
+        }
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+
+        try {
+            const res = await fetch(form.action || 'index.php', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Kiitos palautteestasi!');
+                }
+                form.reset();
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.message || data.error || 'Palautteen lähetys epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Feedback error:', err);
+            form.submit();
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = origText;
+            }
+        }
+        return;
+    }
+
+    // 10. Ilmiannon lähetys (Report Form)
+    if (form.querySelector('input[name="submit_report"]')) {
+        e.preventDefault();
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const origText = submitBtn ? submitBtn.textContent : '';
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Lähetetään...';
+        }
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+
+        try {
+            const res = await fetch(form.action || 'index.php', {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success) {
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Kiitos ilmoituksesta!');
+                }
+                form.reset();
+                if (typeof closeReportModal === 'function') {
+                    closeReportModal();
+                } else {
+                    const overlay = document.getElementById('reportModalOverlay');
+                    if (overlay) overlay.style.display = 'none';
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.message || data.error || 'Ilmoituksen lähetys epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Report error:', err);
+            form.submit();
+        } finally {
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = origText;
+            }
+        }
+        return;
+    }
+});
+
+// ==========================================
+// AJAX ROOM FILTERING & EXPLORE SEARCH
+// ==========================================
+
+// Huonesuodatus etusivulla ilman sivun uudelleenlatausta
+document.addEventListener('click', (e) => {
+    const chip = e.target.closest('.room-chip');
+    if (chip && chip.closest('.rooms-bar')) {
+        e.preventDefault();
+        const url = chip.href;
+        const postsSection = document.querySelector('.posts');
+        if (!postsSection) {
+            window.location.href = url;
+            return;
+        }
+
+        document.querySelectorAll('.room-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+
+        history.pushState(null, '', url);
+
+        const ajaxUrl = url + (url.includes('?') ? '&' : '?') + 'ajax=1';
+        fetch(ajaxUrl, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                postsSection.innerHTML = data.html;
+            }
+        })
+        .catch(err => {
+            console.error('Room filter error:', err);
+            window.location.href = url;
+        });
+    }
+});
+
+// Selaussivun haku ja käyttäjävalinnat
+function loadSearchResults(q, updateHistory = true) {
+    const url = `index.php?page=selaa&q=${encodeURIComponent(q)}`;
+    if (updateHistory) {
+        history.pushState(null, '', url);
+    }
+
+    document.querySelectorAll('.user-chip').forEach(c => {
+        const chipUrl = new URL(c.href, window.location.origin);
+        c.classList.toggle('active', chipUrl.searchParams.get('q') === q);
+    });
+
+    const ajaxUrl = `${url}&ajax=1`;
+    fetch(ajaxUrl, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.success) {
+            const postsSection = document.querySelector('.posts');
+            if (postsSection) postsSection.innerHTML = data.posts_html;
+
+            let userCard = document.querySelector('.selaa-user-card');
+            if (data.user_card_html) {
+                if (userCard) {
+                    userCard.outerHTML = data.user_card_html;
+                } else if (postsSection) {
+                    postsSection.insertAdjacentHTML('beforebegin', data.user_card_html);
+                }
+            } else if (userCard) {
+                userCard.remove();
+            }
+        }
+    })
+    .catch(err => {
+        console.error('Search error:', err);
+        window.location.href = url;
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const searchForm = document.querySelector('.search-form');
+    if (searchForm) {
+        searchForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const input = searchForm.querySelector('.search-input');
+            const q = input ? input.value.trim() : '';
+            loadSearchResults(q);
+        });
+    }
+
+    document.addEventListener('click', (e) => {
+        const chip = e.target.closest('.user-chip');
+        if (chip && chip.closest('.user-chips')) {
+            e.preventDefault();
+            const url = new URL(chip.href, window.location.origin);
+            const q = url.searchParams.get('q') || '';
+            const searchInput = document.querySelector('.search-input');
+            if (searchInput) searchInput.value = q;
+            loadSearchResults(q);
+        }
+    });
+});
+
+// Sivupalkin uloskirjautuminen AJAXilla
+document.addEventListener('click', (e) => {
+    const logoutLink = e.target.closest('a[href*="page=logout"]');
+    if (logoutLink) {
+        e.preventDefault();
+        if (!confirm('Haluatko varmasti kirjautua ulos?')) return;
+
+        fetch('index.php?page=logout', {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.redirect) {
+                window.location.href = data.redirect;
+            } else {
+                window.location.href = 'index.php';
+            }
+        })
+        .catch(() => {
+            window.location.href = 'index.php?page=logout';
+        });
+    }
+});
+
+// Selaimen takaisin/eteenpäin -painikkeiden tuki (PopState)
+window.addEventListener('popstate', () => {
+    const params = new URLSearchParams(window.location.search);
+    const page = params.get('page') || 'home';
+    if (page === 'home') {
+        const room = params.get('room') || 'all';
+        const targetChip = document.querySelector(`.room-chip[href*="room=${room}"]`) || document.querySelector('.room-chip[href="index.php?page=home"]');
+        if (targetChip) {
+            document.querySelectorAll('.room-chip').forEach(c => c.classList.remove('active'));
+            targetChip.classList.add('active');
+            fetch(`index.php?page=home&room=${encodeURIComponent(room)}&ajax=1`, {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' }
+            })
+            .then(r => r.json())
+            .then(data => {
+                const postsSection = document.querySelector('.posts');
+                if (postsSection && data.success) postsSection.innerHTML = data.html;
+            });
+        }
+    } else if (page === 'selaa') {
+        const q = params.get('q') || '';
+        const searchInput = document.querySelector('.search-input');
+        if (searchInput) searchInput.value = q;
+        loadSearchResults(q, false);
+    }
+});
+

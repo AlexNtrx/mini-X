@@ -32,7 +32,10 @@ function registerUser($conn, $username, $password, $email, $displayName = null)
 // Kirjaa käyttäjän sisään
 function loginUser($conn, $username, $password)
 {
-    $stmt = $conn->prepare("SELECT id, username, display_name, password, avatar, deleted_at FROM users WHERE username = ? LIMIT 1");
+    if (function_exists('ensureAdminSchema')) {
+        ensureAdminSchema($conn);
+    }
+    $stmt = $conn->prepare("SELECT id, username, display_name, password, avatar, role, deleted_at FROM users WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();

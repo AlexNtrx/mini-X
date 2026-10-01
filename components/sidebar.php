@@ -43,6 +43,18 @@ $sidebarDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_nam
         </a>
         <a href="index.php?page=profile" class="<?= $currentPage === 'profile' ? 'active' : '' ?>">Profiili</a>
         <a href="index.php?page=setting" class="<?= $currentPage === 'setting' ? 'active' : '' ?>">Asetukset</a>
+        <a href="index.php?page=palaute" class="<?= $currentPage === 'palaute' ? 'active' : '' ?>">Anna palautetta</a>
+
+        <?php if (function_exists('isAdmin') && isAdmin()): ?>
+            <?php $adminBadgeCount = function_exists('getAdminPendingAlertCount') ? getAdminPendingAlertCount($conn) : 0; ?>
+            <a href="index.php?page=admin" class="nav-item-notif nav-item-admin <?= $currentPage === 'admin' ? 'active' : '' ?>" style="color: #ff7b72;">
+                <span>🛡️ Ylläpito</span>
+                <?php if ($adminBadgeCount > 0): ?>
+                    <span class="nav-badge" style="background: #f4212e;"><?= $adminBadgeCount ?></span>
+                <?php endif; ?>
+            </a>
+        <?php endif; ?>
+
         <a href="index.php?page=privacy" class="<?= $currentPage === 'privacy' ? 'active' : '' ?>">Tietosuojaseloste</a>
         <a href="index.php?page=logout" onclick="return confirm('Haluatko varmasti kirjautua ulos?');">Kirjaudu ulos</a>
     </nav>

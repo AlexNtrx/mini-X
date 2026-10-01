@@ -19,10 +19,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if (updateDisplayName($conn, $userId, $newDisplayName)) {
                     $_SESSION['display_name'] = $newDisplayName;
                     $success = "Nimi päivitetty onnistuneesti!";
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => $success,
+                            'display_name' => $newDisplayName,
+                            'initials' => getUserInitials($newDisplayName)
+                        ]);
+                    }
                 } else {
                     $error = "Päivitys epäonnistui.";
                 }
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Päivitä profiilin käyttäjänimi
@@ -43,10 +54,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if (updateUsername($conn, $userId, $newUsername)) {
                     $_SESSION['username'] = $newUsername;
                     $success = "Käyttäjänimi päivitetty onnistuneesti!";
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => $success,
+                            'username' => $newUsername
+                        ]);
+                    }
                 } else {
                     $error = "Päivitys epäonnistui.";
                 }
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Päivitä profiilikuva (Avatar)
@@ -55,9 +76,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $result = updateUserAvatar($conn, $userId, $_FILES["avatar"]);
             if ($result === true) {
                 $success = "Profiilikuva päivitetty onnistuneesti!";
+                if (isAjaxRequest()) {
+                    $newAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
+                    sendJsonResponse([
+                        'success' => true,
+                        'message' => $success,
+                        'avatar_url' => $newAvatarUrl
+                    ]);
+                }
             } else {
                 $error = is_string($result) ? $result : "Kuvan lataaminen epäonnistui.";
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Poista profiilikuva
@@ -65,9 +97,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($userId > 0) {
             if (deleteUserAvatar($conn, $userId)) {
                 $success = "Profiilikuva poistettu onnistuneesti!";
+                if (isAjaxRequest()) {
+                    sendJsonResponse([
+                        'success' => true,
+                        'message' => $success,
+                        'initials' => getUserInitials($_SESSION['display_name'] ?? ($_SESSION['username'] ?? ''))
+                    ]);
+                }
             } else {
                 $error = "Profiilikuvan poistaminen epäonnistui.";
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Päivitä salasana
@@ -84,10 +126,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 if (updateSalasana($conn, $userId, $newSalasana)) {
                     $success = "Salasana päivitetty onnistuneesti!";
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => $success
+                        ]);
+                    }
                 } else {
                     $error = "Päivitys epäonnistui.";
                 }
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Päivitä sähköposti
@@ -103,10 +154,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             } else {
                 if (updateEmail($conn, $userId, $newEmail)) {
                     $success = "Sähköposti päivitetty onnistuneesti!";
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => $success,
+                            'email' => $newEmail
+                        ]);
+                    }
                 } else {
                     $error = "Sähköpostin päivitys epäonnistui.";
                 }
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Poista tili (Soft Delete)
@@ -120,12 +181,22 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 if ($result === true) {
                     session_unset();
                     session_destroy();
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => 'Tilisi on poistettu onnistuneesti.',
+                            'redirect' => 'index.php?status=account_deleted'
+                        ]);
+                    }
                     header("Location: index.php?status=account_deleted");
                     exit;
                 } else {
                     $error = is_string($result) ? $result : "Tilin poistaminen epäonnistui.";
                 }
             }
+        }
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
 }

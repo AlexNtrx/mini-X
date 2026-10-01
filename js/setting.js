@@ -175,3 +175,216 @@ function cancelSettingAvatar() {
     if (changeBtn) changeBtn.style.display = 'inline-flex';
     if (deleteBtn) deleteBtn.style.display = 'inline-flex';
 }
+
+// ==========================================
+// AJAX SETTING FORMS HANDLER
+// ==========================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. Profiilikuvan päivitys ja poisto AJAXilla
+    const avatarForm = document.getElementById('setting-avatar-form');
+    if (avatarForm) {
+        avatarForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitter = e.submitter;
+            const isDelete = submitter && submitter.name === 'delete_avatar';
+            const isUpdate = submitter && submitter.name === 'update_avatar';
+
+            if (isDelete && !confirm('Haluatko varmasti poistaa profiilikuvasi?')) {
+                return;
+            }
+
+            const formData = new FormData(avatarForm);
+            formData.append('ajax', '1');
+            if (isDelete) formData.append('delete_avatar', '1');
+            if (isUpdate) formData.append('update_avatar', '1');
+
+            if (submitter) submitter.disabled = true;
+
+            try {
+                const res = await fetch('index.php?page=setting', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    if (isDelete) {
+                        const container = document.getElementById('setting-avatar-container');
+                        if (container) {
+                            container.removeAttribute('data-initial-avatar');
+                            container.classList.remove('clickable-avatar');
+                            container.removeAttribute('title');
+                            container.onclick = null;
+                            container.innerHTML = `<div class="avatar-fallback" id="setting-avatar-fallback">${data.initials || ''}</div>`;
+                        }
+                        const delBtn = document.getElementById('btn-setting-delete-avatar');
+                        if (delBtn) delBtn.remove();
+                        // Update sidebar avatar
+                        const sbAvatar = document.querySelector('.sidebar-avatar');
+                        if (sbAvatar) sbAvatar.innerHTML = data.initials || '';
+                        cancelSettingAvatar();
+                    } else if (isUpdate) {
+                        const container = document.getElementById('setting-avatar-container');
+                        if (container && data.avatar_url) {
+                            container.setAttribute('data-initial-avatar', data.avatar_url);
+                            container.classList.add('clickable-avatar');
+                            container.setAttribute('title', 'Näytä profiilikuva');
+                            container.onclick = () => {
+                                if (typeof openAvatarModal === 'function') openAvatarModal(data.avatar_url);
+                            };
+                            container.innerHTML = `<img src="${data.avatar_url}" alt="Profiilikuva" class="avatar-preview-img" id="setting-avatar-img">`;
+                        }
+                        // Update sidebar avatar
+                        const sbAvatar = document.querySelector('.sidebar-avatar');
+                        if (sbAvatar && data.avatar_url) {
+                            sbAvatar.innerHTML = `<img src="${data.avatar_url}" alt="Avatar" class="sidebar-avatar-img">`;
+                        }
+                        const saveActions = document.getElementById('setting-avatar-save-actions');
+                        const changeBtn = document.getElementById('btn-setting-change-avatar');
+                        let delBtn = document.getElementById('btn-setting-delete-avatar');
+                        if (saveActions) saveActions.style.display = 'none';
+                        if (changeBtn) changeBtn.style.display = 'inline-flex';
+                        if (!delBtn && container && data.avatar_url) {
+                            delBtn = document.createElement('button');
+                            delBtn.type = 'submit';
+                            delBtn.name = 'delete_avatar';
+                            delBtn.className = 'setting-btn-danger';
+                            delBtn.id = 'btn-setting-delete-avatar';
+                            delBtn.textContent = 'Poista kuva';
+                            delBtn.onclick = () => confirm('Haluatko varmasti poistaa profiilikuvasi?');
+                            document.querySelector('.setting-avatar-actions')?.appendChild(delBtn);
+                        } else if (delBtn) {
+                            delBtn.style.display = 'inline-flex';
+                        }
+                    }
+                    if (typeof Toast !== 'undefined') Toast.success(data.message || 'Päivitetty!');
+                } else {
+                    if (typeof Toast !== 'undefined') Toast.error(data.error || 'Päivitys epäonnistui.');
+                }
+            } catch (err) {
+                console.error('Avatar AJAX error:', err);
+                avatarForm.submit();
+            } finally {
+                if (submitter) submitter.disabled = false;
+            }
+        });
+    }
+
+    // 2. Asetusten tekstilomakkeet (Nimi, Käyttäjänimi, Sähköposti, Salasana)
+    document.querySelectorAll('.setting-collapsible-wrapper form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const origText = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Tallennetaan...';
+            }
+
+            const formData = new FormData(form);
+            formData.append('ajax', '1');
+
+            try {
+                const res = await fetch('index.php?page=setting', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    const wrapper = form.closest('.setting-collapsible-wrapper');
+                    const settingItem = wrapper?.previousElementSibling;
+
+                    // Display Name
+                    if (data.display_name !== undefined) {
+                        const valEl = settingItem?.querySelector('.setting-value');
+                        if (valEl) valEl.textContent = data.display_name;
+                        const headerName = document.querySelector('.setting-username-title');
+                        if (headerName) headerName.textContent = data.display_name;
+                        const sbName = document.querySelector('.sidebar-username');
+                        if (sbName) sbName.textContent = data.display_name;
+                    }
+
+                    // Username
+                    if (data.username !== undefined) {
+                        const valEl = settingItem?.querySelector('.setting-value');
+                        if (valEl) valEl.textContent = `@${data.username}`;
+                        const headerHandle = document.querySelector('.setting-handle');
+                        if (headerHandle) headerHandle.textContent = `@${data.username}`;
+                        const sbHandle = document.querySelector('.sidebar-handle');
+                        if (sbHandle) sbHandle.textContent = `@${data.username}`;
+                    }
+
+                    // Email
+                    if (data.email !== undefined) {
+                        const valEl = settingItem?.querySelector('.setting-value');
+                        if (valEl) valEl.textContent = data.email;
+                    }
+
+                    // Password
+                    if (form.querySelector('input[type="password"]')) {
+                        form.reset();
+                    }
+
+                    if (wrapper) toggleSettingForm(wrapper.id, false);
+                    if (typeof Toast !== 'undefined') Toast.success(data.message || 'Tallennettu!');
+                } else {
+                    if (typeof Toast !== 'undefined') Toast.error(data.error || 'Päivitys epäonnistui.');
+                }
+            } catch (err) {
+                console.error('Setting save error:', err);
+                form.submit();
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = origText;
+                }
+            }
+        });
+    });
+
+    // 3. Tilin poisto AJAXilla
+    const deleteAccountForm = document.getElementById('form-delete-account');
+    if (deleteAccountForm) {
+        deleteAccountForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = deleteAccountForm.querySelector('button[type="submit"]');
+            const origText = submitBtn ? submitBtn.textContent : '';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Poistetaan...';
+            }
+
+            const formData = new FormData(deleteAccountForm);
+            formData.append('ajax', '1');
+            if (!formData.has('delete_account')) formData.append('delete_account', '1');
+
+            try {
+                const res = await fetch('index.php?page=setting', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (data.success && data.redirect) {
+                    if (typeof Toast !== 'undefined') Toast.success(data.message || 'Tili poistettu.');
+                    window.location.href = data.redirect;
+                } else {
+                    if (typeof Toast !== 'undefined') Toast.error(data.error || 'Tilin poistaminen epäonnistui.');
+                }
+            } catch (err) {
+                console.error('Delete account error:', err);
+                deleteAccountForm.submit();
+            } finally {
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = origText;
+                }
+            }
+        });
+    }
+});

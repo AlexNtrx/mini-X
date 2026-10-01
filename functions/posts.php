@@ -43,28 +43,62 @@ function ensurePantipSchema($conn)
 
 /**
  * Palauttaa kaikki saatavilla olevat huoneet / aihealueet (Rooms).
+ * Hakee dynaamisesti tietokannasta jos taulu on olemassa, muuten oletukset.
  *
+ * @param mysqli|null $conn
  * @return array
  */
-function getAvailableRooms()
+function getAvailableRooms($conn = null)
 {
-    return [
-        'general'       => ['name' => 'Yleinen',        'icon' => '', 'desc' => 'Vapaa keskustelu ja sekalaiset aiheet'],
-        'tech'          => ['name' => 'Teknologia',     'icon' => '', 'desc' => 'IT, ohjelmointi, laitteet ja teknologia'],
-        'food'          => ['name' => 'Ruoka & Juoma',  'icon' => '', 'desc' => 'Ruoanlaitto, reseptit ja ravintolat'],
-        'gaming'        => ['name' => 'Pelaaminen',     'icon' => '', 'desc' => 'Videopelit, konsolit ja e-urheilu'],
-        'entertainment' => ['name' => 'Viihde',         'icon' => '', 'desc' => 'Elokuvat, sarjat, musiikki ja popkulttuuri'],
-        'lifestyle'     => ['name' => 'Elämäntapa',     'icon' => '', 'desc' => 'Hyvinvointi, arki ja matkailu'],
+    $defaultRooms = [
+        'general'       => ['name' => 'Yleinen',        'icon' => '💬', 'desc' => 'Vapaa keskustelu ja sekalaiset aiheet'],
+        'tech'          => ['name' => 'Teknologia',     'icon' => '💻', 'desc' => 'IT, ohjelmointi, laitteet ja teknologia'],
+        'food'          => ['name' => 'Ruoka & Juoma',  'icon' => '🍔', 'desc' => 'Ruoanlaitto, reseptit ja ravintolat'],
+        'gaming'        => ['name' => 'Pelaaminen',     'icon' => '🎮', 'desc' => 'Videopelit, konsolit ja e-urheilu'],
+        'entertainment' => ['name' => 'Viihde',         'icon' => '🎬', 'desc' => 'Elokuvat, sarjat, musiikki ja popkulttuuri'],
+        'lifestyle'     => ['name' => 'Elämäntapa',     'icon' => '🌿', 'desc' => 'Hyvinvointi, arki ja matkailu'],
     ];
+
+    if (!$conn) {
+        global $conn;
+        if (!isset($conn) || !$conn) {
+            if (function_exists('dbConnect')) {
+                $conn = dbConnect();
+            }
+        }
+    }
+
+    if ($conn) {
+        if (function_exists('ensureAdminSchema')) {
+            ensureAdminSchema($conn);
+        }
+        $res = $conn->query("SELECT slug, name, icon, description FROM rooms WHERE is_active = 1 ORDER BY id ASC");
+        if ($res && $res->num_rows > 0) {
+            $dbRooms = [];
+            while ($row = $res->fetch_assoc()) {
+                $dbRooms[$row['slug']] = [
+                    'name' => $row['name'],
+                    'icon' => $row['icon'],
+                    'desc' => $row['description']
+                ];
+            }
+            return $dbRooms;
+        }
+    }
+
+    return $defaultRooms;
 }
 
-// Hakee kaikki julkaisut etusivulle huonesuodatuksella (käyttäjänimi ja avatar haetaan users-taulusta JOINilla)
+// Hakee kaikki julkaisut etusivulle huonesuodatuksella (kiinnitetyt julkaisut ensin)
 function getShowContents($conn, $room = 'all')
 {
     if (!$conn) return [];
     ensurePantipSchema($conn);
+    if (function_exists('ensureAdminSchema')) {
+        ensureAdminSchema($conn);
+    }
 
-    $availableRooms = getAvailableRooms();
+    $availableRooms = getAvailableRooms($conn);
     $filterRoom = (is_string($room) && $room !== 'all' && isset($availableRooms[$room])) ? $room : null;
 
     if ($filterRoom) {
@@ -75,7 +109,7 @@ function getShowContents($conn, $room = 'all')
                 FROM posts 
                 JOIN users ON posts.user_id = users.id 
                 WHERE users.deleted_at IS NULL AND posts.room = ? 
-                ORDER BY posts.id DESC";
+                ORDER BY posts.is_pinned DESC, posts.id DESC";
         $stmt = $conn->prepare($sql);
         if ($stmt) {
             $stmt->bind_param("s", $filterRoom);
@@ -97,7 +131,7 @@ function getShowContents($conn, $room = 'all')
             FROM posts 
             JOIN users ON posts.user_id = users.id 
             WHERE users.deleted_at IS NULL 
-            ORDER BY posts.id DESC";
+            ORDER BY posts.is_pinned DESC, posts.id DESC";
     $result = $conn->query($sql);
     $contents = [];
     if ($result) {
@@ -222,8 +256,50 @@ function addPost($conn, $userId, $content = null, $image = null, $room = 'genera
     if (!$stmt) return false;
     $stmt->bind_param("issss", $userId, $content, $image, $room, $postType);
     $res = $stmt->execute();
+    $insertId = $stmt->insert_id;
     $stmt->close();
-    return $res;
+    return $res ? $insertId : false;
+}
+
+/**
+ * Hakee yksittäisen julkaisun ID:n perusteella käyttäjätietoineen
+ *
+ * @param mysqli $conn
+ * @param int $id
+ * @return array|null
+ */
+function getPostById($conn, $id)
+{
+    if (!$conn || $id <= 0) return null;
+    $sql = "SELECT posts.*, 
+                   users.username AS author, 
+                   COALESCE(NULLIF(users.display_name, ''), users.username) AS author_display_name,
+                   users.avatar AS author_avatar 
+            FROM posts 
+            JOIN users ON posts.user_id = users.id 
+            WHERE posts.id = ? AND users.deleted_at IS NULL 
+            LIMIT 1";
+    $stmt = $conn->prepare($sql);
+    if (!$stmt) return null;
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $post = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return $post;
+}
+
+/**
+ * Renderöi kortit.php-näkymän HTML-merkkijonoksi
+ *
+ * @param mysqli $conn
+ * @param array $content
+ * @return string
+ */
+function renderPostCardHtml($conn, array $content)
+{
+    ob_start();
+    include __DIR__ . '/../components/kortit.php';
+    return ob_get_clean();
 }
 
 // Päivittää julkaisun sisällön

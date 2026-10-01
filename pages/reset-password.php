@@ -14,8 +14,21 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["reset_password_post"]
     $result = resetPasswordWithToken($conn, $token, $password, $passwordConfirmation);
     if ($result === true) {
         $success = "Salasana päivitetty onnistuneesti! Voit nyt kirjautua sisään uudella salasanallasi.";
+        if (isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => true,
+                'message' => $success,
+                'redirect' => 'index.php?tab=login'
+            ]);
+        }
     } else {
         $error = $result;
+        if (isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error
+            ], 400);
+        }
     }
 } else {
     // Tarkistetaan palautustunnisteen voimassaolo sivulle saavuttaessa
@@ -76,6 +89,7 @@ $formAction = $isDirectAccess ? ('reset-password.php?token=' . urlencode($token)
     </div>
 
     <?php include __DIR__ . '/../components/toast.php'; ?>
-    <script src="<?= $assetPrefix ?>js/toast.js?v=1.1.2"></script>
+    <script src="<?= $assetPrefix ?>js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="<?= $assetPrefix ?>js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
 </body>
 </html>

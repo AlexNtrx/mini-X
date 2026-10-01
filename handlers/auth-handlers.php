@@ -27,9 +27,23 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         } else {
             if (registerUser($conn, $username, $password, $email)) {
                 $success = "Rekisteröinti onnistui! Voit nyt kirjautua sisään.";
+                if (isAjaxRequest()) {
+                    sendJsonResponse([
+                        'success' => true,
+                        'message' => $success,
+                        'username' => $username
+                    ]);
+                }
             } else {
                 $error = "Rekisteröinti epäonnistui.";
             }
+        }
+
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error
+            ], 400);
         }
     }
     // Kirjaudu sisään
@@ -49,18 +63,44 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $_SESSION['pending_reactivation_display_name'] = !empty($user['display_name']) ? $user['display_name'] : $user['username'];
                     $_SESSION['pending_reactivation_avatar'] = $user['avatar'] ?? null;
                     $showReactivationModal = true;
+
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'reactivation_needed' => true,
+                            'username' => $user['username'],
+                            'display_name' => $_SESSION['pending_reactivation_display_name']
+                        ]);
+                    }
                 } else {
                     session_regenerate_id(true);
                     $_SESSION['user_id'] = (int)$user['id'];
                     $_SESSION['username'] = $user['username'];
                     $_SESSION['display_name'] = !empty($user['display_name']) ? $user['display_name'] : $user['username'];
                     $_SESSION['avatar'] = $user['avatar'];
+                    $_SESSION['role'] = $user['role'] ?? 'user';
+
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => 'Kirjautuminen onnistui!',
+                            'redirect' => 'index.php?page=home'
+                        ]);
+                    }
+
                     header("Location: index.php?page=home");
                     exit;
                 }
             } else {
                 $error = "Virheellinen käyttäjänimi tai salasana.";
             }
+        }
+
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error
+            ], 400);
         }
     }
     // Vahvista tilin uudelleenaktivointi
@@ -82,10 +122,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $_SESSION['pending_reactivation_display_name'],
                 $_SESSION['pending_reactivation_avatar']
             );
+
+            if (isAjaxRequest()) {
+                sendJsonResponse([
+                    'success' => true,
+                    'message' => 'Tili aktivoitu onnistuneesti!',
+                    'redirect' => 'index.php?page=home'
+                ]);
+            }
+
             header("Location: index.php?page=home");
             exit;
         } else {
             $error = "Aktivointi epäonnistui. Kirjaudu sisään uudelleen.";
+            if (isAjaxRequest()) {
+                sendJsonResponse([
+                    'success' => false,
+                    'error' => $error
+                ], 400);
+            }
         }
     }
     // Peruuta tilin uudelleenaktivointi
@@ -97,5 +152,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION['pending_reactivation_avatar']
         );
         $showReactivationModal = false;
+
+        if (isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => true,
+                'message' => 'Aktivointi peruutettu.'
+            ]);
+        }
     }
 }

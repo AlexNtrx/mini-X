@@ -50,6 +50,7 @@ if ($status === 'error') {
     </div>
 
     <?php include __DIR__ . '/../components/toast.php'; ?>
-    <script src="<?= $assetPrefix ?>js/toast.js?v=1.1.2"></script>
+    <script src="<?= $assetPrefix ?>js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="<?= $assetPrefix ?>js/lomakeet.js?v=<?= filemtime(__DIR__ . '/../js/lomakeet.js') ?>"></script>
 </body>
 </html>

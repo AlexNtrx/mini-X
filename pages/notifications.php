@@ -97,8 +97,8 @@ $latestId = !empty($notifications) ? (int)$notifications[0]['id'] : 0;
             </section>
         </main>
     </div>
-    <script src="./js/toast.js?v=1.1.2"></script>
-    <script src="./js/script.js?v=1.1.2"></script>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
 </body>
 
 </html>

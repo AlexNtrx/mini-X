@@ -903,8 +903,156 @@ function escapeHtml(text) {
 document.addEventListener('DOMContentLoaded', () => {
     initBannerDrag();
     initAvatarCropperEvents();
+    initProfileModalAjax();
 });
 
 // Suoritetaan myös heti siltä varalta että DOM oli jo valmis
 initBannerDrag();
 initAvatarCropperEvents();
+initProfileModalAjax();
+
+// ==========================================
+// PROFILE MODAL AJAX SAVE HANDLER
+// ==========================================
+
+function initProfileModalAjax() {
+    const form = document.getElementById('edit-profile-form');
+    if (!form || form.dataset.ajaxAttached === 'true') return;
+    form.dataset.ajaxAttached = 'true';
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const saveBtn = form.querySelector('.modal-save-btn');
+        const origText = saveBtn ? saveBtn.textContent : '';
+        if (saveBtn) {
+            saveBtn.disabled = true;
+            saveBtn.textContent = 'Tallennetaan...';
+        }
+
+        const formData = new FormData(form);
+        formData.append('ajax', '1');
+        if (!formData.has('update_profile_modal')) formData.append('update_profile_modal', '1');
+
+        try {
+            const res = await fetch(window.location.href, {
+                method: 'POST',
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                body: formData
+            });
+            const data = await res.json();
+            if (data.success && data.data) {
+                const d = data.data;
+
+                // 1. Päivitä näyttönimi
+                document.querySelectorAll('.profile-display-name, .profile-header .header-info h2').forEach(el => {
+                    el.textContent = d.display_name;
+                });
+                const sbName = document.querySelector('.sidebar-username');
+                if (sbName) sbName.textContent = d.display_name;
+
+                // 2. Päivitä profiilikuva profiilissa ja sivupalkissa
+                const avatarContainer = document.getElementById('profile-avatar-container');
+                if (avatarContainer) {
+                    if (d.avatar_url) {
+                        avatarContainer.classList.add('clickable-avatar');
+                        avatarContainer.setAttribute('title', 'Näytä profiilikuva');
+                        avatarContainer.onclick = () => {
+                            if (typeof openAvatarModal === 'function') openAvatarModal(d.avatar_url);
+                        };
+                        avatarContainer.innerHTML = `<img src="${d.avatar_url}" alt="Profiilikuva" class="profile-avatar-img" id="profile-avatar-img">`;
+                    } else {
+                        avatarContainer.classList.remove('clickable-avatar');
+                        avatarContainer.removeAttribute('title');
+                        avatarContainer.onclick = null;
+                        avatarContainer.innerHTML = `<span id="profile-avatar-fallback">${d.initials || ''}</span>`;
+                    }
+                }
+                const sbAvatar = document.querySelector('.sidebar-avatar');
+                if (sbAvatar) {
+                    if (d.avatar_url) {
+                        sbAvatar.innerHTML = `<img src="${d.avatar_url}" alt="Avatar" class="sidebar-avatar-img">`;
+                    } else {
+                        sbAvatar.innerHTML = d.initials || '';
+                    }
+                }
+
+                // 3. Päivitä banneri
+                const bannerEl = document.querySelector('.profile-banner');
+                if (bannerEl) {
+                    if (d.banner_url) {
+                        bannerEl.classList.add('has-custom-banner');
+                        bannerEl.style.backgroundImage = `url('${d.banner_url}')`;
+                        bannerEl.style.backgroundPosition = `center ${d.banner_pos_y}%`;
+                        bannerEl.style.setProperty('--banner-pos-y', `${d.banner_pos_y}%`);
+                    } else {
+                        bannerEl.classList.remove('has-custom-banner');
+                        bannerEl.style.backgroundImage = '';
+                        bannerEl.style.backgroundPosition = '';
+                        bannerEl.style.removeProperty('--banner-pos-y');
+                    }
+                }
+
+                // 4. Päivitä Bio / Status
+                let bioBox = document.querySelector('.profile-bio-box');
+                const addHintBtn = document.querySelector('.profile-add-hint-btn');
+                if (d.bio && d.bio.trim() !== '') {
+                    if (addHintBtn) addHintBtn.remove();
+                    if (!bioBox) {
+                        bioBox = document.createElement('div');
+                        bioBox.className = 'profile-bio-box';
+                        bioBox.innerHTML = `<span class="profile-bio-badge">STATUS</span> <span class="profile-bio-text"></span>`;
+                        const nameSec = document.querySelector('.profile-name-section');
+                        if (nameSec) nameSec.after(bioBox);
+                    }
+                    const bioText = bioBox.querySelector('.profile-bio-text');
+                    if (bioText) bioText.textContent = d.bio;
+                } else if (bioBox) {
+                    bioBox.remove();
+                }
+
+                // 5. Päivitä teeman korostusväri
+                if (d.theme_accent) {
+                    document.body.style.setProperty('--profile-accent', d.theme_accent);
+                    if (d.theme_accent_rgb) {
+                        document.body.style.setProperty('--profile-accent-rgb', d.theme_accent_rgb);
+                    }
+                }
+
+                // 6. Päivitä tausta
+                if (d.theme_bg_style) {
+                    document.body.classList.add('hi5-profile-page');
+                    applyLiveBackground(d.theme_bg_style);
+                } else {
+                    document.body.classList.remove('hi5-profile-page');
+                    applyLiveBackground('background-color: #000000; background-image: none;');
+                }
+
+                // 7. Päivitä musiikki
+                const musicWrapper = document.getElementById('profile-music-wrapper');
+                if (musicWrapper && d.music_html !== undefined) {
+                    musicWrapper.innerHTML = d.music_html;
+                    if (typeof initRetroPlayer === 'function') {
+                        initRetroPlayer();
+                    }
+                }
+
+                closeEditProfileModal();
+                if (typeof Toast !== 'undefined') {
+                    Toast.success(data.message || 'Profiili päivitetty onnistuneesti! ✨');
+                }
+            } else {
+                if (typeof Toast !== 'undefined') {
+                    Toast.error(data.error || 'Profiilin tallennus epäonnistui.');
+                }
+            }
+        } catch (err) {
+            console.error('AJAX Profile save error:', err);
+            form.submit();
+        } finally {
+            if (saveBtn) {
+                saveBtn.disabled = false;
+                saveBtn.textContent = origText;
+            }
+        }
+    });
+}

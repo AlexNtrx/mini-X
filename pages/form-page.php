@@ -181,9 +181,9 @@ if (isset($_GET['status']) && $_GET['status'] === 'account_deleted' && empty($su
 
     <?php include __DIR__ . '/../components/toast.php'; ?>
 
-    <script src="./js/toast.js?v=1.1.2"></script>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
-    <script src="./js/lomakeet.js?v=1.1.2"></script>
-    <script src="./js/validation.js?v=1.1.2"></script>
+    <script src="./js/lomakeet.js?v=<?= filemtime(__DIR__ . '/../js/lomakeet.js') ?>"></script>
+    <script src="./js/validation.js?v=<?= filemtime(__DIR__ . '/../js/validation.js') ?>"></script>
   </body>
 </html>

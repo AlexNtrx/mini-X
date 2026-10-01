@@ -125,8 +125,64 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     $success = "Profiili päivitetty onnistuneesti! ✨";
                 } else {
                     $error = "Tietojen tallennus epäonnistui.";
+                    $hasError = true;
                 }
             }
+        }
+
+        if ($hasError && isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error ?: 'Profiilin tallennus epäonnistui.'
+            ], 400);
+        }
+
+        if (!$hasError && isAjaxRequest()) {
+            $updatedUser = null;
+            $uStmt = $conn->prepare("SELECT username, display_name, avatar FROM users WHERE id = ? LIMIT 1");
+            if ($uStmt) {
+                $uStmt->bind_param("i", $userId);
+                $uStmt->execute();
+                $updatedUser = $uStmt->get_result()->fetch_assoc();
+                $uStmt->close();
+            }
+            $updatedCustom = getUserCustomization($conn, $userId);
+            $accentHex = sanitizeHexColor($updatedCustom['theme_accent'] ?? '#1d9bf0');
+            $r = hexdec(substr($accentHex, 1, 2));
+            $g = hexdec(substr($accentHex, 3, 2));
+            $b = hexdec(substr($accentHex, 5, 2));
+            $accentRgb = "$r, $g, $b";
+
+            $bgStyle = getProfileBackgroundStyle($updatedCustom['theme_bg_type'] ?? 'default', $updatedCustom['theme_bg_val'] ?? '');
+
+            ob_start();
+            $customization = $updatedCustom;
+            $isOwnProfile = true;
+            include __DIR__ . '/../components/music-player.php';
+            $musicHtml = ob_get_clean();
+
+            sendJsonResponse([
+                'success' => true,
+                'message' => $success ?: 'Profiili päivitetty onnistuneesti! ✨',
+                'data' => [
+                    'display_name' => $updatedUser['display_name'] ?? ($updatedUser['username'] ?? ''),
+                    'avatar_url' => getUserAvatarUrl($updatedUser['avatar'] ?? null),
+                    'initials' => getUserInitials($updatedUser['display_name'] ?? ($updatedUser['username'] ?? '')),
+                    'banner_url' => getUserBannerUrl($updatedCustom['theme_banner'] ?? null),
+                    'banner_pos_y' => (int)($updatedCustom['banner_pos_y'] ?? 50),
+                    'bio' => $updatedCustom['bio'] ?? '',
+                    'theme_accent' => $accentHex,
+                    'theme_accent_rgb' => $accentRgb,
+                    'theme_bg_style' => $bgStyle,
+                    'music_html' => $musicHtml,
+                    'song' => [
+                        'title' => $updatedCustom['song_title'] ?? '',
+                        'artist' => $updatedCustom['song_artist'] ?? '',
+                        'artwork' => $updatedCustom['song_artwork'] ?? '',
+                        'url' => $updatedCustom['song_url'] ?? '',
+                    ]
+                ]
+            ]);
         }
     }
 }

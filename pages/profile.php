@@ -99,9 +99,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
     <link rel="stylesheet" href="./css/profile.css?v=<?= filemtime(__DIR__ . '/../css/profile.css') ?>">
     <link rel="stylesheet" href="./css/profile-modal.css?v=<?= filemtime(__DIR__ . '/../css/profile-modal.css') ?>">
     <link rel="stylesheet" href="./css/toast.css?v=<?= filemtime(__DIR__ . '/../css/toast.css') ?>">
-    <?php if (!empty($customization['song_url'])): ?>
-        <link rel="stylesheet" href="./css/retro-player.css?v=<?= filemtime(__DIR__ . '/../css/retro-player.css') ?>">
-    <?php endif; ?>
+    <link rel="stylesheet" href="./css/retro-player.css?v=<?= filemtime(__DIR__ . '/../css/retro-player.css') ?>">
 
 </head>
 <body class="<?= !empty($bgStyle) ? 'hi5-profile-page' : '' ?>" style="--profile-accent: <?= $accentHex ?>; --profile-accent-rgb: <?= $accentRgb ?>;<?= !empty($bgStyle) ? ' ' . $bgStyle : '' ?>">
@@ -184,7 +182,9 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
                         <?php endif; ?>
 
                         <!-- Instagram Story Style Music Sticker Component -->
-                        <?php include __DIR__ . '/../components/music-player.php'; ?>
+                        <div id="profile-music-wrapper">
+                            <?php include __DIR__ . '/../components/music-player.php'; ?>
+                        </div>
                     </div>
                 </div>
 
@@ -217,12 +217,11 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
         <?php include __DIR__ . '/../components/profile-modal.php'; ?>
         <?php include __DIR__ . '/../components/avatar-cropper-modal.php'; ?>
     <?php endif; ?>
+    <?php include __DIR__ . '/../components/report-modal.php'; ?>
 
     <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
     <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
-    <?php if (!empty($customization['song_url'])): ?>
-        <script src="./js/retro-player.js?v=<?= filemtime(__DIR__ . '/../js/retro-player.js') ?>"></script>
-    <?php endif; ?>
+    <script src="./js/retro-player.js?v=<?= filemtime(__DIR__ . '/../js/retro-player.js') ?>"></script>
     <?php if ($isOwnProfile): ?>
         <script src="./js/profile-modal.js?v=<?= filemtime(__DIR__ . '/../js/profile-modal.js') ?>"></script>
     <?php endif; ?>

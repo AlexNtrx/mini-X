@@ -20,3 +20,6 @@ desktop.ini
 # Logs & Cache
 *.log
 error_log
+
+# Loose raw screenshots at root (use screenshots/ instead)
+/*.png

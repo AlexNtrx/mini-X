@@ -30,7 +30,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $postType = trim($_POST["post_type"] ?? "general");
 
                 if (empty($error)) {
-                    if (addPost($conn, $userId, $content, $imageFileName, $room, $postType)) {
+                    $newPostId = addPost($conn, $userId, $content, $imageFileName, $room, $postType);
+                    if ($newPostId) {
+                        if (isAjaxRequest()) {
+                            $newPost = getPostById($conn, (int)$newPostId);
+                            $postHtml = $newPost ? renderPostCardHtml($conn, $newPost) : '';
+                            sendJsonResponse([
+                                'success' => true,
+                                'message' => 'Julkaisu luotu onnistuneesti!',
+                                'post_id' => (int)$newPostId,
+                                'html' => $postHtml
+                            ]);
+                        }
                         setFlashToast("Julkaisu luotu onnistuneesti!", "success");
                         header("Location: " . $redirectUrl);
                         exit;
@@ -39,6 +50,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     }
                 }
             }
+        }
+
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error
+            ], 400);
         }
     }
     // Muokkaa julkaisua
@@ -52,6 +70,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 $error = "Julkaisun teksti saa olla enintään 140 merkkiä.";
             } else {
                 if (updatePost($conn, $id, $content, $userId)) {
+                    if (isAjaxRequest()) {
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => 'Julkaisu päivitetty onnistuneesti!',
+                            'post_id' => $id,
+                            'content' => $content
+                        ]);
+                    }
                     setFlashToast("Julkaisu päivitetty onnistuneesti!", "success");
                     header("Location: " . $redirectUrl);
                     exit;
@@ -60,14 +86,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 }
             }
         }
+
+        if (!empty($error) && isAjaxRequest()) {
+            sendJsonResponse([
+                'success' => false,
+                'error' => $error
+            ], 400);
+        }
     }
     // Poista julkaisu
     elseif (isset($_POST["delete_post"])) {
         $id = (int)($_POST["id"] ?? 0);
         if ($id > 0 && $userId > 0) {
             if (deletePost($conn, $id, $userId)) {
+                if (isAjaxRequest()) {
+                    sendJsonResponse([
+                        'success' => true,
+                        'message' => 'Julkaisu poistettu onnistuneesti!',
+                        'post_id' => $id
+                    ]);
+                }
                 setFlashToast("Julkaisu poistettu onnistuneesti!", "success");
             } else {
+                if (isAjaxRequest()) {
+                    sendJsonResponse([
+                        'success' => false,
+                        'error' => 'Julkaisun poistaminen epäonnistui.'
+                    ], 400);
+                }
                 setFlashToast("Julkaisun poistaminen epäonnistui.", "error");
             }
             header("Location: " . $redirectUrl);

@@ -12,10 +12,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if ($postId > 0 && $userId > 0) {
             toggleLike($conn, $postId, $userId);
             $postOwnerId = getPostOwnerId($conn, $postId);
-            if (isPostLikedByUser($conn, $postId, $userId)) {
+            $isLiked = isPostLikedByUser($conn, $postId, $userId);
+            if ($isLiked) {
                 addNotification($conn, $postOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'like');
             } else {
                 removeNotification($conn, $postOwnerId, $userId, $postId, 'like');
+            }
+            if (isAjaxRequest()) {
+                $likeCount = getLikeCount($conn, $postId);
+                sendJsonResponse([
+                    'success' => true,
+                    'post_id' => $postId,
+                    'is_liked' => $isLiked,
+                    'like_count' => $likeCount
+                ]);
             }
             header("Location: " . $cleanUrl . "#post-" . $postId);
             exit;
@@ -49,9 +59,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             addNotification($conn, $postOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'comment', $preview);
                         }
                     }
+
+                    if (isAjaxRequest()) {
+                        $post = getPostById($conn, $postId);
+                        $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
+                        $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
+                        $commentCount = getCommentCount($conn, $postId);
+                        sendJsonResponse([
+                            'success' => true,
+                            'message' => 'Kommentti lisätty onnistuneesti!',
+                            'post_id' => $postId,
+                            'comments_html' => $commentsHtml,
+                            'comment_count' => $commentCount
+                        ]);
+                    }
+                } else {
+                    $error = "Kommentin lisääminen epäonnistui.";
                 }
-                header("Location: " . $cleanUrl . "#comments-" . $postId);
-                exit;
+
+                if (empty($error)) {
+                    header("Location: " . $cleanUrl . "#comments-" . $postId);
+                    exit;
+                }
+            }
+
+            if (!empty($error) && isAjaxRequest()) {
+                sendJsonResponse([
+                    'success' => false,
+                    'error' => $error
+                ], 400);
             }
         }
     }
@@ -61,17 +97,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $commentId = (int)($_POST["comment_id"] ?? 0);
         if ($postId > 0 && $commentId > 0 && $userId > 0) {
             $res = toggleBestAnswer($conn, $postId, $commentId, $userId);
+            $msg = '';
             if ($res && is_array($res)) {
                 if ($res['action'] === 'marked') {
                     $commentOwnerId = (int)($res['comment_owner_id'] ?? 0);
                     if ($commentOwnerId > 0 && $commentOwnerId !== $userId) {
                         addNotification($conn, $commentOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'best_answer', 'Valitsi kommenttisi parhaaksi vastaukseksi! ⭐');
                     }
-                    setFlashToast("Valittu parhaaksi vastaukseksi! ⭐", "success");
+                    $msg = "Valittu parhaaksi vastaukseksi! ⭐";
+                    setFlashToast($msg, "success");
                 } elseif ($res['action'] === 'unmarked') {
-                    setFlashToast("Parhaan vastauksen merkintä poistettu.", "info");
+                    $msg = "Parhaan vastauksen merkintä poistettu.";
+                    setFlashToast($msg, "info");
                 }
             }
+
+            if (isAjaxRequest()) {
+                $post = getPostById($conn, $postId);
+                $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
+                $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
+                sendJsonResponse([
+                    'success' => true,
+                    'action' => $res['action'] ?? 'marked',
+                    'message' => $msg,
+                    'post_id' => $postId,
+                    'is_resolved' => (($res['action'] ?? '') === 'marked'),
+                    'comments_html' => $commentsHtml
+                ]);
+            }
+
             header("Location: " . $cleanUrl . "#comments-" . $postId);
             exit;
         }
@@ -82,8 +136,77 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $postId = (int)($_POST["post_id"] ?? 0);
         if ($commentId > 0 && $userId > 0) {
             deleteComment($conn, $commentId, $userId);
+
+            if (isAjaxRequest()) {
+                $post = getPostById($conn, $postId);
+                $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
+                $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
+                $commentCount = getCommentCount($conn, $postId);
+                sendJsonResponse([
+                    'success' => true,
+                    'message' => 'Kommentti poistettu onnistuneesti!',
+                    'post_id' => $postId,
+                    'comments_html' => $commentsHtml,
+                    'comment_count' => $commentCount
+                ]);
+            }
+
             header("Location: " . $cleanUrl . ($postId > 0 ? "#comments-" . $postId : ""));
             exit;
         }
+    }
+    // Lähetä ilmianto (Report Post/Comment)
+    elseif (isset($_POST["submit_report"])) {
+        $postId = !empty($_POST["post_id"]) ? (int)$_POST["post_id"] : null;
+        $commentId = !empty($_POST["comment_id"]) ? (int)$_POST["comment_id"] : null;
+        $reason = trim($_POST["reason"] ?? "other");
+        $details = trim($_POST["details"] ?? "");
+
+        if ($userId > 0 && ($postId || $commentId)) {
+            if (function_exists('createReport') && createReport($conn, $userId, $postId, $commentId, $reason, $details)) {
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => true, 'message' => 'Kiitos ilmoituksesta! Ylläpito tarkistaa sisällön pikimmiten.']);
+                }
+                setFlashToast("Kiitos ilmoituksesta! Ylläpito tarkistaa sisällön pikimmiten.", "success");
+            } else {
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => false, 'message' => 'Ilmoituksen lähetys epäonnistui.'], 500);
+                }
+                setFlashToast("Ilmoituksen lähetys epäonnistui.", "error");
+            }
+        } else {
+            if (isAjaxRequest()) {
+                sendJsonResponse(['success' => false, 'message' => 'Virheellinen pyyntö.'], 400);
+            }
+        }
+        header("Location: " . $cleanUrl);
+        exit;
+    }
+    // Lähetä palaute (Submit Feedback)
+    elseif (isset($_POST["submit_feedback"])) {
+        $type = trim($_POST["feedback_type"] ?? "general");
+        $subject = trim($_POST["subject"] ?? "");
+        $message = trim($_POST["message"] ?? "");
+
+        if ($userId > 0) {
+            if (empty($subject) || empty($message)) {
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => false, 'message' => 'Täytä otsikko ja viesti.'], 400);
+                }
+                setFlashToast("Täytä otsikko ja viesti.", "error");
+            } elseif (function_exists('submitFeedback') && submitFeedback($conn, $userId, $type, $subject, $message)) {
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => true, 'message' => 'Kiitos palautteestasi! Viestisi on toimitettu ylläpidolle.']);
+                }
+                setFlashToast("Kiitos palautteestasi! Viestisi on toimitettu ylläpidolle.", "success");
+            } else {
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => false, 'message' => 'Palautteen lähetys epäonnistui.'], 500);
+                }
+                setFlashToast("Palautteen lähetys epäonnistui.", "error");
+            }
+        }
+        header("Location: " . $cleanUrl);
+        exit;
     }
 }

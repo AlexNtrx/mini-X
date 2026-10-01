@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mini X — Full Stack Web Application | Case Study</title>
+  <meta name="description" content="Mini X on yhteisöllinen mikroblogi- ja Q&A-alusta, joka yhdistää reaaliaikaisen viestinnän, aihekohtaiset keskusteluhuoneet, ratkaisukeskeisen Q&A-järjestelmän sekä monipuolisen profiilipersonoinnin.">
+  <meta name="author" content="Nithitorn Kaosa-ard">
+
+  <!-- OpenGraph Metadata -->
+  <meta property="og:title" content="Mini X — Yhteisöllinen mikroblogi- ja Q&A-alusta">
+  <meta property="og:description" content="Full Stack Web Application: PHP 8.2, MySQL, Vanilla JavaScript, iTunes API ja kattava tietoturva.">
+  <meta property="og:image" content="screenshots/03-hero-showcase.png">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Poppins & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ========================================================================
+       STICKY NAVBAR
+       ======================================================================== -->
+  <header class="site-nav" id="siteNav">
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="container nav-container">
+      <a href="#hero" class="nav-brand" aria-label="Mini X Case Study">
+        <div class="nav-brand-logo">X</div>
+        <span>Mini X</span>
+        <span class="nav-brand-badge">Case Study</span>
+      </a>
+
+      <nav class="nav-menu" id="navMenu">
+        <a href="#feed-qa" class="nav-link">Syöte &amp; Q&amp;A</a>
+        <a href="#customization" class="nav-link">Kustomointi</a>
+        <a href="#music" class="nav-link">Musiikki API</a>
+        <a href="#notifications" class="nav-link">Ilmoitukset</a>
+        <a href="#security" class="nav-link">Tietoturva</a>
+        <a href="#tech-stack" class="nav-link">Teknologiat</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="https://github.com/AlexNtrx/mini-X" target="_blank" rel="noopener noreferrer" class="btn btn-secondary nav-btn-sm" title="Avaa lähdekoodi GitHubissa">
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+          </svg>
+          <span>GitHub</span>
+        </a>
+
+        <a href="https://mini-x.infinityfree.io/" target="_blank" rel="noopener noreferrer" class="btn btn-primary nav-btn-sm" title="Avaa Mini X -sivusto">
+          <span>Avaa sivusto</span>
+          <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+
+        <button type="button" class="mobile-toggle" id="mobileToggle" aria-label="Avaa valikko" aria-expanded="false">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ========================================================================
+         01. HERO SECTION & INTEGRATED METRICS
+         ======================================================================== -->
+    <section class="section hero-section" id="hero">
+      <div class="container">
+        <div class="hero-content reveal-item">
+          <div class="hero-pill">
+            <span class="hero-pill-dot"></span>
+            <span>Full Stack Web Application &bull; PHP &amp; MySQL</span>
+          </div>
+
+          <h1 class="hero-title">Mini X</h1>
+          <p class="hero-subtitle">Yhteisöllinen mikroblogi- ja Q&amp;A-alusta</p>
+
+          <p class="hero-intro">
+            Mini X on selaimessa toimiva sosiaalisen median sovellus, jossa yhdistyvät reaaliaikainen mikroblogisyöte, aihekohtaiset keskusteluhuoneet, ratkaisukeskeinen Q&amp;A-järjestelmä sekä poikkeuksellisen monipuolinen profiilin kustomointi ja musiikki-integraatio.
+          </p>
+
+          <div class="hero-cta-group">
+            <a href="https://mini-x.infinityfree.io/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="Avaa Mini X -sivusto">
+              <span>Avaa sivusto</span>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+
+            <a href="https://github.com/AlexNtrx/mini-X" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" title="Tarkastele lähdekoodia GitHubissa">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+
+            <a href="#feed-qa" class="btn btn-secondary">
+              <span>Arkkitehtuuri</span>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <polyline points="19 12 12 19 5 12"></polyline>
+              </svg>
+            </a>
+          </div>
+
+          <div class="hero-tech-badges">
+            <span class="tech-tag">PHP 8.2</span>
+            <span class="tech-tag">MySQL / MariaDB</span>
+            <span class="tech-tag">Vanilla JavaScript</span>
+            <span class="tech-tag">HTML5 &amp; CSS3</span>
+            <span class="tech-tag">Apple Music API</span>
+            <span class="tech-tag">BCRYPT &amp; Prepared SQL</span>
+          </div>
+        </div>
+
+        <!-- Hero Showcase Frame -->
+        <div class="hero-showcase reveal-item delay-2">
+          <div class="hero-mockup-wrapper" data-lightbox="screenshots/03-hero-showcase.png" data-caption="Mini X monilaite-esittely: Pääsyöte työpöytänäkymässä ja kirjautuminen mobiilinäkymässä">
+            <img 
+              src="screenshots/03-hero-showcase.png" 
+              alt="Mini X sovellus esiteltynä kannettavan tietokoneen ja tabletin näytöillä" 
+              class="hero-mockup-image"
+              loading="eager"
+              fetchpriority="high"
+            >
+            <div class="mockup-zoom-hint">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+              <span>Klikkaa suuremmaksi</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Integrated Metrics Strip -->
+        <div class="metrics-strip reveal-item delay-3" style="margin-top: 40px;">
+          <div class="metric-item">
+            <div class="metric-val">6</div>
+            <div class="metric-label">Aihealuetta (Rooms)</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">2</div>
+            <div class="metric-label">Julkaisutyyppiä (Viesti &amp; Q&amp;A)</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val blue">2 s</div>
+            <div class="metric-label">Reaaliaikainen ilmoituspolling</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val blue">30 s</div>
+            <div class="metric-label">Apple Music -esikuuntelut</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">30 pv</div>
+            <div class="metric-label">Tilin palautusaika (Soft Delete)</div>
+          </div>
+          <div class="metric-item">
+            <div class="metric-val">100%</div>
+            <div class="metric-label">Parametroidut SQL-kyselyt</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         02. FEED, ROOMS & Q&A SYSTEM (MERGED CORE SHOWCASE)
+         ======================================================================== -->
+    <section class="section" id="feed-qa">
+      <div class="container">
+        <div class="feature-row">
+          <div class="feature-text-col reveal-item">
+            <span class="feature-kicker blue">01 &bull; Ydintoiminnallisuus</span>
+            <h2 class="feature-heading">Syöte, aihehuoneet ja Q&amp;A-järjestelmä</h2>
+            <p class="feature-paragraph">
+              Mini X yhdistää sosiaalisen mikrobloggauksen ja foorumeilta tutun rakenteellisen ongelmanratkaisun. Julkaisut jäsennellään 6 aihehuoneeseen, ja kysymyspostauksissa tekijä voi nostaa esiin parhaan vastauksen.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>6 aihehuonetta (Rooms):</strong> Yleinen, Teknologia, Ruoka &amp; Juoma, Pelaaminen, Viihde ja Elämäntapa. Syöte suodattuu välittömästi ilman sivulatausta.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>2 julkaisutyyppiä:</strong> Normaali tilapäivitys tai kysymys (<code>post_type = 'question'</code>), joka tukee ongelmanratkaisua yhteisön avulla.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Paras vastaus &amp; Ratkaistu-tila:</strong> Kysymyksen esittäjä valitsee parhaan vastauksen, joka kiinnitetään ketjun kärkeen kultaisella kehyksellä ja julkaisu saa vihreän <code>[✓ Ratkaistu]</code> -merkin.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>Ketjutetut kommenttivastaukset:</strong> Yhden tason sisennetyt vastaukset suoralla käyttäjämaininnalla (<code>@käyttäjä</code>).
+                </div>
+              </li>
+            </ul>
+
+            <div class="feature-tag-row">
+              <span class="feature-tag blue">6 Huonetta</span>
+              <span class="feature-tag highlight">Kysymys</span>
+              <span class="feature-tag highlight">&check; Ratkaistu</span>
+              <span class="feature-tag highlight">&starf; Paras vastaus</span>
+              <span class="feature-tag">Suhteelliset aikaleimat</span>
+            </div>
+          </div>
+
+          <div class="feature-visual-col reveal-item delay-2">
+            <div class="feature-screenshot-card gold-glow" data-lightbox="screenshots/02-feed-qa-best-answer.png" data-caption="Pääsyöte ja Q&amp;A: Aihehuoneiden suodatus, kysymys 'Apple vs Samsung ?', vihreä Ratkaistu-tila sekä kultainen tekijän valitsema Paras vastaus ketjutettuine alikommentteineen">
+              <img 
+                src="screenshots/02-feed-qa-best-answer.png" 
+                alt="Mini X syöte, aihehuoneet, kysymys ja tekijän valitsema paras vastaus" 
+                class="feature-screenshot-img"
+                loading="lazy"
+              >
+              <div class="feature-screenshot-caption">Kuvakaappaus: Syötenäkymä, [✓ Ratkaistu] -tila ja Paras vastaus</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         03. PROFILE CUSTOMIZATION & THEMES (MERGED)
+         ======================================================================== -->
+    <section class="section" id="customization">
+      <div class="container">
+        <div class="feature-row reverse">
+          <div class="feature-text-col reveal-item">
+            <span class="feature-kicker">02 &bull; Visuaalinen personointi</span>
+            <h2 class="feature-heading">Profiilin kustomointi, teemat ja rajaustyökalu</h2>
+            <p class="feature-paragraph">
+              Käyttäjä voi rakentaa oman näköisensä tilan. Käyttöliittymä yhdistää modernin tumman teeman retrohenkisiin profiiliteemoihin (Hi5/MySpace-inspiraatio) yhtenäisestä modaalieditorista.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Avatar Cropper:</strong> Interaktiivinen pyöreä rajaustyökalu canvas-pohjaisella esikatselulla ja zoom-liukusäätimellä.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Bannerin pystykohdistus:</strong> Kansikuvan kohdistus liukusäätimellä (0–100% <code>banner_pos_y</code>), joka takaa optimin rajauksen eri laitteilla.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Korostusvärit (Accent Colors):</strong> 6 valmista teemaväriä (Hot Pink, Cyber Cyan, Toxic Lime, Electric Violet, Sunset Neon, Mini-X Blue) sekä HTML5-värivalitsin.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Valmiit taustateemat &amp; Oma kuva:</strong> Esiasetetut teemat (<em>Cyber Grid</em>, <em>Tähtitaivas</em>, <em>Retro Polka</em>, <em>Neon Sunset</em>, <em>Cosmic Nebula</em>) tai oma taustakuva (max 8 MB) MIME-validoinnilla.
+                </div>
+              </li>
+            </ul>
+
+            <div class="feature-tag-row">
+              <span class="feature-tag">Avatar Cropper</span>
+              <span class="feature-tag">Banner Slider</span>
+              <span class="feature-tag highlight">Cyber Grid</span>
+              <span class="feature-tag highlight">Tähtitaivas</span>
+              <span class="feature-tag">Oma taustakuva</span>
+            </div>
+          </div>
+
+          <div class="feature-visual-col reveal-item delay-2">
+            <div class="feature-screenshot-card" data-lightbox="screenshots/04-screenshot-102641.png" data-caption="Profiilin muokkausmodaali: Profiilikuvan vaihto ja rajaus, näyttönimi, tilaviesti sekä teeman korostusväripaletti">
+              <img 
+                src="screenshots/04-screenshot-102641.png" 
+                alt="Profiilin muokkausmodaali näyttönimellä, tilaviestillä ja väripaletilla" 
+                class="feature-screenshot-img"
+                loading="lazy"
+              >
+              <div class="feature-screenshot-caption">Kuvakaappaus: Muokkaa profiilia -asetusnäkymä ja väripaletti</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         04. EXTERNAL MUSIC INTEGRATION (APPLE MUSIC / ITUNES API)
+         ======================================================================== -->
+    <section class="section" id="music">
+      <div class="container">
+        <div class="feature-row">
+          <div class="feature-text-col reveal-item">
+            <span class="feature-kicker blue">03 &bull; Ulkoinen REST API</span>
+            <h2 class="feature-heading">Apple Music / iTunes API ja audiosoitin</h2>
+            <p class="feature-paragraph">
+              Mini X integroituu Apple Music / iTunes Public Catalog -rajapintaan. Käyttäjä voi etsiä miljoonien kappaleiden joukosta suosikkinsa ja asettaa sen soimaan suoraan profiilisivullaan.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>Reaaliaikainen musiikkihaku:</strong> Hakee kappaleen nimen, artistin, albumin ja korkearesoluutioisen kansikuvan (200x200) suoraan virallisesta rajapinnasta cURL-kutsulla.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>30–90 sekunnin viralliset esikuuntelut:</strong> Korkealaatuinen äänivirta ilman mainoksia suoraan selaimessa toimivalla HTML5 Audio -elementillä.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>Instagram Story -tyylinen audiosoitin:</strong> Squircle-kansikuva, animoitu ääniaaltotaajuuskorjain (Equalizer wave), kappaleen tiedot, toisto/tauko-säädin sekä mikrotason edistymispalkki.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon blue">&#10003;</span>
+                <div>
+                  <strong>Pikahakuchipsit:</strong> Suositut artistihaut yhdellä napautuksella (esim. <em>Taylor Swift</em>, <em>Bodyslam</em>, <em>Three Man Down</em>).
+                </div>
+              </li>
+            </ul>
+
+            <div class="feature-tag-row">
+              <span class="feature-tag blue">Apple Music API</span>
+              <span class="feature-tag blue">cURL Backend</span>
+              <span class="feature-tag">30s Audio Stream</span>
+              <span class="feature-tag">Instagram Equalizer</span>
+            </div>
+          </div>
+
+          <div class="feature-visual-col reveal-item delay-2">
+            <div class="feature-screenshot-card" data-lightbox="screenshots/06-screenshot-102658.png" data-caption="Musiikki-integraatio: Reaaliaikainen iTunes-kappalehaku hakusanalla 'Taylor Swift', albumikannet, esikuuntelupainike ja valintapainikkeet">
+              <img 
+                src="screenshots/06-screenshot-102658.png" 
+                alt="Musiikki-integraatio hakutuloksineen, albumikansineen ja esikuuntelupainikkeineen" 
+                class="feature-screenshot-img"
+                loading="lazy"
+              >
+              <div class="feature-screenshot-caption">Kuvakaappaus: Kappalehaku Apple Music / iTunes -rajapinnasta</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         05. NOTIFICATIONS ENGINE
+         ======================================================================== -->
+    <section class="section" id="notifications">
+      <div class="container">
+        <div class="feature-row reverse">
+          <div class="feature-text-col reveal-item">
+            <span class="feature-kicker">04 &bull; Reaaliaikaisuus</span>
+            <h2 class="feature-heading">Dynaaminen ilmoituskeskus ja taustapollaus</h2>
+            <p class="feature-paragraph">
+              Sovelluksessa on kevyt ja tehokas ilmoitusarkkitehtuuri. Käyttäjä saa tiedon tykkäyksistä, kommenteista, vastauksista ja parhaan vastauksen valinnoista välittömästi ilman sivun manuaalista päivittämistä.
+            </p>
+
+            <ul class="feature-list">
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>2 sekunnin taustakysely (Polling):</strong>
+                  Asynkroninen JavaScript Fetch API kyselee kevyiltä päätepisteiltä (<code>api/notifications-count.php</code> ja <code>api/get-new-notifications.php</code>) uudet tapahtumat.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Dynaaminen laskurimerkki:</strong>
+                  Sivupalkin ilmoituskuvakkeen viereen ilmestyy automaattisesti punainen lukemattomien ilmoitusten määräbadge.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Inkrementaalinen päivitys (Prepend):</strong>
+                  Ilmoitussivulla uudet tapahtumat ilmestyvät saumattomasti listan kärkeen ilman sivuvälähdystä.
+                </div>
+              </li>
+              <li class="feature-list-item">
+                <span class="feature-list-icon">&#10003;</span>
+                <div>
+                  <strong>Suora ankkurilinkitys:</strong>
+                  Kommenteista näytetään sitaatti ja ilmoituksen klikkaus vie suoraan oikeaan julkaisuun ja kommenttikenttään (<code>#comments-ID</code>).
+                </div>
+              </li>
+            </ul>
+
+            <div class="feature-tag-row">
+              <span class="feature-tag highlight">Fetch API Polling</span>
+              <span class="feature-tag highlight">2s Interval</span>
+              <span class="feature-tag">Notification Badge</span>
+              <span class="feature-tag">Anchor Link navigation</span>
+            </div>
+          </div>
+
+          <div class="feature-visual-col reveal-item delay-2">
+            <div class="feature-screenshot-card" data-lightbox="screenshots/07-screenshot-103340.png" data-caption="Ilmoituskeskus: Tykkäys- ja kommentti-ilmoitukset sisältölainauksineen ja suhteellisine aikaleimoineen">
+              <img 
+                src="screenshots/07-screenshot-103340.png" 
+                alt="Ilmoitussivu näyttäen tykkäyksen ja kommentti-ilmoituksen suhteellisilla aikaleimoilla" 
+                class="feature-screenshot-img"
+                loading="lazy"
+              >
+              <div class="feature-screenshot-caption">Kuvakaappaus: Ilmoituskeskus ja saapuneet tapahtumat</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         06. SECURITY ARCHITECTURE & GDPR
+         ======================================================================== -->
+    <section class="section" id="security">
+      <div class="container">
+        <div class="section-header text-center reveal-item">
+          <span class="section-badge">05 &bull; Tietoturva &amp; Yksityisyys</span>
+          <h2 class="section-title">Tuotantotason sovellusturvallisuus &amp; GDPR</h2>
+          <p class="section-desc">
+            Mini X on rakennettu alusta alkaen noudattamaan tiukkoja tietoturvakäytäntöjä, parametroituja tietokantakyselyitä sekä EU:n GDPR-tietosuoja-asetusta.
+          </p>
+        </div>
+
+        <div class="security-container">
+          <div class="security-pillars reveal-item delay-1">
+            <div class="security-pillar">
+              <div class="security-pillar-header">
+                <span class="security-pillar-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                  <span>Parametroidut SQL-kyselyt</span>
+                </span>
+                <span class="security-pillar-badge">100% Suojattu</span>
+              </div>
+              <p class="security-pillar-desc">
+                Kaikki tietokantakyselyt suoritetaan parametroitujen lauseiden kautta (<code>mysqli::prepare</code> ja <code>bind_param</code>), mikä eliminoi SQL-injektiohyökkäykset.
+              </p>
+            </div>
+
+            <div class="security-pillar">
+              <div class="security-pillar-header">
+                <span class="security-pillar-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                  <span>BCRYPT-salasanatiivisteet</span>
+                </span>
+                <span class="security-pillar-badge">Vahva tiivistys</span>
+              </div>
+              <p class="security-pillar-desc">
+                Salasanat tiivistetään käyttämällä PHP:n modernia <code>password_hash()</code> -funktiota BCRYPT-algoritmilla ja vahvistetaan <code>password_verify()</code>:llä.
+              </p>
+            </div>
+
+            <div class="security-pillar">
+              <div class="security-pillar-header">
+                <span class="security-pillar-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  <span>SHA-256 Palautustokenit</span>
+                </span>
+                <span class="security-pillar-badge">Kertakäyttöinen</span>
+              </div>
+              <p class="security-pillar-desc">
+                Kryptografiset <code>random_bytes(16)</code> -tunnisteet tiivistetään SHA-256-muotoon tietokantaan. Linkit vanhenevat automaattisesti 30 minuutissa.
+              </p>
+            </div>
+
+            <div class="security-pillar">
+              <div class="security-pillar-header">
+                <span class="security-pillar-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  <span>Palvelinpään MIME-validointi</span>
+                </span>
+                <span class="security-pillar-badge">finfo_file</span>
+              </div>
+              <p class="security-pillar-desc">
+                Ladatut kuvat validoidaan suoraan tiedoston binäärisisällön perusteella sallittuihin MIME-tyyppeihin (JPG, PNG, WEBP, GIF) ja tallennetaan satunnaisella hash-nimellä.
+              </p>
+            </div>
+
+            <div class="security-pillar">
+              <div class="security-pillar-header">
+                <span class="security-pillar-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-green)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"></path><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                  <span>30 päivän tilin palautus (Soft Delete)</span>
+                </span>
+                <span class="security-pillar-badge">GDPR-yhteensopiva</span>
+              </div>
+              <p class="security-pillar-desc">
+                Tilin poisto vaatii salasanavahvistuksen. Tili asetetaan 30 päivän tauolle ennen lopullista tuhoamista, ja käyttäjä voi palauttaa tilinsä kirjautumalla sisään.
+              </p>
+            </div>
+          </div>
+
+          <div class="feature-visual-col reveal-item delay-2">
+            <div class="feature-screenshot-card" data-lightbox="screenshots/01-login.png" data-caption="Kirjautumis- ja rekisteröintinäkymä: Jaettu split-screen asettelu, tietosuojakäytäntölinkki ja salasanan palautus">
+              <img 
+                src="screenshots/01-login.png" 
+                alt="Mini X jaettu kirjautumis- ja rekisteröintiruutu" 
+                class="feature-screenshot-img"
+                loading="lazy"
+              >
+              <div class="feature-screenshot-caption">Kuvakaappaus: Jaettu kirjautumisruutu ja tietosuojalinkit</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <hr class="section-divider">
+
+    <!-- ========================================================================
+         07. TECH STACK & ARCHITECTURE
+         ======================================================================== -->
+    <section class="section" id="tech-stack">
+      <div class="container">
+        <div class="section-header text-center reveal-item">
+          <span class="section-badge">06 &bull; Teknologiapino</span>
+          <h2 class="section-title">Käytetyt teknologiat ja kirjastot</h2>
+          <p class="section-desc">
+            Rakennettu tarkoituksella puhtaille web-standardeille ilman raskaita valmiskehyksiä, varmistaen erinomaisen suorituskyvyn ja syvällisen arkkitehtuurin hallinnan.
+          </p>
+        </div>
+
+        <div class="tech-stack-grid">
+          <div class="tech-stack-card reveal-item delay-1">
+            <div class="tech-card-top">
+              <span class="tech-name">PHP 8.2+</span>
+              <span class="tech-category-pill">Backend</span>
+            </div>
+            <p class="tech-desc">
+              Palvelinpuolen logiikka, reititys, istuntokohtainen tunnistautuminen, tiedostojen MIME-käsittely ja API-päätepisteet.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-2">
+            <div class="tech-card-top">
+              <span class="tech-name">MySQL / MariaDB</span>
+              <span class="tech-category-pill">Tietokanta</span>
+            </div>
+            <p class="tech-desc">
+              Relaatiotietokanta (InnoDB &amp; utf8mb4_unicode_ci), normalisoidut taulut julkaisuille, kommenteille, ilmoituksille ja kustomoinnille.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-3">
+            <div class="tech-card-top">
+              <span class="tech-name">Vanilla JavaScript</span>
+              <span class="tech-category-pill">Frontend</span>
+            </div>
+            <p class="tech-desc">
+              Moderni ES6+ ilman riippuvuuksia: Fetch API asynkroniseen taustapollingiin, modaalit, audiosoitin ja DOM-käsittely.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-4">
+            <div class="tech-card-top">
+              <span class="tech-name">HTML5 &amp; CSS3</span>
+              <span class="tech-category-pill">UI / UX</span>
+            </div>
+            <p class="tech-desc">
+              Semanttinen merkkaus, moderni CSS Grid &amp; Flexbox, CSS-muuttujat dynaamiseen teemaväritykseen sekä mobiiliresponsiivisuus.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-1">
+            <div class="tech-card-top">
+              <span class="tech-name">Apple Music / iTunes API</span>
+              <span class="tech-category-pill">Integraatio</span>
+            </div>
+            <p class="tech-desc">
+              Ulkoinen REST-rajapinta kappaleiden, albumikansien ja 30 sekunnin virallisten ääninäytteiden reaaliaikaiseen hakuun cURL-kutsulla.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-2">
+            <div class="tech-card-top">
+              <span class="tech-name">PHPMailer</span>
+              <span class="tech-category-pill">Kirjasto</span>
+            </div>
+            <p class="tech-desc">
+              Luotettava sähköpostien lähetys salasanan palautustunnisteille SMTP- ja Resend API -valmiudella.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-3">
+            <div class="tech-card-top">
+              <span class="tech-name">JustValidate</span>
+              <span class="tech-category-pill">Validointi</span>
+            </div>
+            <p class="tech-desc">
+              Käyttäjäystävällinen asiakaspään reaaliaikainen lomakevalidointi kirjautumiselle ja rekisteröitymiselle.
+            </p>
+          </div>
+
+          <div class="tech-stack-card reveal-item delay-4">
+            <div class="tech-card-top">
+              <span class="tech-name">WampServer / XAMPP</span>
+              <span class="tech-category-pill">Ympäristö</span>
+            </div>
+            <p class="tech-desc">
+              Paikallinen Apache-, PHP- ja MySQL-palvelinympäristö, jossa kehitystyö, testaus ja suorituskykyoptimoitu ajo on suoritettu.
+            </p>
+          </div>
+        </div>
+
+        <!-- Compact Author & Project Metadata Strip -->
+        <div class="summary-box reveal-item" style="margin-top: 50px; padding: 32px 36px;">
+          <div class="summary-details">
+            <div class="summary-meta-item">
+              <span class="summary-meta-label">Tekijä</span>
+              <span class="summary-meta-value gold">Nithitorn Kaosa-ard</span>
+            </div>
+
+            <div class="summary-meta-item">
+              <span class="summary-meta-label">Rooli</span>
+              <span class="summary-meta-value">Full Stack Developer</span>
+            </div>
+
+            <div class="summary-meta-item">
+              <span class="summary-meta-label">Ajankohta</span>
+              <span class="summary-meta-value">Syyskuu 2026</span>
+            </div>
+
+            <div class="summary-meta-item">
+              <span class="summary-meta-label">Versio</span>
+              <span class="summary-meta-value">v1.1.2 &bull; Completed</span>
+            </div>
+          </div>
+
+          <div class="summary-text-block">
+            <p>
+              Mini X on osoitus kyvystä suunnitella ja toteuttaa monimutkainen ja turvallinen verkkosovellus ilman valmiskehyksiä. Käyttöliittymä yhdistää modernin esteettisyyden, rikkaan vuorovaikutuksen ja järjestelmällisen tietokantarakenteen.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================================
+         FINAL CTA
+         ======================================================================== -->
+    <section class="section final-cta" id="cta">
+      <div class="container">
+        <div class="cta-box reveal-item">
+          <h2 class="cta-title">Mini X</h2>
+          <p class="cta-desc">
+            Avaa ja kokeile sovellusta verkossa tai tutki sen arkkitehtuuria suoraan GitHubissa.
+          </p>
+
+          <div class="cta-buttons">
+            <a href="https://mini-x.infinityfree.io/" target="_blank" rel="noopener noreferrer" class="btn btn-primary" title="Avaa Mini X -sivusto">
+              <span>Avaa sivusto</span>
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+
+            <a href="https://github.com/AlexNtrx/mini-X" target="_blank" rel="noopener noreferrer" class="btn btn-secondary" title="Avaa lähdekoodi GitHubissa">
+              <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+              </svg>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       FOOTER
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container footer-container">
+      <div class="footer-copy">
+        <span>&copy; 2026 Mini X &bull; Nithitorn Kaosa-ard</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="#hero" class="footer-link">Alkuun &uarr;</a>
+        <a href="index.php?page=privacy" class="footer-link">Tietosuojaseloste</a>
+        <a href="https://github.com/AlexNtrx/mini-X" target="_blank" rel="noopener noreferrer" class="footer-link">GitHub</a>
+        <a href="https://mini-x.infinityfree.io/" target="_blank" rel="noopener noreferrer" class="footer-link">Avaa sivusto</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       IMAGE LIGHTBOX MODAL DIALOG
+       ======================================================================== -->
+  <div class="lightbox-overlay" id="lightboxModal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="lightbox-content-wrap">
+      <button type="button" class="lightbox-close-btn" id="lightboxCloseBtn" aria-label="Sulje suurennos">&times;</button>
+      <img src="" alt="" class="lightbox-img" id="lightboxImg">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script src="script.js"></script>
+</body>
+</html>
