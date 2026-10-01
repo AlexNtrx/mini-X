@@ -205,6 +205,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         if (is_array($filesToDelete) && !empty($filesToDelete)) {
             $allowedDir = realpath(__DIR__ . "/../uploads");
             foreach ($filesToDelete as $relPath) {
+                $baseName = basename($relPath);
+                // Älä koskaan poista pistetiedostoja (.gitignore, .gitkeep) tai järjestelmätiedostoja
+                if (str_starts_with($baseName, '.') || in_array($baseName, ['index.html', 'index.php', 'web.config'])) {
+                    continue;
+                }
+
                 $targetFile = realpath(__DIR__ . "/../uploads/" . $relPath);
                 // Varmistetaan että tiedosto on uploads-hakemiston sisällä (estää Directory Traversal)
                 if ($targetFile && str_starts_with($targetFile, $allowedDir) && is_file($targetFile)) {

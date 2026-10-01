@@ -1184,7 +1184,10 @@ function adminScanOrphanFiles($conn)
         if (!is_dir($path)) continue;
         $files = scandir($path);
         foreach ($files as $f) {
-            if ($f === '.' || $f === '..' || $f === '.gitkeep' || $f === 'index.html') continue;
+            // Ohitetaan järjestelmätiedostot, pistetiedostot (.gitignore, .gitkeep) ja indeksit
+            if ($f === '.' || $f === '..' || str_starts_with($f, '.') || $f === 'index.html' || $f === 'index.php') {
+                continue;
+            }
             $fullPath = $path . $f;
             if (is_file($fullPath)) {
                 $totalFiles++;
