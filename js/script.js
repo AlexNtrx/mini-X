@@ -371,7 +371,7 @@ function checkUnreadNotifications() {
                     // joten prependaamalla järjestyksessä uusin tulee listan ylimmäksi
                     data.notifications.forEach((notif) => {
                         const item = document.createElement("a");
-                        const targetAnchor = (notif.type === 'comment' || notif.type === 'comment_reply' || notif.type === 'best_answer') ? 'comments-' : 'post-';
+                        const targetAnchor = (notif.type === 'comment' || notif.type === 'comment_reply') ? 'comments-' : 'post-';
                         item.href = `index.php?page=home#${targetAnchor}${encodeURIComponent(notif.post_id)}`;
                         item.className = "notification-item unread";
                         item.setAttribute("data-id", notif.id);
@@ -382,9 +382,6 @@ function checkUnreadNotifications() {
                         if (notif.type === "like") {
                             iconSpan.className = "notif-icon notif-like";
                             iconSpan.innerHTML = "&#10084;&#65039;";
-                        } else if (notif.type === "best_answer") {
-                            iconSpan.className = "notif-icon notif-best-answer";
-                            iconSpan.innerHTML = "⭐";
                         } else if (notif.type === "comment_reply") {
                             iconSpan.className = "notif-icon notif-reply";
                             iconSpan.innerHTML = "↩️";
@@ -408,10 +405,6 @@ function checkUnreadNotifications() {
                         const actionSpan = document.createElement("span");
                         if (notif.type === "like") {
                             actionSpan.textContent = "tykkäsi julkaisustasi";
-                        } else if (notif.type === "best_answer") {
-                            actionSpan.textContent = "valitsi vastauksesi parhaaksi! ⭐";
-                            actionSpan.style.color = "#ffd700";
-                            actionSpan.style.fontWeight = "600";
                         } else if (notif.type === "comment_reply") {
                             actionSpan.textContent = "vastasi kommenttiisi";
                         } else {
@@ -634,66 +627,7 @@ document.addEventListener('submit', async (e) => {
         return;
     }
 
-    // 3. Paras vastaus (Best Answer Toggle)
-    if (form.classList.contains('best-answer-form')) {
-        e.preventDefault();
-        const submitBtn = form.querySelector('button[type="submit"]');
-        if (submitBtn) submitBtn.disabled = true;
-
-        const formData = new FormData(form);
-        formData.append('ajax', '1');
-        if (!formData.has('toggle_best_answer')) formData.append('toggle_best_answer', '1');
-
-        try {
-            const res = await fetch(form.action || window.location.href, {
-                method: 'POST',
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                body: formData
-            });
-            const data = await res.json();
-            if (data.success) {
-                const postId = data.post_id;
-                const wrapper = document.getElementById(`comments-list-wrapper-${postId}`);
-                if (wrapper) {
-                    wrapper.innerHTML = data.comments_html || '';
-                }
-                const postArticle = document.getElementById(`post-${postId}`);
-                if (postArticle) {
-                    const postUser = postArticle.querySelector('.post-user');
-                    let resolvedBadge = postUser?.querySelector('.post-badge-resolved');
-                    if (data.is_resolved) {
-                        if (!resolvedBadge && postUser) {
-                            resolvedBadge = document.createElement('span');
-                            resolvedBadge.className = 'post-badge-resolved';
-                            resolvedBadge.title = 'Ratkaistu (paras vastaus valittu)';
-                            resolvedBadge.textContent = '✓ Ratkaistu';
-                            postUser.appendChild(resolvedBadge);
-                        }
-                    } else if (resolvedBadge) {
-                        resolvedBadge.remove();
-                    }
-                }
-                if (typeof Toast !== 'undefined') {
-                    if (data.action === 'marked') {
-                        Toast.success(data.message || 'Valittu parhaaksi vastaukseksi! ⭐');
-                    } else {
-                        Toast.info(data.message || 'Parhaan vastauksen merkintä poistettu.');
-                    }
-                }
-            } else {
-                if (typeof Toast !== 'undefined') {
-                    Toast.error(data.error || 'Toiminto epäonnistui.');
-                }
-            }
-        } catch (err) {
-            console.error('AJAX Best answer error:', err);
-        } finally {
-            if (submitBtn) submitBtn.disabled = false;
-        }
-        return;
-    }
-
-    // 4. Kommentin poisto (Delete comment)
+    // 3. Kommentin poisto (Delete comment)
     if (form.classList.contains('delete-comment-form')) {
         e.preventDefault();
         if (!confirm('Poistetaanko kommentti?')) return;

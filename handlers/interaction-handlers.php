@@ -62,8 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
                     if (isAjaxRequest()) {
                         $post = getPostById($conn, $postId);
-                        $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
-                        $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
+                        $commentsHtml = renderCommentsListHtml($conn, $postId, null, (int)($post['user_id'] ?? 0));
                         $commentCount = getCommentCount($conn, $postId);
                         sendJsonResponse([
                             'success' => true,
@@ -91,45 +90,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
         }
     }
-    // Aseta tai poista paras vastaus (Best Answer)
-    elseif (isset($_POST["toggle_best_answer"])) {
-        $postId = (int)($_POST["post_id"] ?? 0);
-        $commentId = (int)($_POST["comment_id"] ?? 0);
-        if ($postId > 0 && $commentId > 0 && $userId > 0) {
-            $res = toggleBestAnswer($conn, $postId, $commentId, $userId);
-            $msg = '';
-            if ($res && is_array($res)) {
-                if ($res['action'] === 'marked') {
-                    $commentOwnerId = (int)($res['comment_owner_id'] ?? 0);
-                    if ($commentOwnerId > 0 && $commentOwnerId !== $userId) {
-                        addNotification($conn, $commentOwnerId, $userId, $_SESSION['username'] ?? '', $postId, 'best_answer', 'Valitsi kommenttisi parhaaksi vastaukseksi! ⭐');
-                    }
-                    $msg = "Valittu parhaaksi vastaukseksi! ⭐";
-                    setFlashToast($msg, "success");
-                } elseif ($res['action'] === 'unmarked') {
-                    $msg = "Parhaan vastauksen merkintä poistettu.";
-                    setFlashToast($msg, "info");
-                }
-            }
-
-            if (isAjaxRequest()) {
-                $post = getPostById($conn, $postId);
-                $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
-                $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
-                sendJsonResponse([
-                    'success' => true,
-                    'action' => $res['action'] ?? 'marked',
-                    'message' => $msg,
-                    'post_id' => $postId,
-                    'is_resolved' => (($res['action'] ?? '') === 'marked'),
-                    'comments_html' => $commentsHtml
-                ]);
-            }
-
-            header("Location: " . $cleanUrl . "#comments-" . $postId);
-            exit;
-        }
-    }
     // Poista kommentti
     elseif (isset($_POST["delete_comment"])) {
         $commentId = (int)($_POST["comment_id"] ?? 0);
@@ -139,8 +99,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             if (isAjaxRequest()) {
                 $post = getPostById($conn, $postId);
-                $bestCommentId = !empty($post['best_comment_id']) ? (int)$post['best_comment_id'] : null;
-                $commentsHtml = renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($post['user_id'] ?? 0));
+                $commentsHtml = renderCommentsListHtml($conn, $postId, null, (int)($post['user_id'] ?? 0));
                 $commentCount = getCommentCount($conn, $postId);
                 sendJsonResponse([
                     'success' => true,

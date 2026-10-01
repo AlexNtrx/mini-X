@@ -66,58 +66,6 @@ function getCommentOwnerId($conn, $commentId)
     return (int)($row['user_id'] ?? 0);
 }
 
-// Asettaa tai poistaa parhaan vastauksen (Best Answer)
-function toggleBestAnswer($conn, $postId, $commentId, $userId)
-{
-    if (!$conn || $postId <= 0 || $userId <= 0) return false;
-
-    // Tarkistetaan julkaisun omistaja ja nykyinen valinta
-    $stmt = $conn->prepare("SELECT user_id, best_comment_id FROM posts WHERE id = ? LIMIT 1");
-    if (!$stmt) return false;
-    $stmt->bind_param("i", $postId);
-    $stmt->execute();
-    $post = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!$post || (int)$post['user_id'] !== (int)$userId) {
-        return false;
-    }
-
-    // Jos sama kommentti on jo valittu, poistetaan valinta (toggle off)
-    if ((int)($post['best_comment_id'] ?? 0) === (int)$commentId) {
-        $upd = $conn->prepare("UPDATE posts SET best_comment_id = NULL WHERE id = ?");
-        if ($upd) {
-            $upd->bind_param("i", $postId);
-            $upd->execute();
-            $upd->close();
-        }
-        return ['action' => 'unmarked'];
-    }
-
-    // Varmistetaan että valittava kommentti kuuluu tähän julkaisuun
-    $cStmt = $conn->prepare("SELECT id, user_id FROM comments WHERE id = ? AND post_id = ? LIMIT 1");
-    if (!$cStmt) return false;
-    $cStmt->bind_param("ii", $commentId, $postId);
-    $cStmt->execute();
-    $comment = $cStmt->get_result()->fetch_assoc();
-    $cStmt->close();
-
-    if (!$comment) {
-        return false;
-    }
-
-    $upd = $conn->prepare("UPDATE posts SET best_comment_id = ? WHERE id = ?");
-    if (!$upd) return false;
-    $upd->bind_param("ii", $commentId, $postId);
-    $res = $upd->execute();
-    $upd->close();
-
-    return [
-        'action' => 'marked',
-        'comment_owner_id' => (int)$comment['user_id']
-    ];
-}
-
 // Hakee julkaisun kaikki kommentit puurakenteena (pääkommentit + vastaukset, Best Answer ensin)
 function getCommentsByPost($conn, $postId, $bestCommentId = null)
 {
@@ -164,17 +112,10 @@ function getCommentsByPost($conn, $postId, $bestCommentId = null)
         }
     }
 
-    // Jos bestCommentId on asetettu, siirretään kyseinen pääkommentti kärkeen
-    if ($bestCommentId !== null && (int)$bestCommentId > 0 && isset($parents[(int)$bestCommentId])) {
-        $best = $parents[(int)$bestCommentId];
-        unset($parents[(int)$bestCommentId]);
-        $parents = [(int)$bestCommentId => $best] + $parents;
-    }
-
     return array_values($parents);
 }
 
-// Poistaa kommentin (ja sen alikommentit) sekä päivittää tarvittaessa julkaisun best_comment_id
+// Poistaa kommentin (ja sen alikommentit)
 function deleteComment($conn, $commentId, $userId)
 {
     // Nollataan mahdollinen best_comment_id viittaus
@@ -213,11 +154,7 @@ function deleteComment($conn, $commentId, $userId)
 function renderCommentsListHtml($conn, $postId, $bestCommentId = null, $postOwnerId = null)
 {
     if (!$conn || $postId <= 0) return '';
-    if ($postOwnerId === null) {
-        $postOwnerId = getPostOwnerId($conn, $postId);
-    }
-    $comments = getCommentsByPost($conn, $postId, $bestCommentId);
-    $isPostOwner = (isset($_SESSION['user_id']) && (int)$_SESSION['user_id'] === (int)$postOwnerId);
+    $comments = getCommentsByPost($conn, $postId);
 
     ob_start();
     if (!empty($comments)): ?>
@@ -225,16 +162,8 @@ function renderCommentsListHtml($conn, $postId, $bestCommentId = null, $postOwne
             <?php foreach ($comments as $comment): ?>
                 <?php 
                 $commentAvatarUrl = getUserAvatarUrl($comment['author_avatar'] ?? null); 
-                $isThisBest = ($bestCommentId !== null && (int)$comment['id'] === (int)$bestCommentId);
                 ?>
-                <div class="comment-item <?= $isThisBest ? 'best-answer-card' : '' ?>" id="comment-<?= (int)$comment['id'] ?>">
-                    <?php if ($isThisBest): ?>
-                        <div class="best-answer-ribbon">
-                            <span class="best-answer-ribbon-icon">⭐</span>
-                            <span>Tekijän valitsema paras vastaus</span>
-                        </div>
-                    <?php endif; ?>
-
+                <div class="comment-item" id="comment-<?= (int)$comment['id'] ?>">
                     <div class="comment-main-row">
                         <div class="comment-avatar">
                             <?php if ($commentAvatarUrl): ?>
@@ -255,17 +184,6 @@ function renderCommentsListHtml($conn, $postId, $bestCommentId = null, $postOwne
                                 <button type="button" class="btn-reply-action" onclick="toggleCommentReplyBox('reply-box-<?= (int)$comment['id'] ?>', '@<?= htmlspecialchars($comment['author'], ENT_QUOTES, 'UTF-8') ?> ')" title="Vastaa tähän kommenttiin">
                                     ↩ Vastaa
                                 </button>
-
-                                <!-- Best Answer Nappi (vain julkaisun tekijälle) -->
-                                <?php if ($isPostOwner): ?>
-                                    <form method="POST" class="best-answer-form" style="display:inline;">
-                                        <input type="hidden" name="post_id" value="<?= (int)$postId ?>">
-                                        <input type="hidden" name="comment_id" value="<?= (int)$comment['id'] ?>">
-                                        <button type="submit" name="toggle_best_answer" class="btn-best-answer-action <?= $isThisBest ? 'active' : '' ?>" title="<?= $isThisBest ? 'Peruuta parhaan vastauksen merkintä' : 'Merkitse parhaaksi vastaukseksi' ?>">
-                                            <?= $isThisBest ? '★ Paras vastaus' : '☆ Valitse parhaaksi' ?>
-                                        </button>
-                                    </form>
-                                <?php endif; ?>
 
                                 <?php if (isset($_SESSION['user_id']) && (int)$_SESSION['user_id'] === (int)$comment['user_id']): ?>
                                     <form method="POST" class="delete-comment-form" onsubmit="return confirm('Poistetaanko kommentti?');">

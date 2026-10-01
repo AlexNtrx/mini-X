@@ -41,7 +41,6 @@ require_once __DIR__ . "/../functions/init.php";
                     <?php
                     $postRoom = $content['room'] ?? 'general';
                     $postType = $content['post_type'] ?? 'general';
-                    $bestCommentId = !empty($content['best_comment_id']) ? (int)$content['best_comment_id'] : null;
                     $availableRooms = function_exists('getAvailableRooms') ? getAvailableRooms() : [];
                     $isPinned = !empty($content['is_pinned']);
                     ?>
@@ -57,9 +56,6 @@ require_once __DIR__ . "/../functions/init.php";
 
                     <?php if ($postType === 'question'): ?>
                         <span class="post-badge-question" title="Kysymysjulkaisu">Kysymys</span>
-                        <?php if ($bestCommentId): ?>
-                            <span class="post-badge-resolved" title="Ratkaistu (paras vastaus valittu)">Ratkaistu</span>
-                        <?php endif; ?>
                     <?php endif; ?>
                 </div>
 
@@ -193,7 +189,7 @@ require_once __DIR__ . "/../functions/init.php";
 
                 <!-- Comments List Wrapper -->
                 <div class="comments-list-wrapper" id="comments-list-wrapper-<?= $postId ?>">
-                    <?= renderCommentsListHtml($conn, $postId, $bestCommentId, (int)($content['user_id'] ?? 0)) ?>
+                    <?= renderCommentsListHtml($conn, $postId, null, (int)($content['user_id'] ?? 0)) ?>
                 </div>
             </div>
 

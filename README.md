@@ -11,7 +11,7 @@ Mini-X on selaimessa toimiva täysiverinen mikroblogipalvelu (inspiraationa X / 
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu – Lokakuu 2026
-- **Versio:** 1.2.0 (Full-Stack AJAX Architecture)
+- **Versio:** 1.3.0 (Production Release / Final Version)
 
 ---
 
@@ -46,10 +46,10 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 
 ### 3. Julkaisujen ja keskustelujen hallinta (CRUD)
 - **Julkaisujen luonti:** Tekstin ja kuvien julkaiseminen `FormData`-tiedostolatauksella ilman sivulatausta. Uusi julkaisu ilmestyy syötteen kärkeen välittömästi.
+- **Aihekohtaiset julkaisutyypit:** Tavalliset tilapäivitykset sekä kysymysjulkaisut (`post_type = 'question'`) aihealueiden keskustelun herättämiseksi.
 - **Julkaisujen muokkaus ja poisto:** Sisällön muokkaaminen suoraan syötteessä (inline edit) ja poistaminen vahvistusdialogin kautta pehmeällä häivytyksellä.
 - **Reaaliaikaiset tykkäykset:** Tykkää/peruuta-toiminto päivittää sydänkuvakkeen ja laskurin reaaliajassa.
 - **Kommentointi ja ketjutetut vastaukset (Threaded Replies):** Julkaisuihin voi kommentoida ja kommentteihin vastata suoraan sisäkkäin.
-- **Paras vastaus (Best Answer / Q&A):** Kysymysmuotoisissa julkaisuissa aloittaja voi valita parhaan vastauksen, mikä merkitsee keskustelun ratkaistuksi ja nostaa valitun vastauksen korostetusti esille.
 - **Kuvien Lightbox:** Täysikokoinen kuvankatselu suoraan syötteestä.
 - **Suhteelliset aikaleimat:** Automaattisesti päivittyvät X/Twitter-tyyliset aikaleimat (`nyt`, `15 s`, `5 min`, `2 t`, `3 pv`).
 
@@ -58,7 +58,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Avatarin pyöreä rajaustyökalu (Canvas Cropper):** Käyttäjä voi rajata ja zoomata profiilikuvansa haluamaansa kohtaan ennen tallennusta.
 - **Profiilibanneri ja asemointi:** Bannerikuvan lataus ja pystysuuntaisen kohdistuksen säätö liukusäätimellä (reposition slider).
 - **Live-taustakuvat ja teemavärit:** Valmiit animoidut live-taustat, omat taustakuvat sekä korostusvärin (Accent Color) valinta, joka päivittyy dynaamisesti CSS-muuttujina koko sivulle.
-- **Retro 8-bit -musiikkisoitin:** Profiiliin voi valita oman tunnusmusiikin, joka soi autenttisella retro-soittimella profiilissa vierailtaessa.
+- **Retro 8-bit -musiikkisoitin:** Profiiliin voi lisätä oman tunnusmusiikin, joka soi autenttisella retro-soittimella profiilissa vierailtaessa.
 
 ### 5. Huoneet, haku ja selainhistoria (Navigation)
 - **Pantip-tyyliset aihealuehuoneet:** Syötteen suodatus huoneittain (esim. Yleinen, Ohjelmointi, Pelit) yhdellä klikkauksella ilman sivulatausta.
@@ -66,6 +66,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Browser History Integration:** Suodatukset ja haut päivittävät selaimen osoiterivin (`history.pushState`), joten selaimen Edellinen/Seuraava-painikkeet (`popstate`) toimivat saumattomasti.
 
 ### 6. Ylläpito ja moderointi (Admin Dashboard & RBAC)
+- **Erillinen ylläpitoportaali (Dedicated Standalone Admin Portal):** Oma suojattu ja nopea hallintasivu (`admin.php`) 1400px leveällä työskentelytilalla, tilanneilmaisimilla ja erillisellä navigoinnilla.
 - **Roolipohjainen pääsynhallinta (RBAC):** `admin`- ja `user`-roolit tiukalla palvelintason suojauksella.
 - **Käyttäjien moderointi:** Käyttäjätunnusten ja nimimerkkien auditointi, profiilikuvien pakkonollaus, tilien jäädytys tai poisto.
 - **Huoneiden dynaaminen hallinta:** Uusien aihealueiden luonti, piilottaminen ja poistaminen.
