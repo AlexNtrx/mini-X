@@ -43,7 +43,7 @@
             <div class="profile-modal-body">
                 <!-- Banner Area with "Vaihda banneri" and Slider Repositioning -->
                 <div class="modal-banner-area" id="modal-banner-area" 
-                     <?= !empty($bannerUrl) ? 'style="background-image: url(\'' . $bannerUrl . '\'); background-position: center ' . (int)($customization['banner_pos_y'] ?? 50) . '%;"' : '' ?>>
+                     <?= !empty($bannerUrl) ? 'style="background-image: url(\'' . htmlspecialchars($bannerUrl, ENT_QUOTES) . '\'); background-position: center ' . (int)($customization['banner_pos_y'] ?? 50) . '%;"' : '' ?>>
                     <input type="file" id="edit-banner-input" name="banner" accept="image/jpeg,image/png,image/webp,image/gif" style="display: none;" onclick="this.value=null;" onchange="handleBannerSelect(this)">
 
                     <!-- Position slider widget -->

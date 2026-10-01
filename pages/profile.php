@@ -93,14 +93,14 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= $userFound ? htmlspecialchars($profileDisplayName) . ' (@' . htmlspecialchars($profileUsername) . ')' : 'Käyttäjää ei löydy' ?> - Mini X</title>
-    <link rel="stylesheet" href="./css/main.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/kortit.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/sidebar.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/profile.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/profile-modal.css?v=1.1.2">
-    <link rel="stylesheet" href="./css/toast.css?v=1.1.2">
+    <link rel="stylesheet" href="./css/main.css?v=<?= filemtime(__DIR__ . '/../css/main.css') ?>">
+    <link rel="stylesheet" href="./css/kortit.css?v=<?= filemtime(__DIR__ . '/../css/kortit.css') ?>">
+    <link rel="stylesheet" href="./css/sidebar.css?v=<?= filemtime(__DIR__ . '/../css/sidebar.css') ?>">
+    <link rel="stylesheet" href="./css/profile.css?v=<?= filemtime(__DIR__ . '/../css/profile.css') ?>">
+    <link rel="stylesheet" href="./css/profile-modal.css?v=<?= filemtime(__DIR__ . '/../css/profile-modal.css') ?>">
+    <link rel="stylesheet" href="./css/toast.css?v=<?= filemtime(__DIR__ . '/../css/toast.css') ?>">
     <?php if (!empty($customization['song_url'])): ?>
-        <link rel="stylesheet" href="./css/retro-player.css?v=1.1.2">
+        <link rel="stylesheet" href="./css/retro-player.css?v=<?= filemtime(__DIR__ . '/../css/retro-player.css') ?>">
     <?php endif; ?>
 
 </head>
@@ -142,7 +142,7 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
 
                 <!-- Profiilikortti / Banner -->
                 <div class="profile-card">
-                    <div class="profile-banner <?= !empty($bannerUrl) ? 'has-custom-banner' : '' ?>" <?= !empty($bannerUrl) ? 'style="--banner-bg: url(\'' . htmlspecialchars($bannerUrl, ENT_QUOTES) . '\'); --banner-pos-y: ' . (int)($customization['banner_pos_y'] ?? 50) . '%;"' : '' ?>></div>
+                    <div class="profile-banner <?= !empty($bannerUrl) ? 'has-custom-banner' : '' ?>" <?= !empty($bannerUrl) ? 'style="background-image: url(\'' . htmlspecialchars($bannerUrl, ENT_QUOTES) . '\'); background-position: center ' . (int)($customization['banner_pos_y'] ?? 50) . '%; --banner-pos-y: ' . (int)($customization['banner_pos_y'] ?? 50) . '%;"' : '' ?>></div>
                     <div class="profile-details">
                         <div class="profile-avatar-row">
                             <div class="profile-avatar-wrapper">
@@ -218,13 +218,13 @@ $customBgUrl = getUserBackgroundUrl($currentBgVal);
         <?php include __DIR__ . '/../components/avatar-cropper-modal.php'; ?>
     <?php endif; ?>
 
-    <script src="./js/toast.js?v=1.1.2"></script>
-    <script src="./js/script.js?v=1.1.2"></script>
+    <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
+    <script src="./js/script.js?v=<?= filemtime(__DIR__ . '/../js/script.js') ?>"></script>
     <?php if (!empty($customization['song_url'])): ?>
-        <script src="./js/retro-player.js?v=1.1.2"></script>
+        <script src="./js/retro-player.js?v=<?= filemtime(__DIR__ . '/../js/retro-player.js') ?>"></script>
     <?php endif; ?>
     <?php if ($isOwnProfile): ?>
-        <script src="./js/profile-modal.js?v=1.1.2"></script>
+        <script src="./js/profile-modal.js?v=<?= filemtime(__DIR__ . '/../js/profile-modal.js') ?>"></script>
     <?php endif; ?>
 </body>
 </html>

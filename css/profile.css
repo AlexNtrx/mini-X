@@ -419,8 +419,8 @@
 }
 
 .profile-banner.has-custom-banner {
-    background-image: var(--banner-bg);
     background-size: cover;
+    background-repeat: no-repeat;
     background-position: center var(--banner-pos-y, 50%);
     height: 160px;
 }

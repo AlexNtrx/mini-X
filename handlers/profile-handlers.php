@@ -52,9 +52,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // 3. Bannerikuvan päivitys tai poisto
+        $deleteBanner = false;
         if (!$hasError) {
             if (!empty($_POST["delete_banner_flag"])) {
                 deleteUserBanner($conn, $userId);
+                $deleteBanner = true;
             } elseif (isset($_FILES["banner"]) && $_FILES["banner"]["error"] !== UPLOAD_ERR_NO_FILE) {
                 $bannerRes = updateUserBanner($conn, $userId, $_FILES["banner"]);
                 if ($bannerRes !== true && $bannerRes !== null) {
@@ -75,6 +77,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 'theme_accent' => $themeAccent,
                 'banner_pos_y' => $bannerPosY
             ];
+            if ($deleteBanner) {
+                $customData['theme_banner'] = '';
+            }
 
             // Taustan päivitys tai poisto (Preset tai oma kuva)
             if (!empty($_POST["delete_bg_flag"])) {

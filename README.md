@@ -68,8 +68,10 @@ Kopioi esimerkkikonfiguraatiot ja aseta omat tietokanta- ja sähköpostitunnukse
 - Kopioi `config/mail.example.php` nimelle `config/mail.php`
 
 ### 5. Sovelluksen avaaminen
-Avaa selain ja mene osoitteeseen:  
- **`http://localhost/mini-X/`**
+- **Paikallinen ympäristö:** Avaa selain ja mene osoitteeseen:  
+  **`http://localhost/mini-X/`**
+- **Live-sivusto (Verkossa):**  
+  **[https://mini-x.infinityfree.io/](https://mini-x.infinityfree.io/)**
 
 ---
 
