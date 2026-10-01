@@ -60,6 +60,36 @@ if (!$response) {
 }
 
 $data = json_decode($response, true);
+if (empty($data['results'])) {
+    // Kokeillaan hakua ilman maakohtaista rajoitusta (globaali iTunes-katalogi)
+    $globalUrl = 'https://itunes.apple.com/search?term=' . urlencode($term) . '&entity=song&limit=12';
+    $globalRes = null;
+    if (function_exists('curl_init')) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $globalUrl);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 6);
+        curl_setopt($ch, CURLOPT_USERAGENT, 'Mini-X Social/1.1.2');
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        $globalRes = curl_exec($ch);
+        curl_close($ch);
+    } elseif (ini_get('allow_url_fopen')) {
+        $ctx = stream_context_create([
+            'http' => [
+                'timeout' => 6,
+                'header'  => "User-Agent: Mini-X Social/1.1.2\r\n"
+            ]
+        ]);
+        $globalRes = @file_get_contents($globalUrl, false, $ctx);
+    }
+    if ($globalRes) {
+        $globalData = json_decode($globalRes, true);
+        if (!empty($globalData['results'])) {
+            $data = $globalData;
+        }
+    }
+}
+
 $results = [];
 
 if (isset($data['results']) && is_array($data['results'])) {

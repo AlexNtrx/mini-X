@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
 
     $adminId = (int)($_SESSION['user_id'] ?? 0);
     $action = trim($_POST["admin_action"]);
-    $redirectUrl = getSafeRedirectUrl("index.php?page=admin");
+    $redirectUrl = getSafeRedirectUrl("admin.php");
 
     // 1. Käyttäjätietojen päivitys (Username, Display Name, Role)
     if ($action === "update_user") {
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast($res['message'], "error");
         }
-        header("Location: index.php?page=admin&tab=rooms");
+        header("Location: admin.php?tab=rooms");
         exit;
     }
 
@@ -100,7 +100,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast($res['message'], "error");
         }
-        header("Location: index.php?page=admin&tab=rooms");
+        header("Location: admin.php?tab=rooms");
         exit;
     }
 
@@ -113,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast($res['message'], "error");
         }
-        header("Location: index.php?page=admin&tab=rooms");
+        header("Location: admin.php?tab=rooms");
         exit;
     }
 
@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast("Ilmiannon käsittely epäonnistui.", "error");
         }
-        header("Location: index.php?page=admin&tab=reports");
+        header("Location: admin.php?tab=reports");
         exit;
     }
 
@@ -169,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast("Päivitys epäonnistui.", "error");
         }
-        header("Location: index.php?page=admin&tab=feedbacks");
+        header("Location: admin.php?tab=feedbacks");
         exit;
     }
 
@@ -181,7 +181,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast("Palautteen poisto epäonnistui.", "error");
         }
-        header("Location: index.php?page=admin&tab=feedbacks");
+        header("Location: admin.php?tab=feedbacks");
         exit;
     }
 
@@ -194,7 +194,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
 
         $msg = ($newMode === '1') ? "Huoltotila on nyt KÄYTÖSSÄ! (Vain ylläpitäjät pääsevät sivustolle)" : "Huoltotila on nyt POIS PÄÄLTÄ. (Sivusto auki kaikille)";
         setFlashToast($msg, "success");
-        header("Location: index.php?page=admin&tab=overview");
+        header("Location: admin.php?tab=overview");
         exit;
     }
 
@@ -218,7 +218,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         } else {
             setFlashToast("Ei valittuja tiedostoja poistettavaksi.", "error");
         }
-        header("Location: index.php?page=admin&tab=storage");
+        header("Location: admin.php?tab=storage");
         exit;
     }
 }

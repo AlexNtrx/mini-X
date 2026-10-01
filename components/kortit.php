@@ -52,13 +52,13 @@ require_once __DIR__ . "/../functions/init.php";
                     <?php endif; ?>
 
                     <?php if ($isPinned): ?>
-                        <span class="post-badge-pinned" style="background: rgba(29, 155, 240, 0.15); color: #1d9bf0; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; border: 1px solid rgba(29, 155, 240, 0.3);" title="Ylläpidon kiinnitetty ilmoitus">📌 Kiinnitetty</span>
+                        <span class="post-badge-pinned" style="background: rgba(29, 155, 240, 0.15); color: #1d9bf0; font-size: 11px; padding: 2px 8px; border-radius: 9999px; font-weight: 700; border: 1px solid rgba(29, 155, 240, 0.3);" title="Ylläpidon kiinnitetty ilmoitus">Kiinnitetty</span>
                     <?php endif; ?>
 
                     <?php if ($postType === 'question'): ?>
                         <span class="post-badge-question" title="Kysymysjulkaisu">Kysymys</span>
                         <?php if ($bestCommentId): ?>
-                            <span class="post-badge-resolved" title="Ratkaistu (paras vastaus valittu)">✓ Ratkaistu</span>
+                            <span class="post-badge-resolved" title="Ratkaistu (paras vastaus valittu)">Ratkaistu</span>
                         <?php endif; ?>
                     <?php endif; ?>
                 </div>
@@ -100,7 +100,7 @@ require_once __DIR__ . "/../functions/init.php";
                                     <input type="hidden" name="admin_action" value="admin_toggle_pin">
                                     <input type="hidden" name="post_id" value="<?= $content["id"] ?>">
                                     <button type="submit">
-                                        <?= $isPinned ? '📌 Poista kiinnitys' : '📌 Kiinnitä ilmoitukseksi' ?>
+                                        <?= $isPinned ? 'Poista kiinnitys' : 'Kiinnitä ilmoitukseksi' ?>
                                     </button>
                                 </form>
                                 <?php if (!$isOwner): ?>
@@ -108,7 +108,7 @@ require_once __DIR__ . "/../functions/init.php";
                                         <input type="hidden" name="admin_action" value="admin_delete_post">
                                         <input type="hidden" name="post_id" value="<?= $content["id"] ?>">
                                         <button type="submit" style="color: #f4212e;" onclick="return confirm('YLLÄPITO: Haluatko varmasti poistaa tämän julkaisun?')">
-                                            🗑️ Poista (Ylläpito)
+                                            Poista (Ylläpito)
                                         </button>
                                     </form>
                                 <?php endif; ?>
@@ -119,7 +119,7 @@ require_once __DIR__ . "/../functions/init.php";
                                     type="button"
                                     onclick="openReportModal(<?= (int)$content['id'] ?>, 'post')"
                                     style="color: #ff9800;">
-                                    🚨 Ilmianna julkaisu
+                                    Ilmianna julkaisu
                                 </button>
                             <?php endif; ?>
                         </div>

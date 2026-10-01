@@ -53,7 +53,10 @@ if (!empty($customization['song_url'])): ?>
                 <div class="ig-music-progress-fill" id="retro-scrubber-fill" style="width: 0%;"></div>
             </div>
 
-            <audio id="hi5-audio-element" src="<?= htmlspecialchars($customization['song_url'], ENT_QUOTES) ?>" preload="metadata"></audio>
+            <audio id="hi5-audio-element" src="<?= htmlspecialchars($customization['song_url'], ENT_QUOTES) ?>" preload="metadata">
+                <source src="<?= htmlspecialchars($customization['song_url'], ENT_QUOTES) ?>" type="audio/mp4">
+                <source src="<?= htmlspecialchars($customization['song_url'], ENT_QUOTES) ?>" type="audio/aac">
+            </audio>
         </div>
     </div>
 <?php elseif (!empty($isOwnProfile)): ?>

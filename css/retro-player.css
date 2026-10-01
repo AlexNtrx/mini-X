@@ -24,7 +24,7 @@
     padding: 8px 14px 8px 8px;
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    cursor: default;
+    cursor: pointer;
     user-select: none;
     transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
     overflow: hidden;

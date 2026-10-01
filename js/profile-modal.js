@@ -562,6 +562,8 @@ function removeModalAvatar() {
 // 3. MUSIIKKIHAKU MODALISSA (Facebook-Style)
 // ==========================================
 
+let currentModalMusicResults = [];
+
 function quickSearchModalMusic(term) {
     const input = document.getElementById('modal-music-search-input');
     if (input) {
@@ -593,27 +595,47 @@ function doModalMusicSearch() {
 
             if (!data.success || !data.results || data.results.length === 0) {
                 resultsBox.innerHTML = '<div style="padding: 10px; text-align: center; color: #71767b; font-size: 12px;">Ei löytynyt kappaleita hakusanalla "' + escapeHtml(term) + '".</div>';
+                currentModalMusicResults = [];
                 return;
             }
 
+            currentModalMusicResults = data.results;
             let html = '';
-            data.results.forEach(song => {
-                const songJson = encodeURIComponent(JSON.stringify(song));
+            data.results.forEach((song, idx) => {
                 html += `
-                    <div class="music-result-item">
+                    <div class="music-result-item" data-song-idx="${idx}">
                         <img src="${escapeHtml(song.artwork)}" alt="Kansi" class="music-result-art">
                         <div class="music-result-info">
                             <span class="music-result-title">${escapeHtml(song.title)}</span>
                             <span class="music-result-artist">${escapeHtml(song.artist)}</span>
                         </div>
                         <div class="music-result-actions">
-                            <button type="button" class="btn-music-preview" onclick="toggleModalAudioPreview('${escapeHtml(song.preview_url)}', this)">▶ Kuuntele</button>
-                            <button type="button" class="btn-music-select" onclick="selectModalMusicTrack('${songJson}')">Valitse</button>
+                            <button type="button" class="btn-music-preview" data-preview-url="${escapeHtml(song.preview_url)}">▶ Kuuntele</button>
+                            <button type="button" class="btn-music-select" data-song-idx="${idx}">Valitse</button>
                         </div>
                     </div>
                 `;
             });
             resultsBox.innerHTML = html;
+
+            // Liitetään tapahtumankuuntelijat turvallisesti ilman merkkijonojen lainausmerkki-ongelmia
+            resultsBox.querySelectorAll('.btn-music-preview').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const url = btn.getAttribute('data-preview-url');
+                    toggleModalAudioPreview(url, btn);
+                });
+            });
+
+            resultsBox.querySelectorAll('.btn-music-select').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const idx = parseInt(btn.getAttribute('data-song-idx'), 10);
+                    if (currentModalMusicResults[idx]) {
+                        selectModalMusicTrack(currentModalMusicResults[idx]);
+                    }
+                });
+            });
         })
         .catch(err => {
             if (loading) loading.style.display = 'none';
@@ -624,6 +646,7 @@ function doModalMusicSearch() {
 }
 
 function toggleModalAudioPreview(url, btn) {
+    if (!url) return;
     if (activeModalPreviewAudio && activeModalPreviewAudio.src === url && !activeModalPreviewAudio.paused) {
         stopModalAudioPreview();
         return;
@@ -638,18 +661,25 @@ function toggleModalAudioPreview(url, btn) {
     btn.style.color = '#ff007f';
     btn.style.borderColor = '#ff007f';
 
-    audio.play().catch(() => {
+    audio.play().catch((err) => {
+        console.warn('Modal preview playback prevented:', err);
         stopModalAudioPreview();
     });
 
     audio.onended = () => {
         stopModalAudioPreview();
     };
+    audio.onerror = () => {
+        console.warn('Modal preview playback error:', audio.error);
+        stopModalAudioPreview();
+    };
 }
 
 function stopModalAudioPreview() {
     if (activeModalPreviewAudio) {
-        activeModalPreviewAudio.pause();
+        try {
+            activeModalPreviewAudio.pause();
+        } catch (e) {}
         activeModalPreviewAudio = null;
     }
     if (activeModalPreviewBtn) {
@@ -658,40 +688,74 @@ function stopModalAudioPreview() {
         activeModalPreviewBtn.style.borderColor = '';
         activeModalPreviewBtn = null;
     }
+    const selBtn = document.getElementById('modal-selected-song-preview-btn');
+    if (selBtn) {
+        selBtn.textContent = '▶ Kuuntele';
+        selBtn.style.color = '';
+        selBtn.style.borderColor = '';
+    }
 }
 
-function selectModalMusicTrack(encodedJson) {
-    stopModalAudioPreview();
-    try {
-        const song = JSON.parse(decodeURIComponent(encodedJson));
+function previewSelectedSong(btn) {
+    const urlInput = document.getElementById('modal-song-url');
+    if (!urlInput || !urlInput.value) return;
+    toggleModalAudioPreview(urlInput.value, btn);
+}
 
+function selectModalMusicTrack(songOrJson) {
+    stopModalAudioPreview();
+    let song = null;
+    if (typeof songOrJson === 'object' && songOrJson !== null) {
+        song = songOrJson;
+    } else if (typeof songOrJson === 'string') {
+        try {
+            song = JSON.parse(decodeURIComponent(songOrJson));
+        } catch (e) {
+            console.error('Error parsing song JSON:', e);
+            return;
+        }
+    }
+
+    if (!song) return;
+
+    try {
         const titleInput = document.getElementById('modal-song-title');
         const artistInput = document.getElementById('modal-song-artist');
         const artworkInput = document.getElementById('modal-song-artwork');
         const urlInput = document.getElementById('modal-song-url');
         const deleteSongFlag = document.getElementById('delete_song_flag');
 
-        if (titleInput) titleInput.value = song.title;
-        if (artistInput) artistInput.value = song.artist;
-        if (artworkInput) artworkInput.value = song.artwork;
-        if (urlInput) urlInput.value = song.preview_url;
+        if (titleInput) titleInput.value = song.title || '';
+        if (artistInput) artistInput.value = song.artist || '';
+        if (artworkInput) artworkInput.value = song.artwork || '';
+        if (urlInput) urlInput.value = song.preview_url || '';
         if (deleteSongFlag) deleteSongFlag.value = '0';
 
         const selectedContainer = document.getElementById('modal-selected-song-container');
         const selectedArt = document.getElementById('modal-selected-song-art');
         const selectedTitle = document.getElementById('modal-selected-song-title');
         const selectedArtist = document.getElementById('modal-selected-song-artist');
+        const selectedPreviewBtn = document.getElementById('modal-selected-song-preview-btn');
 
         if (selectedContainer) selectedContainer.style.display = 'flex';
         if (selectedArt) {
-            selectedArt.src = song.artwork;
+            selectedArt.src = song.artwork || '';
             selectedArt.style.display = song.artwork ? 'block' : 'none';
         }
-        if (selectedTitle) selectedTitle.textContent = song.title;
-        if (selectedArtist) selectedArtist.textContent = song.artist;
+        if (selectedTitle) selectedTitle.textContent = song.title || '';
+        if (selectedArtist) selectedArtist.textContent = song.artist || '';
+        if (selectedPreviewBtn) {
+            selectedPreviewBtn.textContent = '▶ Kuuntele';
+            selectedPreviewBtn.style.color = '';
+            selectedPreviewBtn.style.borderColor = '';
+        }
 
         const resultsBox = document.getElementById('modal-music-results');
         if (resultsBox) resultsBox.style.display = 'none';
+
+        if (typeof Toast !== 'undefined') {
+            Toast.info(`Valittu: ${song.title} - ${song.artist}`);
+        }
     } catch (e) {
         console.error('Error selecting track:', e);
     }
@@ -1031,8 +1095,8 @@ function initProfileModalAjax() {
                 const musicWrapper = document.getElementById('profile-music-wrapper');
                 if (musicWrapper && d.music_html !== undefined) {
                     musicWrapper.innerHTML = d.music_html;
-                    if (typeof initRetroPlayer === 'function') {
-                        initRetroPlayer();
+                    if (typeof window.initRetroPlayer === 'function') {
+                        window.initRetroPlayer();
                     }
                 }
 

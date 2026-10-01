@@ -250,6 +250,7 @@
                                     <span class="modal-selected-song-badge">VALITTU KAPPALE</span>
                                     <span id="modal-selected-song-title" class="modal-selected-song-title"><?= htmlspecialchars($customization['song_title'] ?? '') ?></span>
                                     <span id="modal-selected-song-artist" class="modal-selected-song-artist"><?= htmlspecialchars($customization['song_artist'] ?? '') ?></span>
+                                    <button type="button" class="btn-music-preview" id="modal-selected-song-preview-btn" onclick="previewSelectedSong(this)" style="margin-top: 6px; padding: 4px 10px; font-size: 11px; align-self: flex-start;">▶ Kuuntele</button>
                                 </div>
                                 <button type="button" class="modal-btn-remove-song" onclick="removeModalSelectedSong()" title="Poista musiikki">&times;</button>
                             </div>

@@ -175,10 +175,10 @@ if ($conn && $userId > 0) {
                         <div class="feedback-form-group">
                             <label for="feedback_type" class="feedback-label">Palautteen tyyppi:</label>
                             <select name="feedback_type" id="feedback_type" class="feedback-select" required>
-                                <option value="general">💬 Yleinen palaute</option>
-                                <option value="bug">🐛 Virheilmoitus / Bugin raportointi</option>
-                                <option value="suggestion">💡 Kehitysehdotus / Uusi idea</option>
-                                <option value="report">⚠️ Ilmoitus häiriöstä tai sopimattomasta toiminnasta</option>
+                                <option value="general">Yleinen palaute</option>
+                                <option value="bug">Virheilmoitus / Bugin raportointi</option>
+                                <option value="suggestion">Kehitysehdotus / Uusi idea</option>
+                                <option value="report">Ilmoitus häiriöstä tai sopimattomasta toiminnasta</option>
                             </select>
                         </div>
 

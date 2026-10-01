@@ -2,7 +2,7 @@
 <div class="report-modal-overlay" id="reportModalOverlay" style="display: none;" onclick="closeReportModal(event)">
     <div class="report-modal-card" onclick="event.stopPropagation()">
         <div class="report-modal-header">
-            <h3 class="report-modal-title">🚨 Ilmianna sisältö</h3>
+            <h3 class="report-modal-title">Ilmianna sisältö</h3>
             <button type="button" class="report-modal-close" onclick="closeReportModal()">&times;</button>
         </div>
         <form method="POST" class="report-modal-form" id="reportModalForm">

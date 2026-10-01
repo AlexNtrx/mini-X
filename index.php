@@ -74,13 +74,18 @@ if (empty($page)) {
     $page = 'home';
 }
 
-// Suojataan ylläpitosivu (Vain ylläpitäjät voivat nähdä tai käyttää)
+// Suojataan ja ohjataan ylläpitosivu erilliseen admin.php-portaaliin
 if ($page === 'admin') {
     if (!isAdmin()) {
         setFlashToast("Pääsy evätty. Vain ylläpitäjille.", "error");
         header("Location: index.php?page=home");
         exit;
     }
+    $queryParams = $_GET;
+    unset($queryParams['page']);
+    $qs = !empty($queryParams) ? '?' . http_build_query($queryParams) : '';
+    header("Location: admin.php" . $qs);
+    exit;
 }
 
 // Määrittele reitit ja niiden vastaavat tiedostot

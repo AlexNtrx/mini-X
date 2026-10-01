@@ -47,8 +47,8 @@ $sidebarDisplayName = !empty($_SESSION['display_name']) ? $_SESSION['display_nam
 
         <?php if (function_exists('isAdmin') && isAdmin()): ?>
             <?php $adminBadgeCount = function_exists('getAdminPendingAlertCount') ? getAdminPendingAlertCount($conn) : 0; ?>
-            <a href="index.php?page=admin" class="nav-item-notif nav-item-admin <?= $currentPage === 'admin' ? 'active' : '' ?>" style="color: #ff7b72;">
-                <span>🛡️ Ylläpito</span>
+            <a href="admin.php" class="nav-item-notif nav-item-admin" style="color: #ff7b72;">
+                <span>Ylläpito</span>
                 <?php if ($adminBadgeCount > 0): ?>
                     <span class="nav-badge" style="background: #f4212e;"><?= $adminBadgeCount ?></span>
                 <?php endif; ?>

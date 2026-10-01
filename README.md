@@ -7,7 +7,7 @@ Mini-X on selaimessa toimiva täysiverinen mikroblogipalvelu (inspiraationa X / 
 
 ---
 
-## 📌 Tekijän ja projektin tiedot
+## Tekijän ja projektin tiedot
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu – Lokakuu 2026
@@ -15,7 +15,7 @@ Mini-X on selaimessa toimiva täysiverinen mikroblogipalvelu (inspiraationa X / 
 
 ---
 
-## 🛠️ Käytetyt teknologiat
+## Käytetyt teknologiat
 - **Backend:** PHP 8.2+ (Oma MVC-henkinen modulaarinen arkkitehtuuri, REST/JSON API -päätepisteet ja Dual-mode käsittelijät)
 - **Tietokanta:** MySQL / MariaDB (InnoDB, utf8mb4-merkistö, viite-eheydet ja kaskadoituvat poistot)
 - **Frontend:** HTML5, CSS3 (Moderni tumma teema, CSS-muuttujat, Flexbox/Grid, täysi mobiiliresponsiivisuus)
@@ -25,9 +25,9 @@ Mini-X on selaimessa toimiva täysiverinen mikroblogipalvelu (inspiraationa X / 
 
 ---
 
-## ✨ Tärkeimmät toiminnot ja arkkitehtuuri
+## Tärkeimmät toiminnot ja arkkitehtuuri
 
-### 1. ⚡ Täysi AJAX-arkkitehtuuri (100% Asynkroninen käyttökokemus)
+### 1. Täysi AJAX-arkkitehtuuri (100% Asynkroninen käyttökokemus)
 Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritseviä koko sivun uudelleenlatauksia:
 - **Asynkroninen viestintä (Fetch API):** Kaikki lomakkeet ja käyttäjätoiminnot kommunikoivat taustajärjestelmän kanssa JSON-muotoisilla pyynnöillä ja vastauksilla.
 - **Reaaliaikaiset käyttöliittymäpäivitykset (DOM & Toast):** Onnistuneet toiminnot ja virheilmoitukset viestitään käyttäjälle välittömästi kevyillä Toast-ilmoituksilla ja suorilla DOM-muutoksilla.
@@ -36,7 +36,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Dual-Mode Fallback:** Järjestelmä tunnistaa automaattisesti AJAX-pyynnöt (`isAjaxRequest()`), mutta tukee täysin myös perinteisiä HTTP POST- ja uudelleenohjauspyyntöjä varmuuskäytössä.
 - **Automaattinen välimuistinohitus:** Kaikki skriptit ja tyylitiedostot latautuvat dynaamisella aikaleimalla (`filemtime`), jolloin päivitykset tulevat käyttäjille voimaan ilman selaimen välimuistin tyhjennystä.
 
-### 2. 🔐 Käyttäjätilit ja tietoturva
+### 2. Käyttäjätilit ja tietoturva
 - **Turvallinen todennus:** Rekisteröityminen ja kirjautuminen AJAX-vahvistuksella sekä salasanojen vahva suojaus (`password_hash` / BCRYPT).
 - **Injektioiden ja haavoittuvuuksien esto:** Kaikki tietokantakyselyt suoritetaan parametroiduilla lausekkeilla (`prepared statements`) ja tulosteet suojataan XSS-hyökkäyksiltä (`htmlspecialchars`).
 - **Pehmeä poisto ja tilin palautus (Soft Delete & Reactivation):** Käyttäjä voi sulkea tilinsä väliaikaisesti. Kirjautuessa järjestelmä tunnistaa passiivisen tilin ja tarjoaa automaattisen palautusdialogin (30 päivän suoja-aika).
@@ -44,7 +44,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Istunnon valvonta (AJAX 401 Interceptor):** Jos käyttäjän istunto vanhenee, taustakutsut palauttavat JSON 401 -koodin ja ohjaavat kirjautumissivulle hallitusti.
 - **GDPR-yhteensopivuus:** Kattava tietosuojaseloste ja omien henkilötietojen sekä julkaisujen poistomahdollisuus.
 
-### 3. 📝 Julkaisujen ja keskustelujen hallinta (CRUD)
+### 3. Julkaisujen ja keskustelujen hallinta (CRUD)
 - **Julkaisujen luonti:** Tekstin ja kuvien julkaiseminen `FormData`-tiedostolatauksella ilman sivulatausta. Uusi julkaisu ilmestyy syötteen kärkeen välittömästi.
 - **Julkaisujen muokkaus ja poisto:** Sisällön muokkaaminen suoraan syötteessä (inline edit) ja poistaminen vahvistusdialogin kautta pehmeällä häivytyksellä.
 - **Reaaliaikaiset tykkäykset:** Tykkää/peruuta-toiminto päivittää sydänkuvakkeen ja laskurin reaaliajassa.
@@ -53,19 +53,19 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Kuvien Lightbox:** Täysikokoinen kuvankatselu suoraan syötteestä.
 - **Suhteelliset aikaleimat:** Automaattisesti päivittyvät X/Twitter-tyyliset aikaleimat (`nyt`, `15 s`, `5 min`, `2 t`, `3 pv`).
 
-### 4. 🎨 Edistynyt profiilin kustomointi (Hi5 / Retro -tyyli)
+### 4. Edistynyt profiilin kustomointi (Hi5 / Retro -tyyli)
 - **Interaktiivinen muokkaustyökalu (Profile Modal):** Profiilinäkymän muokkaus suoraan omalta sivulta AJAX-tallennuksella.
 - **Avatarin pyöreä rajaustyökalu (Canvas Cropper):** Käyttäjä voi rajata ja zoomata profiilikuvansa haluamaansa kohtaan ennen tallennusta.
 - **Profiilibanneri ja asemointi:** Bannerikuvan lataus ja pystysuuntaisen kohdistuksen säätö liukusäätimellä (reposition slider).
 - **Live-taustakuvat ja teemavärit:** Valmiit animoidut live-taustat, omat taustakuvat sekä korostusvärin (Accent Color) valinta, joka päivittyy dynaamisesti CSS-muuttujina koko sivulle.
 - **Retro 8-bit -musiikkisoitin:** Profiiliin voi valita oman tunnusmusiikin, joka soi autenttisella retro-soittimella profiilissa vierailtaessa.
 
-### 5. 🧭 Huoneet, haku ja selainhistoria (Navigation)
+### 5. Huoneet, haku ja selainhistoria (Navigation)
 - **Pantip-tyyliset aihealuehuoneet:** Syötteen suodatus huoneittain (esim. Yleinen, Ohjelmointi, Pelit) yhdellä klikkauksella ilman sivulatausta.
 - **Selaa-sivun reaaliaikainen haku:** Käyttäjähaku suodattaa käyttäjäkortit ja julkaisut lennosta.
 - **Browser History Integration:** Suodatukset ja haut päivittävät selaimen osoiterivin (`history.pushState`), joten selaimen Edellinen/Seuraava-painikkeet (`popstate`) toimivat saumattomasti.
 
-### 6. 🛡️ Ylläpito ja moderointi (Admin Dashboard & RBAC)
+### 6. Ylläpito ja moderointi (Admin Dashboard & RBAC)
 - **Roolipohjainen pääsynhallinta (RBAC):** `admin`- ja `user`-roolit tiukalla palvelintason suojauksella.
 - **Käyttäjien moderointi:** Käyttäjätunnusten ja nimimerkkien auditointi, profiilikuvien pakkonollaus, tilien jäädytys tai poisto.
 - **Huoneiden dynaaminen hallinta:** Uusien aihealueiden luonti, piilottaminen ja poistaminen.
@@ -76,7 +76,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 
 ---
 
-## 🚀 Asennus- ja käynnistysohje
+## Asennus- ja käynnistysohje
 
 ### 1. Esivaatimukset
 - Paikallinen palvelin: **XAMPP** tai **WampServer** (Apache, MySQL/MariaDB, PHP 8.2+).
@@ -105,16 +105,16 @@ Projektissa on valmiit esimerkkikonfiguraatiot:
 
 ---
 
-## 🔑 Testitunnukset
+## Testitunnukset
 
 | Rooli | Käyttäjätunnus | Salasana | Oikeudet ja kuvaus |
 |---|---|---|---|
-| **Ylläpitäjä (Admin)** | `admin` | `admin123` | Täysi pääsy ylläpitopaneeliin (`?page=admin`), moderointityökaluihin, huoneiden hallintaan ja huoltotilaan. |
+| **Ylläpitäjä (Admin)** | `admin` | `admin123` | Täysi pääsy erilliseen ylläpitopaneeliin (`admin.php` tai `?page=admin`), moderointityökaluihin, huoneiden hallintaan ja huoltotilaan. |
 | **Tavallinen käyttäjä** | *(Luo uusi tunnus)* | *(Oma salasana)* | Tavallisen käyttäjän perustoiminnot: syöte, julkaisut, kommentointi, profiilin kustomointi ja asetukset. |
 
 ---
 
-## 🧪 Testaus ja dokumentaatio
+## Testaus ja dokumentaatio
 
 Sovellukselle on laadittu ammatillisten vaatimusten mukainen testausdokumentaatio, joka löytyy kansiosta `testaus/`:
 - **Testausraportti:** [`testaus/MiniX_Testausraportti.docx`](testaus/MiniX_Testausraportti.docx)
