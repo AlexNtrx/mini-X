@@ -197,34 +197,4 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && isset($_POST["admin_action"])) {
         header("Location: admin.php?tab=overview");
         exit;
     }
-
-    // 14. Orpojen kuvien poisto
-    elseif ($action === "clean_orphaned_files") {
-        $filesToDelete = $_POST["selected_files"] ?? [];
-        $deletedCount = 0;
-        if (is_array($filesToDelete) && !empty($filesToDelete)) {
-            $allowedDir = realpath(__DIR__ . "/../uploads");
-            foreach ($filesToDelete as $relPath) {
-                $baseName = basename($relPath);
-                // Älä koskaan poista pistetiedostoja (.gitignore, .gitkeep) tai järjestelmätiedostoja
-                if (str_starts_with($baseName, '.') || in_array($baseName, ['index.html', 'index.php', 'web.config'])) {
-                    continue;
-                }
-
-                $targetFile = realpath(__DIR__ . "/../uploads/" . $relPath);
-                // Varmistetaan että tiedosto on uploads-hakemiston sisällä (estää Directory Traversal)
-                if ($targetFile && str_starts_with($targetFile, $allowedDir) && is_file($targetFile)) {
-                    if (@unlink($targetFile)) {
-                        $deletedCount++;
-                    }
-                }
-            }
-            logAdminAction($conn, $adminId, 'clean_orphans', 'storage', null, "Poistettiin {$deletedCount} orpoa tiedostoa palvelimelta");
-            setFlashToast("Siivous valmis! Poistettiin {$deletedCount} tarpeetonta tiedostoa.", "success");
-        } else {
-            setFlashToast("Ei valittuja tiedostoja poistettavaksi.", "error");
-        }
-        header("Location: admin.php?tab=storage");
-        exit;
-    }
 }

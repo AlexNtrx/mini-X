@@ -73,7 +73,6 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Ilmiantojärjestelmä (Report Modal):** Käyttäjät voivat ilmiantaa sopimattomia julkaisuja tai kommentteja, ja ylläpito käsittelee ilmoitukset paneelistaan.
 - **Palautekanava (Palaute):** Käyttäjien buginraportit ja kehitysehdotukset ylläpidon vastausmahdollisuudella.
 - **Kiinnitetyt ilmoitukset & Huoltotila (Maintenance Mode):** Sivuston asettaminen huoltotilaan ja ylläpitotiedotteiden kiinnitys syötteen kärkeen.
-- **Tallennustilan siivoustyökalu:** Orpojen kuvatiedostojen automaattinen tarkastus ja poisto palvelimelta.
 
 ---
 

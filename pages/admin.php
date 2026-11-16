@@ -133,9 +133,6 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                         <span class="tab-badge"><?= $stats['unread_feedback'] ?></span>
                     <?php endif; ?>
                 </a>
-                <a href="admin.php?tab=storage" class="admin-tab-btn <?= $activeTab === 'storage' ? 'active' : '' ?>">
-                    Tallennustila
-                </a>
             </nav>
         </div>
     </div>
@@ -590,61 +587,6 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                         <p class="admin-empty-state">Ei palautteita valituilla ehdoilla.</p>
                     <?php endif; ?>
                 </div>
-
-            <!-- 6. TALLENNUSTILA (Storage Cleanup) -->
-            <?php elseif ($activeTab === 'storage'): ?>
-                <?php $scanResult = adminScanOrphanFiles($conn); ?>
-                <div class="admin-card">
-                    <div class="admin-card-header">
-                        <h3 class="admin-card-title">Tallennustila ja tiedostojen siivous</h3>
-                    </div>
-                    <p style="color:#8b98a5; font-size:14px; margin-bottom:20px;">
-                        Palvelimen uploads-hakemistoissa on yhteensä <strong><?= $scanResult['total_files'] ?></strong> tiedostoa 
-                        (Koko yhteensä: <strong><?= number_format($scanResult['total_size_bytes'] / 1024 / 1024, 2) ?> MB</strong>).<br>
-                        Alla näet tiedostot, joita ei enää löydy mistään tietokannan julkaisusta tai profiilista (esim. poistettujen käyttäjien tai korvattujen kuvien jäänteet).
-                    </p>
-
-                    <?php if (!empty($scanResult['orphans'])): ?>
-                        <form method="POST">
-                            <input type="hidden" name="admin_action" value="clean_orphaned_files">
-                            <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-                                <span class="storage-orphan-count">Löytyi <?= count($scanResult['orphans']) ?> tarpeetonta tiedostoa</span>
-                                <button type="submit" class="btn-danger-action" onclick="return confirm('Haluatko varmasti poistaa kaikki valitut tiedostot palvelimelta?')">
-                                    Poista valitut tiedostot
-                                </button>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th style="width:40px;"><input type="checkbox" id="check-all-orphans" checked onclick="toggleAllOrphans(this)"></th>
-                                            <th>Kategoria</th>
-                                            <th>Tiedostonimi</th>
-                                            <th>Koko</th>
-                                            <th>Viimeksi muokattu</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($scanResult['orphans'] as $orphan): ?>
-                                            <?php $relPath = $orphan['category'] . '/' . $orphan['filename']; ?>
-                                            <tr>
-                                                <td><input type="checkbox" name="selected_files[]" value="<?= htmlspecialchars($relPath) ?>" class="orphan-checkbox" checked></td>
-                                                <td><span class="admin-badge-pill badge-user"><?= htmlspecialchars($orphan['category']) ?></span></td>
-                                                <td><code><?= htmlspecialchars($orphan['filename']) ?></code></td>
-                                                <td><?= number_format($orphan['size'] / 1024, 1) ?> KB</td>
-                                                <td style="color:#71767b;"><?= date('d.m.Y H:i', $orphan['mtime']) ?></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </form>
-                    <?php else: ?>
-                        <div class="admin-empty-state">
-                            Ei orpoja tiedostoja. Kaikki uploads-hakemiston tiedostot ovat aktiivisessa käytössä.
-                        </div>
-                    <?php endif; ?>
-                </div>
             <?php endif; ?>
         </div>
     </main>
@@ -714,12 +656,6 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
             document.getElementById('edit-user-username').value = 'user_' + userId;
             document.getElementById('edit-user-display-name').value = 'Käyttäjä ' + userId;
         }
-    }
-
-    function toggleAllOrphans(master) {
-        document.querySelectorAll('.orphan-checkbox').forEach(cb => {
-            cb.checked = master.checked;
-        });
     }
     </script>
 </body>
