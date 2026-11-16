@@ -8,126 +8,113 @@
 /** @var string $error */
 /** @var string $success */
 
+function applyProfileModalChanges($conn, int $userId, ProfileImageChanges $images): ?string
+{
+    if (isset($_POST['display_name'])) {
+        $name = trim(preg_replace('/\s+/', ' ', $_POST['display_name']));
+        $length = mb_strlen($name, 'UTF-8');
+        if ($length < 1) {
+            return 'Nimi ei voi olla tyhjä.';
+        }
+        if ($length > 25) {
+            return 'Nimen tulee olla enintään 25 merkkiä.';
+        }
+        if (!updateDisplayName($conn, $userId, $name)) {
+            return 'Nimen tallentaminen epäonnistui.';
+        }
+        $_SESSION['display_name'] = $name;
+    }
+
+    $avatarResult = true;
+    if (!empty($_POST['delete_avatar_flag'])) {
+        $avatarResult = deleteUserAvatar($conn, $userId, $images);
+    } elseif (!empty($_POST['avatar_cropped_data'])) {
+        $avatarResult = updateUserAvatarFromDataUrl($conn, $userId, $_POST['avatar_cropped_data'], $images);
+    } elseif (isset($_FILES['avatar']) && $_FILES['avatar']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $avatarResult = updateUserAvatar($conn, $userId, $_FILES['avatar'], $images);
+    }
+    if ($avatarResult !== true) {
+        return is_string($avatarResult) ? $avatarResult : 'Profiilikuvan tallentaminen epäonnistui.';
+    }
+
+    $bannerResult = true;
+    if (!empty($_POST['delete_banner_flag'])) {
+        $bannerResult = deleteUserBanner($conn, $userId, $images);
+    } elseif (isset($_FILES['banner']) && $_FILES['banner']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $bannerResult = updateUserBanner($conn, $userId, $_FILES['banner'], $images);
+    }
+    if ($bannerResult !== true && $bannerResult !== null) {
+        return is_string($bannerResult) ? $bannerResult : 'Bannerin tallentaminen epäonnistui.';
+    }
+
+    $customData = [
+        'bio' => trim($_POST['bio'] ?? ''),
+        'theme_accent' => sanitizeHexColor($_POST['theme_accent'] ?? '#1d9bf0'),
+        'banner_pos_y' => isset($_POST['banner_pos_y']) ? max(0, min(100, (int)$_POST['banner_pos_y'])) : 50,
+    ];
+
+    $backgroundResult = true;
+    if (!empty($_POST['delete_bg_flag'])) {
+        $backgroundResult = deleteUserBackground($conn, $userId, $images);
+    } elseif (isset($_FILES['background_image']) && $_FILES['background_image']['error'] !== UPLOAD_ERR_NO_FILE) {
+        $backgroundResult = updateUserBackground($conn, $userId, $_FILES['background_image'], $images);
+    } elseif (isset($_POST['theme_bg_type'])) {
+        $customData['theme_bg_type'] = trim($_POST['theme_bg_type']);
+        $customData['theme_bg_val'] = trim($_POST['theme_bg_val'] ?? '');
+    }
+    if ($backgroundResult !== true && $backgroundResult !== null) {
+        return is_string($backgroundResult) ? $backgroundResult : 'Taustakuvan tallentaminen epäonnistui.';
+    }
+
+    $deleteSong = !empty($_POST['delete_song_flag']);
+    foreach (['song_title', 'song_artist', 'song_artwork', 'song_url'] as $field) {
+        $customData[$field] = $deleteSong ? '' : trim($_POST[$field] ?? '');
+    }
+    if ($customData['song_url'] !== '' && !preg_match('/^https?:\/\//i', $customData['song_url'])) {
+        return 'Musiikin osoitteen tulee alkaa http:// tai https://';
+    }
+
+    return saveUserCustomization($conn, $userId, $customData) ? null : 'Tietojen tallennus epäonnistui.';
+}
+
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $userId = (int)($_SESSION['user_id'] ?? 0);
 
-    // Käsittelee Edit Profile Modal -lomakkeen tallennuksen
     if (isset($_POST["update_profile_modal"]) && $userId > 0) {
-        $hasError = false;
-
-        // 1. Päivitä näyttönimi (Display Name)
-        if (isset($_POST["display_name"])) {
-            $newDisplayName = trim(preg_replace('/\s+/', ' ', $_POST["display_name"]));
-            $len = mb_strlen($newDisplayName, "UTF-8");
-            if ($len < 1) {
-                $error = "Nimi ei voi olla tyhjä.";
-                $hasError = true;
-            } elseif ($len > 25) {
-                $error = "Nimen tulee olla enintään 25 merkkiä.";
-                $hasError = true;
-            } else {
-                if (updateDisplayName($conn, $userId, $newDisplayName)) {
-                    $_SESSION['display_name'] = $newDisplayName;
+        $images = new ProfileImageChanges();
+        $previousSession = $_SESSION;
+        $transactionStarted = false;
+        $saved = false;
+        $error = 'Tietojen tallennus epäonnistui.';
+        try {
+            // Taulun varmistaminen tekee DDL-kyselyitä ennen transaktiota.
+            if (ensureCustomizationsTable($conn) && $conn->begin_transaction()) {
+                $transactionStarted = true;
+                $user = $conn->prepare("SELECT id FROM users WHERE id = ? FOR UPDATE");
+                $user->bind_param("i", $userId);
+                $exists = $user->execute() && $user->get_result()->num_rows === 1;
+                $user->close();
+                if ($exists) {
+                    $error = applyProfileModalChanges($conn, $userId, $images);
+                    $saved = $error === null && $conn->commit();
                 }
             }
+        } catch (mysqli_sql_exception $exception) {
+            error_log($exception->getMessage());
+        } finally {
+            if (!$saved) {
+                if ($transactionStarted) {
+                    $conn->rollback();
+                }
+                $_SESSION = $previousSession;
+            }
+            $images->finish($saved);
         }
 
-        // 2. Profiilikuvan päivitys tai poisto
-        if (!$hasError) {
-            if (!empty($_POST["delete_avatar_flag"])) {
-                deleteUserAvatar($conn, $userId);
-            } elseif (!empty($_POST["avatar_cropped_data"])) {
-                $avatarRes = updateUserAvatarFromDataUrl($conn, $userId, $_POST["avatar_cropped_data"]);
-                if ($avatarRes !== true) {
-                    $error = is_string($avatarRes) ? $avatarRes : "Profiilikuvan tallentaminen epäonnistui.";
-                    $hasError = true;
-                }
-            } elseif (isset($_FILES["avatar"]) && $_FILES["avatar"]["error"] !== UPLOAD_ERR_NO_FILE) {
-                $avatarRes = updateUserAvatar($conn, $userId, $_FILES["avatar"]);
-                if ($avatarRes !== true) {
-                    $error = is_string($avatarRes) ? $avatarRes : "Profiilikuvan lataaminen epäonnistui.";
-                    $hasError = true;
-                }
-            }
-        }
-
-        // 3. Bannerikuvan päivitys tai poisto
-        $deleteBanner = false;
-        if (!$hasError) {
-            if (!empty($_POST["delete_banner_flag"])) {
-                deleteUserBanner($conn, $userId);
-                $deleteBanner = true;
-            } elseif (isset($_FILES["banner"]) && $_FILES["banner"]["error"] !== UPLOAD_ERR_NO_FILE) {
-                $bannerRes = updateUserBanner($conn, $userId, $_FILES["banner"]);
-                if ($bannerRes !== true && $bannerRes !== null) {
-                    $error = is_string($bannerRes) ? $bannerRes : "Bannerin lataaminen epäonnistui.";
-                    $hasError = true;
-                }
-            }
-        }
-
-        // 4. Bio, Musiikki ja Teema (Customization)
-        if (!$hasError) {
-            $bio         = trim($_POST["bio"] ?? "");
-            $themeAccent = sanitizeHexColor($_POST["theme_accent"] ?? "#1d9bf0");
-            $bannerPosY  = isset($_POST["banner_pos_y"]) ? max(0, min(100, (int)$_POST["banner_pos_y"])) : 50;
-
-            $customData = [
-                'bio'          => $bio,
-                'theme_accent' => $themeAccent,
-                'banner_pos_y' => $bannerPosY
-            ];
-            if ($deleteBanner) {
-                $customData['theme_banner'] = '';
-            }
-
-            // Taustan päivitys tai poisto (Preset tai oma kuva)
-            if (!empty($_POST["delete_bg_flag"])) {
-                deleteUserBackground($conn, $userId);
-                $customData['theme_bg_type'] = 'default';
-                $customData['theme_bg_val']  = '';
-            } elseif (isset($_FILES["background_image"]) && $_FILES["background_image"]["error"] !== UPLOAD_ERR_NO_FILE) {
-                $bgRes = updateUserBackground($conn, $userId, $_FILES["background_image"]);
-                if ($bgRes !== true && $bgRes !== null) {
-                    $error = is_string($bgRes) ? $bgRes : "Taustakuvan lataaminen epäonnistui.";
-                    $hasError = true;
-                }
-            } elseif (isset($_POST["theme_bg_type"])) {
-                $customData['theme_bg_type'] = trim($_POST["theme_bg_type"]);
-                $customData['theme_bg_val']  = trim($_POST["theme_bg_val"] ?? "");
-            }
-
-            // Musiikin poisto tai päivitys
-            if (!empty($_POST["delete_song_flag"])) {
-                $customData['song_title']   = '';
-                $customData['song_artist']  = '';
-                $customData['song_artwork'] = '';
-                $customData['song_url']     = '';
-            } else {
-                $songTitle   = trim($_POST["song_title"] ?? "");
-                $songArtist  = trim($_POST["song_artist"] ?? "");
-                $songArtwork = trim($_POST["song_artwork"] ?? "");
-                $songUrl     = trim($_POST["song_url"] ?? "");
-
-                if (!empty($songUrl) && !preg_match('/^https?:\/\//i', $songUrl)) {
-                    $error = "Musiikin osoitteen tulee alkaa http:// tai https://";
-                    $hasError = true;
-                } else {
-                    $customData['song_title']   = $songTitle;
-                    $customData['song_artist']  = $songArtist;
-                    $customData['song_artwork'] = $songArtwork;
-                    $customData['song_url']     = $songUrl;
-                }
-            }
-
-            if (!$hasError) {
-                if (saveUserCustomization($conn, $userId, $customData)) {
-                    $success = "Profiili päivitetty onnistuneesti! ✨";
-                } else {
-                    $error = "Tietojen tallennus epäonnistui.";
-                    $hasError = true;
-                }
-            }
+        $hasError = !$saved;
+        $error = $hasError ? ($error ?? 'Tietojen tallennus epäonnistui.') : '';
+        if ($saved) {
+            $success = "Profiili päivitetty onnistuneesti! ✨";
         }
 
         if ($hasError && isAjaxRequest()) {

@@ -13,6 +13,7 @@ if (!defined('APP_VERSION')) {
 
 require_once __DIR__ . "/db.php";
 require_once __DIR__ . "/posts.php";
+require_once __DIR__ . "/profile-images.php";
 require_once __DIR__ . "/auth.php";
 require_once __DIR__ . "/likes.php";
 require_once __DIR__ . "/comments.php";

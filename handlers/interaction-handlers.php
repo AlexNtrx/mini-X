@@ -92,27 +92,34 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
     // Poista kommentti
     elseif (isset($_POST["delete_comment"])) {
-        $commentId = (int)($_POST["comment_id"] ?? 0);
-        $postId = (int)($_POST["post_id"] ?? 0);
-        if ($commentId > 0 && $userId > 0) {
-            deleteComment($conn, $commentId, $userId);
-
+        $idOptions = ['options' => ['min_range' => 1]];
+        $commentId = filter_var($_POST["comment_id"] ?? null, FILTER_VALIDATE_INT, $idOptions);
+        $postId = filter_var($_POST["post_id"] ?? null, FILTER_VALIDATE_INT, $idOptions);
+        if (!$commentId || !$postId || $userId <= 0 || !deleteComment($conn, $commentId, $postId, $userId)) {
+            $error = 'Kommentin poisto epäonnistui.';
             if (isAjaxRequest()) {
-                $post = getPostById($conn, $postId);
-                $commentsHtml = renderCommentsListHtml($conn, $postId, null, (int)($post['user_id'] ?? 0));
-                $commentCount = getCommentCount($conn, $postId);
-                sendJsonResponse([
-                    'success' => true,
-                    'message' => 'Kommentti poistettu onnistuneesti!',
-                    'post_id' => $postId,
-                    'comments_html' => $commentsHtml,
-                    'comment_count' => $commentCount
-                ]);
+                sendJsonResponse(['success' => false, 'error' => $error], 400);
             }
-
-            header("Location: " . $cleanUrl . ($postId > 0 ? "#comments-" . $postId : ""));
+            setFlashToast($error, 'error');
+            header("Location: " . $cleanUrl);
             exit;
         }
+
+        if (isAjaxRequest()) {
+            $post = getPostById($conn, $postId);
+            $commentsHtml = renderCommentsListHtml($conn, $postId, null, (int)($post['user_id'] ?? 0));
+            $commentCount = getCommentCount($conn, $postId);
+            sendJsonResponse([
+                'success' => true,
+                'message' => 'Kommentti poistettu onnistuneesti!',
+                'post_id' => $postId,
+                'comments_html' => $commentsHtml,
+                'comment_count' => $commentCount
+            ]);
+        }
+
+        header("Location: " . $cleanUrl . "#comments-" . $postId);
+        exit;
     }
     // Lähetä ilmianto (Report Post/Comment)
     elseif (isset($_POST["submit_report"])) {

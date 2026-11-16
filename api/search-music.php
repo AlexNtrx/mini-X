@@ -17,6 +17,11 @@ if (!isset($_SESSION['user_id'])) {
     exit;
 }
 
+require_once __DIR__ . '/../functions/init.php';
+if (!refreshAuthenticatedSession(dbConnect())) {
+    sendJsonResponse(['success' => false, 'error' => 'Kirjaudu sisään käyttääksesi hakua.'], 401);
+}
+
 $term = trim($_GET['term'] ?? ($_GET['q'] ?? ''));
 
 if (empty($term)) {

@@ -1111,7 +1111,9 @@ function initProfileModalAjax() {
             }
         } catch (err) {
             console.error('AJAX Profile save error:', err);
-            form.submit();
+            if (typeof Toast !== 'undefined') {
+                Toast.error('Tallennuksen tulosta ei voitu varmistaa. Tarkista profiili ennen kuin yrität uudelleen.');
+            }
         } finally {
             if (saveBtn) {
                 saveBtn.disabled = false;

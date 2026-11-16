@@ -133,8 +133,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const signupForm = document.getElementById('form-signup');
   const signUpBtn = document.getElementById('signUp');
 
-  signupForm?.addEventListener('submit', async (e) => {
+  const submitSignup = async (e) => {
     e.preventDefault();
+    if (signUpBtn?.disabled) return;
 
     const usernameInput = document.getElementById('username-signup');
     const passwordInput = document.getElementById('password-signup');
@@ -186,14 +187,24 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     } catch (err) {
       console.error('AJAX Signup error:', err);
-      signupForm.submit();
+      if (typeof Toast !== 'undefined') {
+        Toast.error('Rekisteröinnin tulosta ei voitu varmistaa. Kokeile kirjautua sisään.');
+      }
     } finally {
       if (signUpBtn) {
         signUpBtn.disabled = false;
         signUpBtn.textContent = originalText;
       }
     }
-  });
+  };
+
+  if (signupForm) {
+    if (typeof JustValidate === 'function') {
+      validateSignupForm(submitSignup);
+    } else {
+      signupForm.addEventListener('submit', submitSignup);
+    }
+  }
 
   // --- Login Form AJAX ---
   const loginForm = document.getElementById('form-login');

@@ -22,7 +22,7 @@ $targetId = (int)($_GET['id'] ?? 0);
 
 $profileUser = null;
 if (!empty($targetUsername)) {
-    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE username = ? AND deleted_at IS NULL LIMIT 1");
+    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE username = ? AND deleted_at IS NULL AND suspended_at IS NULL LIMIT 1");
     if ($userStmt) {
         $userStmt->bind_param("s", $targetUsername);
         $userStmt->execute();
@@ -30,7 +30,7 @@ if (!empty($targetUsername)) {
         $userStmt->close();
     }
 } elseif ($targetId > 0) {
-    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE id = ? AND deleted_at IS NULL AND suspended_at IS NULL LIMIT 1");
     if ($userStmt) {
         $userStmt->bind_param("i", $targetId);
         $userStmt->execute();
@@ -39,7 +39,7 @@ if (!empty($targetUsername)) {
     }
 } else {
     // Oletuksena kirjautunut käyttäjä
-    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1");
+    $userStmt = $conn->prepare("SELECT id, avatar, username, display_name FROM users WHERE id = ? AND deleted_at IS NULL AND suspended_at IS NULL LIMIT 1");
     if ($userStmt) {
         $userStmt->bind_param("i", $loggedInUserId);
         $userStmt->execute();

@@ -71,7 +71,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'account_deleted' && empty($su
                 Rekisteröitymällä hyväksyt palvelun <a href="index.php?page=privacy" target="_blank" rel="noopener">tietosuojakäytännön</a>.
               </div>
               <div class="form-element form-submit">
-                <button id="signUp" class="signup" type="submit" name="register_post">
+                <button id="signUp" class="signup" type="submit">
                   Sign up
                 </button>
                 <button id="goLeft" class="signup off" type="button">
@@ -183,7 +183,7 @@ if (isset($_GET['status']) && $_GET['status'] === 'account_deleted' && empty($su
 
     <script src="./js/toast.js?v=<?= filemtime(__DIR__ . '/../js/toast.js') ?>"></script>
     <script src="https://unpkg.com/just-validate@4.3.0/dist/just-validate.production.min.js"></script>
-    <script src="./js/lomakeet.js?v=<?= filemtime(__DIR__ . '/../js/lomakeet.js') ?>"></script>
     <script src="./js/validation.js?v=<?= filemtime(__DIR__ . '/../js/validation.js') ?>"></script>
+    <script src="./js/lomakeet.js?v=<?= filemtime(__DIR__ . '/../js/lomakeet.js') ?>"></script>
   </body>
 </html>

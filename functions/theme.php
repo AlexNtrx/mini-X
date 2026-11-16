@@ -208,7 +208,7 @@ function getUserBannerUrl($banner)
  * @param array $file
  * @return bool|string True jos onnistui, virheviesti jos epäonnistui
  */
-function updateUserBanner($conn, $userId, $file)
+function updateUserBanner($conn, $userId, $file, ?ProfileImageChanges $pending = null)
 {
     if (!isset($file) || !is_array($file) || !isset($file['error'])) {
         return "Bannerin latauksessa tapahtui virhe.";
@@ -254,14 +254,8 @@ function updateUserBanner($conn, $userId, $file)
         mkdir($uploadDir, 0755, true);
     }
 
-    // Haetaan vanha banneri poistettavaksi
     $current = getUserCustomization($conn, $userId);
-    if (!empty($current['theme_banner']) && !preg_match('/^https?:\/\//i', $current['theme_banner'])) {
-        $oldFile = $uploadDir . basename($current['theme_banner']);
-        if (file_exists($oldFile)) {
-            @unlink($oldFile);
-        }
-    }
+    $previous = getLocalProfileImagePath($uploadDir, $current['theme_banner']);
 
     // Luodaan uniikki ja turvallinen tiedostonimi
     $newFileName = "banner_" . $userId . "_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $extension;
@@ -271,8 +265,8 @@ function updateUserBanner($conn, $userId, $file)
         return "Bannerin tallentaminen palvelimelle epäonnistui.";
     }
 
-    // Päivitetään tietokanta
-    return saveUserCustomization($conn, $userId, ['theme_banner' => $newFileName]);
+    return saveProfileImageChange($pending, $previous, $targetPath,
+        fn () => saveUserCustomization($conn, $userId, ['theme_banner' => $newFileName]));
 }
 
 /**
@@ -282,18 +276,13 @@ function updateUserBanner($conn, $userId, $file)
  * @param int $userId
  * @return bool
  */
-function deleteUserBanner($conn, $userId)
+function deleteUserBanner($conn, $userId, ?ProfileImageChanges $pending = null)
 {
     $uploadDir = __DIR__ . "/../uploads/banners/";
     $current = getUserCustomization($conn, $userId);
-    if (!empty($current['theme_banner']) && !preg_match('/^https?:\/\//i', $current['theme_banner'])) {
-        $oldFile = $uploadDir . basename($current['theme_banner']);
-        if (file_exists($oldFile)) {
-            @unlink($oldFile);
-        }
-    }
-
-    return saveUserCustomization($conn, $userId, ['theme_banner' => '']);
+    $previous = getLocalProfileImagePath($uploadDir, $current['theme_banner']);
+    return saveProfileImageChange($pending, $previous, null,
+        fn () => saveUserCustomization($conn, $userId, ['theme_banner' => '']));
 }
 
 /**
@@ -329,7 +318,7 @@ function getUserBackgroundUrl($bgVal)
  * @param array $file
  * @return bool|string True jos onnistui, virheviesti jos epäonnistui
  */
-function updateUserBackground($conn, $userId, $file)
+function updateUserBackground($conn, $userId, $file, ?ProfileImageChanges $pending = null)
 {
     if (!isset($file) || !is_array($file) || !isset($file['error'])) {
         return "Taustakuvan latauksessa tapahtui virhe.";
@@ -375,14 +364,9 @@ function updateUserBackground($conn, $userId, $file)
         mkdir($uploadDir, 0755, true);
     }
 
-    // Haetaan vanha taustakuva poistettavaksi
     $current = getUserCustomization($conn, $userId);
-    if (!empty($current['theme_bg_val']) && !preg_match('/^https?:\/\//i', $current['theme_bg_val'])) {
-        $oldFile = $uploadDir . basename($current['theme_bg_val']);
-        if (file_exists($oldFile)) {
-            @unlink($oldFile);
-        }
-    }
+    $previous = $current['theme_bg_type'] === 'custom_image'
+        ? getLocalProfileImagePath($uploadDir, $current['theme_bg_val']) : null;
 
     // Luodaan uniikki tiedostonimi
     $newFileName = "bg_" . $userId . "_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $extension;
@@ -392,11 +376,11 @@ function updateUserBackground($conn, $userId, $file)
         return "Taustakuvan tallentaminen palvelimelle epäonnistui.";
     }
 
-    // Päivitetään tietokanta
-    return saveUserCustomization($conn, $userId, [
-        'theme_bg_type' => 'custom_image',
-        'theme_bg_val'  => $newFileName
-    ]);
+    return saveProfileImageChange($pending, $previous, $targetPath,
+        fn () => saveUserCustomization($conn, $userId, [
+            'theme_bg_type' => 'custom_image',
+            'theme_bg_val'  => $newFileName
+        ]));
 }
 
 /**
@@ -406,21 +390,17 @@ function updateUserBackground($conn, $userId, $file)
  * @param int $userId
  * @return bool
  */
-function deleteUserBackground($conn, $userId)
+function deleteUserBackground($conn, $userId, ?ProfileImageChanges $pending = null)
 {
     $uploadDir = __DIR__ . "/../uploads/backgrounds/";
     $current = getUserCustomization($conn, $userId);
-    if (!empty($current['theme_bg_val']) && !preg_match('/^https?:\/\//i', $current['theme_bg_val'])) {
-        $oldFile = $uploadDir . basename($current['theme_bg_val']);
-        if (file_exists($oldFile)) {
-            @unlink($oldFile);
-        }
-    }
-
-    return saveUserCustomization($conn, $userId, [
-        'theme_bg_type' => 'default',
-        'theme_bg_val'  => ''
-    ]);
+    $previous = $current['theme_bg_type'] === 'custom_image'
+        ? getLocalProfileImagePath($uploadDir, $current['theme_bg_val']) : null;
+    return saveProfileImageChange($pending, $previous, null,
+        fn () => saveUserCustomization($conn, $userId, [
+            'theme_bg_type' => 'default',
+            'theme_bg_val'  => ''
+        ]));
 }
 
 /**

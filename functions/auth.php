@@ -35,7 +35,7 @@ function loginUser($conn, $username, $password)
     if (function_exists('ensureAdminSchema')) {
         ensureAdminSchema($conn);
     }
-    $stmt = $conn->prepare("SELECT id, username, display_name, password, avatar, role, deleted_at FROM users WHERE username = ? LIMIT 1");
+    $stmt = $conn->prepare("SELECT id, username, display_name, password, avatar, role, deleted_at, suspended_at FROM users WHERE username = ? LIMIT 1");
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -54,11 +54,38 @@ function loginUser($conn, $username, $password)
 // Aktivoi käyttäjätilin uudelleen (Reactivate Soft-Deleted Account)
 function reactivateUser($conn, $userId)
 {
-    $stmt = $conn->prepare("UPDATE users SET deleted_at = NULL WHERE id = ?");
+    ensureAdminSchema($conn);
+    $stmt = $conn->prepare("UPDATE users SET deleted_at = NULL WHERE id = ? AND deleted_at IS NOT NULL AND suspended_at IS NULL");
     $stmt->bind_param("i", $userId);
-    $success = $stmt->execute();
+    $success = $stmt->execute() && $stmt->affected_rows === 1;
     $stmt->close();
     return $success;
+}
+
+function refreshAuthenticatedSession($conn): bool
+{
+    if (!isset($_SESSION['user_id'])) {
+        return false;
+    }
+
+    ensureAdminSchema($conn);
+    $stmt = $conn->prepare("SELECT username, display_name, avatar, role FROM users WHERE id = ? AND deleted_at IS NULL AND suspended_at IS NULL LIMIT 1");
+    $userId = (int)$_SESSION['user_id'];
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $user = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+
+    if (!$user) {
+        $_SESSION = [];
+        return false;
+    }
+
+    $_SESSION['username'] = $user['username'];
+    $_SESSION['display_name'] = !empty($user['display_name']) ? $user['display_name'] : $user['username'];
+    $_SESSION['avatar'] = $user['avatar'];
+    $_SESSION['role'] = $user['role'] ?? 'user';
+    return true;
 }
 
 // Päivittää näyttönimen (Display Name)
@@ -132,9 +159,9 @@ function softDeleteUser($conn, $userId, $password)
         return "Salasana on virheellinen.";
     }
 
-    $updateStmt = $conn->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ?");
+    $updateStmt = $conn->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ? AND deleted_at IS NULL AND suspended_at IS NULL");
     $updateStmt->bind_param("i", $userId);
-    $success = $updateStmt->execute();
+    $success = $updateStmt->execute() && $updateStmt->affected_rows === 1;
     $updateStmt->close();
 
     return $success ? true : "Tilin poistaminen epäonnistui.";
@@ -170,7 +197,7 @@ function getUserInitials($username)
 }
 
 // Päivittää käyttäjän profiilikuvan
-function updateUserAvatar($conn, $userId, $file)
+function updateUserAvatar($conn, $userId, $file, ?ProfileImageChanges $pending = null)
 {
     if (!isset($file) || !is_array($file) || !isset($file['error'])) {
         return "Kuvan latauksessa tapahtui virhe.";
@@ -212,19 +239,7 @@ function updateUserAvatar($conn, $userId, $file)
         mkdir($uploadDir, 0755, true);
     }
 
-    // Haetaan vanha kuva poistettavaksi
-    $stmt = $conn->prepare("SELECT avatar FROM users WHERE id = ? LIMIT 1");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $oldUser = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!empty($oldUser['avatar'])) {
-        $oldFilePath = $uploadDir . $oldUser['avatar'];
-        if (file_exists($oldFilePath)) {
-            @unlink($oldFilePath);
-        }
-    }
+    $previous = getLocalProfileImagePath($uploadDir, getStoredAvatar($conn, $userId));
 
     // Luodaan uniikki ja turvallinen tiedostonimi
     $newFileName = "avatar_" . $userId . "_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $extension;
@@ -234,48 +249,45 @@ function updateUserAvatar($conn, $userId, $file)
         return "Kuvan tallentaminen palvelimelle epäonnistui.";
     }
 
-    // Päivitetään tietokanta
-    $updateStmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
-    $updateStmt->bind_param("si", $newFileName, $userId);
-    $success = $updateStmt->execute();
-    $updateStmt->close();
-
-    if ($success) {
-        $_SESSION['avatar'] = $newFileName;
-        return true;
-    }
-
-    return "Tietokannan päivitys epäonnistui.";
+    return saveUserAvatar($conn, $userId, $previous, $targetPath, $pending)
+        ?: "Tietokannan päivitys epäonnistui.";
 }
 
 // Poistaa käyttäjän profiilikuvan
-function deleteUserAvatar($conn, $userId)
+function deleteUserAvatar($conn, $userId, ?ProfileImageChanges $pending = null)
 {
     $uploadDir = __DIR__ . "/../uploads/avatars/";
+    $previous = getLocalProfileImagePath($uploadDir, getStoredAvatar($conn, $userId));
+    return saveUserAvatar($conn, $userId, $previous, null, $pending);
+}
+
+function getStoredAvatar($conn, $userId): ?string
+{
     $stmt = $conn->prepare("SELECT avatar FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
     $stmt->close();
+    return $user['avatar'] ?? null;
+}
 
-    if (!empty($user['avatar'])) {
-        $filePath = $uploadDir . $user['avatar'];
-        if (file_exists($filePath)) {
-            @unlink($filePath);
+function saveUserAvatar($conn, $userId, ?string $previous, ?string $replacement, ?ProfileImageChanges $pending): bool
+{
+    $avatar = $replacement === null ? null : basename($replacement);
+    return saveProfileImageChange($pending, $previous, $replacement, function () use ($conn, $userId, $avatar) {
+        $stmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
+        $stmt->bind_param("si", $avatar, $userId);
+        $saved = $stmt->execute();
+        $stmt->close();
+        if ($saved) {
+            if ($avatar === null) {
+                unset($_SESSION['avatar']);
+            } else {
+                $_SESSION['avatar'] = $avatar;
+            }
         }
-    }
-
-    $updateStmt = $conn->prepare("UPDATE users SET avatar = NULL WHERE id = ?");
-    $updateStmt->bind_param("i", $userId);
-    $success = $updateStmt->execute();
-    $updateStmt->close();
-
-    if ($success) {
-        unset($_SESSION['avatar']);
-        return true;
-    }
-
-    return false;
+        return $saved;
+    });
 }
 
 /**
@@ -286,7 +298,7 @@ function deleteUserAvatar($conn, $userId)
  * @param string $dataUrl
  * @return bool|string True onnistuessa, virheilmoitus epäonnistuessa.
  */
-function updateUserAvatarFromDataUrl($conn, $userId, $dataUrl)
+function updateUserAvatarFromDataUrl($conn, $userId, $dataUrl, ?ProfileImageChanges $pending = null)
 {
     if (empty($dataUrl) || !is_string($dataUrl)) {
         return "Kuvan tiedot puuttuvat.";
@@ -314,19 +326,7 @@ function updateUserAvatarFromDataUrl($conn, $userId, $dataUrl)
         mkdir($uploadDir, 0755, true);
     }
 
-    // Haetaan vanha kuva poistettavaksi
-    $stmt = $conn->prepare("SELECT avatar FROM users WHERE id = ? LIMIT 1");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $oldUser = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!empty($oldUser['avatar'])) {
-        $oldFilePath = $uploadDir . $oldUser['avatar'];
-        if (file_exists($oldFilePath)) {
-            @unlink($oldFilePath);
-        }
-    }
+    $previous = getLocalProfileImagePath($uploadDir, getStoredAvatar($conn, $userId));
 
     $newFileName = "avatar_" . $userId . "_" . time() . "_" . bin2hex(random_bytes(4)) . "." . $ext;
     $targetPath = $uploadDir . $newFileName;
@@ -335,16 +335,6 @@ function updateUserAvatarFromDataUrl($conn, $userId, $dataUrl)
         return "Kuvan tallentaminen palvelimelle epäonnistui.";
     }
 
-    // Päivitetään tietokanta
-    $updateStmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
-    $updateStmt->bind_param("si", $newFileName, $userId);
-    $success = $updateStmt->execute();
-    $updateStmt->close();
-
-    if ($success) {
-        $_SESSION['avatar'] = $newFileName;
-        return true;
-    }
-
-    return "Tietokannan päivitys epäonnistui.";
+    return saveUserAvatar($conn, $userId, $previous, $targetPath, $pending)
+        ?: "Tietokannan päivitys epäonnistui.";
 }

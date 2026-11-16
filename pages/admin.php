@@ -251,7 +251,8 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                     <?php foreach ($usersList as $u): ?>
                                         <?php 
                                         $uAvatar = getUserAvatarUrl($u['avatar']);
-                                        $isSuspended = !empty($u['deleted_at']);
+                                        $isSuspended = !empty($u['suspended_at']);
+                                        $isInactive = $isSuspended || !empty($u['deleted_at']);
                                         ?>
                                         <tr>
                                             <td>
@@ -274,8 +275,8 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                 </span>
                                             </td>
                                             <td>
-                                                <span class="admin-badge-pill <?= $isSuspended ? 'badge-suspended' : 'badge-active' ?>">
-                                                    <?= $isSuspended ? 'Jäädytetty' : 'Aktiivinen' ?>
+                                                <span class="admin-badge-pill <?= $isInactive ? 'badge-suspended' : 'badge-active' ?>">
+                                                    <?= $isSuspended ? 'Jäädytetty' : ($isInactive ? 'Suljettu' : 'Aktiivinen') ?>
                                                 </span>
                                             </td>
                                             <td><?= $u['post_count'] ?> kpl</td>
@@ -305,7 +306,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                             <input type="hidden" name="admin_action" value="toggle_user_status">
                                                             <input type="hidden" name="target_user_id" value="<?= $u['id'] ?>">
                                                             <button type="submit" class="btn-admin-action" onclick="return confirm('Haluatko varmasti muuttaa käyttäjän @<?= htmlspecialchars($u['username']) ?> tilaa?')">
-                                                                <?= $isSuspended ? 'Aktivoi' : 'Jäädytä' ?>
+                                                                <?= $isSuspended ? 'Poista jäädytys' : 'Jäädytä' ?>
                                                             </button>
                                                         </form>
 

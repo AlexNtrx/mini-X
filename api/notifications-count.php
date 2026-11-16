@@ -11,6 +11,10 @@ if (!isset($_SESSION['user_id'])) {
 
 require_once __DIR__ . '/../functions/init.php';
 $conn = dbConnect();
+if (!refreshAuthenticatedSession($conn)) {
+    echo json_encode(['logged_in' => false, 'unread_count' => 0]);
+    exit;
+}
 
 $userId = (int)$_SESSION['user_id'];
 $unreadCount = 0;

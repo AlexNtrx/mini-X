@@ -55,7 +55,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $error = "Täytä käyttäjänimi ja salasana.";
         } else {
             $user = loginUser($conn, $username, $password);
-            if ($user) {
+            if ($user && !empty($user['suspended_at'])) {
+                $error = "Ylläpito on jäädyttänyt käyttäjätilisi.";
+                if (isAjaxRequest()) {
+                    sendJsonResponse(['success' => false, 'error' => $error], 403);
+                }
+            } elseif ($user) {
                 // Jos tili on poistettu (Soft Delete), pyydetään vahvistus tilin uudelleenaktivointiin
                 if (!empty($user['deleted_at'])) {
                     $_SESSION['pending_reactivation_user_id'] = (int)$user['id'];
@@ -107,40 +112,35 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     elseif (isset($_POST["confirm_reactivation"])) {
         $pendingUserId = (int)($_SESSION['pending_reactivation_user_id'] ?? 0);
         $pendingUsername = $_SESSION['pending_reactivation_username'] ?? '';
-        $pendingDisplayName = $_SESSION['pending_reactivation_display_name'] ?? $pendingUsername;
 
-        if ($pendingUserId > 0 && !empty($pendingUsername)) {
-            reactivateUser($conn, $pendingUserId);
-            session_regenerate_id(true);
+        unset(
+            $_SESSION['pending_reactivation_user_id'],
+            $_SESSION['pending_reactivation_username'],
+            $_SESSION['pending_reactivation_display_name'],
+            $_SESSION['pending_reactivation_avatar']
+        );
+
+        if ($pendingUserId > 0 && !empty($pendingUsername) && reactivateUser($conn, $pendingUserId)) {
             $_SESSION['user_id'] = $pendingUserId;
-            $_SESSION['username'] = $pendingUsername;
-            $_SESSION['display_name'] = $pendingDisplayName;
-            $_SESSION['avatar'] = $_SESSION['pending_reactivation_avatar'] ?? null;
-            unset(
-                $_SESSION['pending_reactivation_user_id'],
-                $_SESSION['pending_reactivation_username'],
-                $_SESSION['pending_reactivation_display_name'],
-                $_SESSION['pending_reactivation_avatar']
-            );
+            if (refreshAuthenticatedSession($conn)) {
+                session_regenerate_id(true);
 
-            if (isAjaxRequest()) {
-                sendJsonResponse([
-                    'success' => true,
-                    'message' => 'Tili aktivoitu onnistuneesti!',
-                    'redirect' => 'index.php?page=home'
-                ]);
-            }
+                if (isAjaxRequest()) {
+                    sendJsonResponse([
+                        'success' => true,
+                        'message' => 'Tili aktivoitu onnistuneesti!',
+                        'redirect' => 'index.php?page=home'
+                    ]);
+                }
 
-            header("Location: index.php?page=home");
-            exit;
-        } else {
-            $error = "Aktivointi epäonnistui. Kirjaudu sisään uudelleen.";
-            if (isAjaxRequest()) {
-                sendJsonResponse([
-                    'success' => false,
-                    'error' => $error
-                ], 400);
+                header("Location: index.php?page=home");
+                exit;
             }
+        }
+
+        $error = "Aktivointi epäonnistui. Kirjaudu sisään uudelleen.";
+        if (isAjaxRequest()) {
+            sendJsonResponse(['success' => false, 'error' => $error], 400);
         }
     }
     // Peruuta tilin uudelleenaktivointi

@@ -121,7 +121,8 @@ CREATE TABLE `users` (
   `created_at` datetime NOT NULL DEFAULT current_timestamp(),
   `reset_token_hash` varchar(64) DEFAULT NULL,
   `reset_token_expires_at` datetime DEFAULT NULL,
-  `deleted_at` datetime DEFAULT NULL
+  `deleted_at` datetime DEFAULT NULL,
+  `suspended_at` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -146,18 +147,6 @@ CREATE TABLE `rooms` (
   `is_active` tinyint(1) NOT NULL DEFAULT 1,
   `created_at` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Oletushuoneiden alustus
---
-INSERT INTO `rooms` (`slug`, `name`, `icon`, `description`, `is_active`) VALUES
-('general', 'Yleinen', '💬', 'Vapaa keskustelu ja sekalaiset aiheet', 1),
-('tech', 'Teknologia', '💻', 'IT, ohjelmointi, laitteet ja teknologia', 1),
-('food', 'Ruoka & Juoma', '🍔', 'Ruoanlaitto, reseptit ja ravintolat', 1),
-('gaming', 'Pelaaminen', '🎮', 'Videopelit, konsolit ja e-urheilu', 1),
-('entertainment', 'Viihde', '🎬', 'Elokuvat, sarjat, musiikki ja popkulttuuri', 1),
-('lifestyle', 'Elämäntapa', '🌿', 'Hyvinvointi, arki ja matkailu', 1)
-ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
 -- --------------------------------------------------------
 
@@ -300,7 +289,7 @@ ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 ALTER TABLE `rooms`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE `feedbacks`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -310,6 +299,18 @@ ALTER TABLE `reports`
 
 ALTER TABLE `admin_logs`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Oletushuoneiden alustus
+--
+INSERT INTO `rooms` (`slug`, `name`, `icon`, `description`, `is_active`) VALUES
+('general', 'Yleinen', '💬', 'Vapaa keskustelu ja sekalaiset aiheet', 1),
+('tech', 'Teknologia', '💻', 'IT, ohjelmointi, laitteet ja teknologia', 1),
+('food', 'Ruoka & Juoma', '🍔', 'Ruoanlaitto, reseptit ja ravintolat', 1),
+('gaming', 'Pelaaminen', '🎮', 'Videopelit, konsolit ja e-urheilu', 1),
+('entertainment', 'Viihde', '🎬', 'Elokuvat, sarjat, musiikki ja popkulttuuri', 1),
+('lifestyle', 'Elämäntapa', '🌿', 'Hyvinvointi, arki ja matkailu', 1)
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
 
 COMMIT;
 

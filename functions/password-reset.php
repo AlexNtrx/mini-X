@@ -4,11 +4,12 @@ require_once __DIR__ . "/mailer.php";
 // Luo salasanan palautustunnisteen (Token) ja tallentaa sen tietokantaan
 function createPasswordResetToken($conn, $email)
 {
+    ensureAdminSchema($conn);
     $token = bin2hex(random_bytes(16));
     $tokenHash = hash("sha256", $token);
     $expiry = date("Y-m-d H:i:s", time() + 60 * 30); // Voimassa 30 minuuttia
 
-    $stmt = $conn->prepare("UPDATE users SET reset_token_hash = ?, reset_token_expires_at = ? WHERE email = ? AND deleted_at IS NULL");
+    $stmt = $conn->prepare("UPDATE users SET reset_token_hash = ?, reset_token_expires_at = ? WHERE email = ? AND deleted_at IS NULL AND suspended_at IS NULL");
     $stmt->bind_param("sss", $tokenHash, $expiry, $email);
     $stmt->execute();
     $affected = $stmt->affected_rows;
@@ -25,7 +26,8 @@ function getUserByResetToken($conn, $token)
     }
 
     $tokenHash = hash("sha256", $token);
-    $stmt = $conn->prepare("SELECT id, username, email, reset_token_expires_at FROM users WHERE reset_token_hash = ? LIMIT 1");
+    ensureAdminSchema($conn);
+    $stmt = $conn->prepare("SELECT id, username, email, reset_token_expires_at FROM users WHERE reset_token_hash = ? AND suspended_at IS NULL LIMIT 1");
     $stmt->bind_param("s", $tokenHash);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -69,10 +71,11 @@ function resetPasswordWithToken($conn, $token, $newPassword, $confirmPassword)
 
     $user = $tokenCheck['user'];
     $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+    $tokenHash = hash("sha256", $token);
 
-    $stmt = $conn->prepare("UPDATE users SET password = ?, reset_token_hash = NULL, reset_token_expires_at = NULL WHERE id = ?");
-    $stmt->bind_param("si", $hashedPassword, $user["id"]);
-    $success = $stmt->execute();
+    $stmt = $conn->prepare("UPDATE users SET password = ?, reset_token_hash = NULL, reset_token_expires_at = NULL WHERE id = ? AND reset_token_hash = ? AND reset_token_expires_at > NOW() AND suspended_at IS NULL");
+    $stmt->bind_param("sis", $hashedPassword, $user["id"], $tokenHash);
+    $success = $stmt->execute() && $stmt->affected_rows === 1;
     $stmt->close();
 
     return $success ? true : "Salasanan päivittäminen epäonnistui.";

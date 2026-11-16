@@ -116,30 +116,56 @@ function getCommentsByPost($conn, $postId, $bestCommentId = null)
 }
 
 // Poistaa kommentin (ja sen alikommentit)
-function deleteComment($conn, $commentId, $userId)
+function deleteComment($conn, $commentId, $postId, $userId)
 {
-    // Nollataan mahdollinen best_comment_id viittaus
-    $upd = $conn->prepare("UPDATE posts SET best_comment_id = NULL WHERE best_comment_id = ?");
-    if ($upd) {
-        $upd->bind_param("i", $commentId);
-        $upd->execute();
-        $upd->close();
+    if (!$conn->begin_transaction()) {
+        return false;
     }
 
-    // Poistetaan myös alikommentit
-    $delSub = $conn->prepare("DELETE FROM comments WHERE parent_id = ?");
-    if ($delSub) {
-        $delSub->bind_param("i", $commentId);
-        $delSub->execute();
-        $delSub->close();
-    }
+    $committed = false;
+    try {
+        // Lukitaan julkaisu ennen kommentteja, jotta saman ketjun poistot eivät risteä.
+        $post = $conn->prepare("SELECT id FROM posts WHERE id = ? FOR UPDATE");
+        $post->bind_param("i", $postId);
+        $postExists = $post->execute() && $post->get_result()->num_rows === 1;
+        $post->close();
+        if (!$postExists) {
+            return false;
+        }
 
-    $stmt = $conn->prepare("DELETE FROM comments WHERE id = ? AND user_id = ?");
-    if (!$stmt) return false;
-    $stmt->bind_param("ii", $commentId, $userId);
-    $res = $stmt->execute();
-    $stmt->close();
-    return $res;
+        $owner = $conn->prepare("SELECT id FROM comments WHERE id = ? AND post_id = ? AND user_id = ? FOR UPDATE");
+        $owner->bind_param("iii", $commentId, $postId, $userId);
+        $canDelete = $owner->execute() && $owner->get_result()->num_rows === 1;
+        $owner->close();
+        if (!$canDelete) {
+            return false;
+        }
+
+        $references = $conn->prepare("UPDATE posts SET best_comment_id = NULL WHERE id = ? AND best_comment_id = ?");
+        $references->bind_param("ii", $postId, $commentId);
+        $cleared = $references->execute();
+        $references->close();
+
+        $replies = $conn->prepare("DELETE FROM comments WHERE post_id = ? AND parent_id = ?");
+        $replies->bind_param("ii", $postId, $commentId);
+        $removedReplies = $replies->execute();
+        $replies->close();
+
+        $comment = $conn->prepare("DELETE FROM comments WHERE id = ?");
+        $comment->bind_param("i", $commentId);
+        $removedComment = $comment->execute() && $comment->affected_rows === 1;
+        $comment->close();
+
+        $committed = $cleared && $removedReplies && $removedComment && $conn->commit();
+        return $committed;
+    } catch (mysqli_sql_exception $exception) {
+        error_log($exception->getMessage());
+        return false;
+    } finally {
+        if (!$committed) {
+            $conn->rollback();
+        }
+    }
 }
 
 /**

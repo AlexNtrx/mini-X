@@ -142,6 +142,34 @@ function ensureAdminSchema($conn)
         }
     }
 
+    // Siirrä vanhat jäädytykset, jotka voidaan tunnistaa audit-lokista.
+    $suspensionColumn = $conn->query("SHOW COLUMNS FROM `users` LIKE 'suspended_at'");
+    if ($suspensionColumn && $suspensionColumn->num_rows === 0) {
+        try {
+            $conn->query("ALTER TABLE `users` ADD COLUMN `suspended_at` DATETIME DEFAULT NULL AFTER `deleted_at`");
+        } catch (mysqli_sql_exception $exception) {
+            if ($exception->getCode() !== 1060) {
+                throw $exception;
+            }
+        }
+    }
+
+    $migration = $conn->query("SELECT 1 FROM system_settings WHERE setting_key = 'account_suspensions_migrated'");
+    if ($migration && $migration->num_rows === 0) {
+        $migrated = $conn->query("UPDATE users
+            SET suspended_at = deleted_at, deleted_at = NULL,
+                reset_token_hash = NULL, reset_token_expires_at = NULL
+            WHERE deleted_at IS NOT NULL AND suspended_at IS NULL
+            AND EXISTS (
+                SELECT 1 FROM admin_logs
+                WHERE target_type = 'user' AND target_id = users.id
+                AND action = 'suspend_user' AND created_at >= users.deleted_at
+            )");
+        if ($migrated) {
+            $conn->query("INSERT IGNORE INTO system_settings (setting_key, setting_value) VALUES ('account_suspensions_migrated', '1')");
+        }
+    }
+
     $checked = true;
     return true;
 }
@@ -206,8 +234,8 @@ function getAdminOverviewStats($conn)
     // Käyttäjätilastot
     $res = $conn->query("SELECT 
         COUNT(*) AS total,
-        SUM(CASE WHEN deleted_at IS NULL THEN 1 ELSE 0 END) AS active,
-        SUM(CASE WHEN deleted_at IS NOT NULL THEN 1 ELSE 0 END) AS suspended,
+        SUM(CASE WHEN deleted_at IS NULL AND suspended_at IS NULL THEN 1 ELSE 0 END) AS active,
+        SUM(CASE WHEN suspended_at IS NOT NULL THEN 1 ELSE 0 END) AS suspended,
         SUM(CASE WHEN role = 'admin' THEN 1 ELSE 0 END) AS admins
     FROM users");
     if ($res && $row = $res->fetch_assoc()) {
@@ -292,7 +320,7 @@ function adminGetAllUsers($conn, $search = '', $roleFilter = 'all', $statusFilte
     if (!$conn) return [];
     ensureAdminSchema($conn);
 
-    $sql = "SELECT id, username, display_name, email, avatar, role, created_at, deleted_at,
+    $sql = "SELECT id, username, display_name, email, avatar, role, created_at, deleted_at, suspended_at,
                    (SELECT COUNT(*) FROM posts WHERE posts.user_id = users.id) AS post_count,
                    (SELECT COUNT(*) FROM comments WHERE comments.user_id = users.id) AS comment_count
             FROM users WHERE 1=1";
@@ -315,9 +343,9 @@ function adminGetAllUsers($conn, $search = '', $roleFilter = 'all', $statusFilte
     }
 
     if ($statusFilter === 'active') {
-        $sql .= " AND deleted_at IS NULL";
+        $sql .= " AND deleted_at IS NULL AND suspended_at IS NULL";
     } elseif ($statusFilter === 'suspended') {
-        $sql .= " AND deleted_at IS NOT NULL";
+        $sql .= " AND suspended_at IS NOT NULL";
     }
 
     $sql .= " ORDER BY id DESC";
@@ -465,7 +493,8 @@ function adminToggleUserStatus($conn, $adminId, $targetUserId)
         return ['success' => false, 'message' => 'Et voi jäädyttää omaa ylläpitotiliäsi!', 'new_status' => ''];
     }
 
-    $stmt = $conn->prepare("SELECT username, deleted_at FROM users WHERE id = ? LIMIT 1");
+    ensureAdminSchema($conn);
+    $stmt = $conn->prepare("SELECT username, deleted_at, suspended_at FROM users WHERE id = ? LIMIT 1");
     $stmt->bind_param("i", $targetUserId);
     $stmt->execute();
     $user = $stmt->get_result()->fetch_assoc();
@@ -475,11 +504,11 @@ function adminToggleUserStatus($conn, $adminId, $targetUserId)
         return ['success' => false, 'message' => 'Käyttäjää ei löydy.', 'new_status' => ''];
     }
 
-    if (empty($user['deleted_at'])) {
+    if (empty($user['suspended_at'])) {
         // Jäädytetään
-        $upd = $conn->prepare("UPDATE users SET deleted_at = NOW() WHERE id = ?");
+        $upd = $conn->prepare("UPDATE users SET suspended_at = NOW(), reset_token_hash = NULL, reset_token_expires_at = NULL WHERE id = ? AND suspended_at IS NULL");
         $upd->bind_param("i", $targetUserId);
-        $res = $upd->execute();
+        $res = $upd->execute() && $upd->affected_rows === 1;
         $upd->close();
         if ($res) {
             logAdminAction($conn, $adminId, 'suspend_user', 'user', $targetUserId, "Jäädytettiin tili @{$user['username']}");
@@ -487,13 +516,13 @@ function adminToggleUserStatus($conn, $adminId, $targetUserId)
         }
     } else {
         // Aktivoidaan uudelleen
-        $upd = $conn->prepare("UPDATE users SET deleted_at = NULL WHERE id = ?");
+        $upd = $conn->prepare("UPDATE users SET suspended_at = NULL WHERE id = ? AND suspended_at IS NOT NULL");
         $upd->bind_param("i", $targetUserId);
-        $res = $upd->execute();
+        $res = $upd->execute() && $upd->affected_rows === 1;
         $upd->close();
         if ($res) {
             logAdminAction($conn, $adminId, 'reactivate_user', 'user', $targetUserId, "Aktivoitiin uudelleen tili @{$user['username']}");
-            return ['success' => true, 'message' => "Käyttäjätili @{$user['username']} aktivoitu uudelleen.", 'new_status' => 'active'];
+            return ['success' => true, 'message' => "Käyttäjätilin @{$user['username']} jäädytys poistettu.", 'new_status' => empty($user['deleted_at']) ? 'active' : 'deleted'];
         }
     }
 

@@ -629,8 +629,8 @@ document.addEventListener('submit', async (e) => {
 
     // 3. Kommentin poisto (Delete comment)
     if (form.classList.contains('delete-comment-form')) {
+        if (e.defaultPrevented) return;
         e.preventDefault();
-        if (!confirm('Poistetaanko kommentti?')) return;
 
         const formData = new FormData(form);
         formData.append('ajax', '1');
@@ -812,8 +812,8 @@ document.addEventListener('submit', async (e) => {
     // 7. Julkaisun poisto (Delete post)
     const deletePostBtn = form.querySelector('button[name="delete_post"]');
     if (deletePostBtn) {
+        if (e.defaultPrevented) return;
         e.preventDefault();
-        if (!confirm('Haluatko varmasti poistaa tämän julkaisun?')) return;
 
         const postArticle = form.closest('.post');
         const formData = new FormData(form);
@@ -994,6 +994,33 @@ document.addEventListener('submit', async (e) => {
 // AJAX ROOM FILTERING & EXPLORE SEARCH
 // ==========================================
 
+let roomFeedRequest;
+
+async function loadRoomFeed(url, postsSection) {
+    roomFeedRequest?.abort();
+    const request = new AbortController();
+    roomFeedRequest = request;
+    const ajaxUrl = url + (url.includes('?') ? '&' : '?') + 'ajax=1';
+
+    try {
+        const response = await fetch(ajaxUrl, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            signal: request.signal
+        });
+        const data = await response.json();
+        if (request.signal.aborted) return;
+        if (data.success) {
+            postsSection.innerHTML = data.html;
+        } else if (data.redirect) {
+            window.location.href = data.redirect;
+        }
+    } catch (err) {
+        if (request.signal.aborted) return;
+        console.error('Room filter error:', err);
+        window.location.href = url;
+    }
+}
+
 // Huonesuodatus etusivulla ilman sivun uudelleenlatausta
 document.addEventListener('click', (e) => {
     const chip = e.target.closest('.room-chip');
@@ -1011,20 +1038,7 @@ document.addEventListener('click', (e) => {
 
         history.pushState(null, '', url);
 
-        const ajaxUrl = url + (url.includes('?') ? '&' : '?') + 'ajax=1';
-        fetch(ajaxUrl, {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(r => r.json())
-        .then(data => {
-            if (data.success) {
-                postsSection.innerHTML = data.html;
-            }
-        })
-        .catch(err => {
-            console.error('Room filter error:', err);
-            window.location.href = url;
-        });
+        loadRoomFeed(url, postsSection);
     }
 });
 
@@ -1095,9 +1109,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // Sivupalkin uloskirjautuminen AJAXilla
 document.addEventListener('click', (e) => {
     const logoutLink = e.target.closest('a[href*="page=logout"]');
-    if (logoutLink) {
+    if (logoutLink && !e.defaultPrevented) {
         e.preventDefault();
-        if (!confirm('Haluatko varmasti kirjautua ulos?')) return;
 
         fetch('index.php?page=logout', {
             headers: { 'X-Requested-With': 'XMLHttpRequest' }
@@ -1122,18 +1135,13 @@ window.addEventListener('popstate', () => {
     const page = params.get('page') || 'home';
     if (page === 'home') {
         const room = params.get('room') || 'all';
-        const targetChip = document.querySelector(`.room-chip[href*="room=${room}"]`) || document.querySelector('.room-chip[href="index.php?page=home"]');
-        if (targetChip) {
-            document.querySelectorAll('.room-chip').forEach(c => c.classList.remove('active'));
+        const chips = [...document.querySelectorAll('.rooms-bar .room-chip')];
+        const targetChip = chips.find(chip => (new URL(chip.href).searchParams.get('room') || 'all') === room);
+        const postsSection = document.querySelector('.posts');
+        if (targetChip && postsSection) {
+            chips.forEach(c => c.classList.remove('active'));
             targetChip.classList.add('active');
-            fetch(`index.php?page=home&room=${encodeURIComponent(room)}&ajax=1`, {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' }
-            })
-            .then(r => r.json())
-            .then(data => {
-                const postsSection = document.querySelector('.posts');
-                if (postsSection && data.success) postsSection.innerHTML = data.html;
-            });
+            loadRoomFeed(targetChip.href, postsSection);
         }
     } else if (page === 'selaa') {
         const q = params.get('q') || '';

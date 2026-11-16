@@ -80,12 +80,11 @@ require_once __DIR__ . "/../functions/init.php";
                                     onclick="showEditForm(this)">
                                     Muokkaa
                                 </button>
-                                <form method="POST">
+                                <form method="POST" onsubmit="return confirm('Haluatko varmasti poistaa tämän julkaisun?')">
                                     <input type="hidden" name="id" value="<?= $content["id"] ?>">
                                     <button
                                         type="submit"
-                                        name="delete_post"
-                                        onclick="return confirm('Haluatko varmasti poistaa tämän julkaisun?')">
+                                        name="delete_post">
                                         Poista
                                     </button>
                                 </form>

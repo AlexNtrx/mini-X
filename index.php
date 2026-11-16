@@ -1,4 +1,9 @@
 <?php
+// Pidä PHP-varoitukset poissa rekisteröintivastauksesta.
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && isset($_POST['register_post'])) {
+    ini_set('display_errors', '0');
+}
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -8,6 +13,7 @@ $conn = dbConnect();
 $error = '';
 $success = '';
 
+refreshAuthenticatedSession($conn);
 require_once "handlers/auth-handlers.php";
 
 // Julkiset sivut, joita voi tarkastella myös ilman sisäänkirjautumista
@@ -35,26 +41,6 @@ if (!isset($_SESSION['user_id'])) {
     }
     include 'pages/form-page.php';
     exit;
-}
-
-// Päivitetään käyttäjän tiedot tietokannasta sessioon (varmistetaan aina tuore display_name, username, avatar ja role)
-if (isset($conn) && $conn) {
-    if (function_exists('ensureAdminSchema')) {
-        ensureAdminSchema($conn);
-    }
-    $sessionStmt = $conn->prepare("SELECT username, display_name, avatar, role FROM users WHERE id = ? AND deleted_at IS NULL LIMIT 1");
-    if ($sessionStmt) {
-        $sessionStmt->bind_param("i", $_SESSION['user_id']);
-        $sessionStmt->execute();
-        $sessionUserData = $sessionStmt->get_result()->fetch_assoc();
-        $sessionStmt->close();
-        if ($sessionUserData) {
-            $_SESSION['username'] = $sessionUserData['username'];
-            $_SESSION['display_name'] = !empty($sessionUserData['display_name']) ? $sessionUserData['display_name'] : $sessionUserData['username'];
-            $_SESSION['avatar'] = $sessionUserData['avatar'];
-            $_SESSION['role'] = $sessionUserData['role'] ?? 'user';
-        }
-    }
 }
 
 require_once "handlers/post-handlers.php";
