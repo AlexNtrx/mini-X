@@ -66,7 +66,7 @@ Sovelluksen käyttöliittymä on uudelleenrakannettu toimimaan ilman häiritsevi
 - **Browser History Integration:** Suodatukset ja haut päivittävät selaimen osoiterivin (`history.pushState`), joten selaimen Edellinen/Seuraava-painikkeet (`popstate`) toimivat saumattomasti.
 
 ### 6. Ylläpito ja moderointi (Admin Dashboard & RBAC)
-- **Erillinen ylläpitoportaali (Dedicated Standalone Admin Portal):** Oma suojattu ja nopea hallintasivu (`admin.php`) 1400px leveällä työskentelytilalla, tilanneilmaisimilla ja erillisellä navigoinnilla.
+- **Minimalistinen ylläpitoportaali (Dedicated Standalone Admin Portal):** Selkeä, skandinaavisen minimalistinen ja häiriötön tumma käyttöliittymä (`admin.php`) ilman ylimääräisiä värikorostuksia tai emojeja, erillisellä tilanneilmaisimella ja selkeällä navigoinnilla.
 - **Roolipohjainen pääsynhallinta (RBAC):** `admin`- ja `user`-roolit tiukalla palvelintason suojauksella.
 - **Käyttäjien moderointi:** Käyttäjätunnusten ja nimimerkkien auditointi, profiilikuvien pakkonollaus, tilien jäädytys tai poisto.
 - **Huoneiden dynaaminen hallinta:** Uusien aihealueiden luonti, piilottaminen ja poistaminen.

@@ -147,9 +147,9 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
             <!-- 1. YLEISKATSAUS (Overview) -->
             <?php if ($activeTab === 'overview'): ?>
                 <!-- Huoltotila -->
-                <div class="maintenance-card" style="border-left: 4px solid <?= $isMaintenance ? '#f4212e' : '#00ba7c' ?>;">
+                <div class="maintenance-card">
                     <div class="maintenance-info">
-                        <h3>Huoltotila: <?= $isMaintenance ? '<span style="color:#f4212e;">Päällä</span>' : '<span style="color:#00ba7c;">Pois päältä</span>' ?></h3>
+                        <h3>Huoltotila: <span class="maintenance-status-text <?= $isMaintenance ? 'status-text-on' : 'status-text-off' ?>"><?= $isMaintenance ? 'Päällä' : 'Pois päältä' ?></span></h3>
                         <p>
                             <?= $isMaintenance 
                                 ? 'Sivusto on suljettu tavallisilta käyttäjiltä. Vain ylläpitäjät pääsevät sisään.' 
@@ -158,7 +158,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                     </div>
                     <form method="POST">
                         <input type="hidden" name="admin_action" value="toggle_maintenance">
-                        <button type="submit" class="btn-admin-action <?= $isMaintenance ? 'btn-edit' : 'btn-suspend' ?>" onclick="return confirm('Haluatko varmasti vaihtaa huoltotilan tilaa?')">
+                        <button type="submit" class="btn-admin-action" onclick="return confirm('Haluatko varmasti vaihtaa huoltotilan tilaa?')">
                             <?= $isMaintenance ? 'Kytke pois päältä' : 'Kytke päälle' ?>
                         </button>
                     </form>
@@ -178,17 +178,13 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                     </div>
                     <div class="stat-card">
                         <span class="stat-card-title">Käsittelemättömät ilmiannot</span>
-                        <span class="stat-card-value" style="color: <?= $stats['pending_reports'] > 0 ? '#f4212e' : '#e7e9ea' ?>;">
-                            <?= number_format($stats['pending_reports']) ?>
-                        </span>
-                        <span class="stat-card-sub"><a href="admin.php?tab=reports" style="color:#1d9bf0;">Käsittele ilmiannot &rarr;</a></span>
+                        <span class="stat-card-value"><?= number_format($stats['pending_reports']) ?></span>
+                        <span class="stat-card-sub"><a href="admin.php?tab=reports">Käsittele ilmiannot &rarr;</a></span>
                     </div>
                     <div class="stat-card">
                         <span class="stat-card-title">Uudet palautteet</span>
-                        <span class="stat-card-value" style="color: <?= $stats['unread_feedback'] > 0 ? '#ff9800' : '#e7e9ea' ?>;">
-                            <?= number_format($stats['unread_feedback']) ?>
-                        </span>
-                        <span class="stat-card-sub"><a href="admin.php?tab=feedbacks" style="color:#1d9bf0;">Lue palautteet &rarr;</a></span>
+                        <span class="stat-card-value"><?= number_format($stats['unread_feedback']) ?></span>
+                        <span class="stat-card-sub"><a href="admin.php?tab=feedbacks">Lue palautteet &rarr;</a></span>
                     </div>
                 </div>
 
@@ -291,7 +287,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                 <div class="btn-action-group">
                                                     <button 
                                                         type="button" 
-                                                        class="btn-admin-action btn-edit" 
+                                                        class="btn-admin-action" 
                                                         title="Muokkaa käyttäjätietoja"
                                                         onclick="openEditUserModal(<?= htmlspecialchars(json_encode($u), ENT_QUOTES, 'UTF-8') ?>)">
                                                         Muokkaa
@@ -301,7 +297,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                         <form method="POST" style="display:inline;">
                                                             <input type="hidden" name="admin_action" value="reset_avatar">
                                                             <input type="hidden" name="target_user_id" value="<?= $u['id'] ?>">
-                                                            <button type="submit" class="btn-admin-action btn-suspend" title="Nollaa profiilikuva" onclick="return confirm('Haluatko varmasti poistaa käyttäjän @<?= htmlspecialchars($u['username']) ?> profiilikuvan?')">
+                                                            <button type="submit" class="btn-admin-action" title="Nollaa profiilikuva" onclick="return confirm('Haluatko varmasti poistaa käyttäjän @<?= htmlspecialchars($u['username']) ?> profiilikuvan?')">
                                                                 Nollaa kuva
                                                             </button>
                                                         </form>
@@ -311,7 +307,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                         <form method="POST" style="display:inline;">
                                                             <input type="hidden" name="admin_action" value="toggle_user_status">
                                                             <input type="hidden" name="target_user_id" value="<?= $u['id'] ?>">
-                                                            <button type="submit" class="btn-admin-action btn-suspend" onclick="return confirm('Haluatko varmasti muuttaa käyttäjän @<?= htmlspecialchars($u['username']) ?> tilaa?')">
+                                                            <button type="submit" class="btn-admin-action" onclick="return confirm('Haluatko varmasti muuttaa käyttäjän @<?= htmlspecialchars($u['username']) ?> tilaa?')">
                                                                 <?= $isSuspended ? 'Aktivoi' : 'Jäädytä' ?>
                                                             </button>
                                                         </form>
@@ -402,7 +398,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                         <form method="POST" style="display:inline;">
                                                             <input type="hidden" name="admin_action" value="toggle_room">
                                                             <input type="hidden" name="room_id" value="<?= $room['id'] ?>">
-                                                            <button type="submit" class="btn-admin-action btn-edit">
+                                                            <button type="submit" class="btn-admin-action">
                                                                 <?= !empty($room['is_active']) ? 'Piilota' : 'Aktivoi' ?>
                                                             </button>
                                                         </form>
@@ -466,18 +462,18 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                             <td>
                                                 <?php if (!empty($rep['post_id'])): ?>
                                                     <div>
-                                                        <span style="font-size:11px; color:#1d9bf0;">Julkaisu #<?= $rep['post_id'] ?> (@<?= htmlspecialchars($rep['post_author'] ?? 'tuntematon') ?>)</span><br>
+                                                        <span class="admin-meta-link">Julkaisu #<?= $rep['post_id'] ?> (@<?= htmlspecialchars($rep['post_author'] ?? 'tuntematon') ?>)</span><br>
                                                         <em>"<?= htmlspecialchars(mb_substr($rep['post_content'] ?? '', 0, 50)) ?>..."</em>
                                                     </div>
                                                 <?php else: ?>
                                                     <span>Kommentti #<?= $rep['comment_id'] ?></span>
                                                 <?php endif; ?>
                                             </td>
-                                            <td><span class="admin-badge-pill badge-suspended"><?= htmlspecialchars($rep['reason']) ?></span></td>
+                                            <td><span class="admin-badge-pill badge-user"><?= htmlspecialchars($rep['reason']) ?></span></td>
                                             <td style="color:#8b98a5; max-width:200px;"><?= htmlspecialchars($rep['details'] ?? '-') ?></td>
                                             <td>
                                                 <?php
-                                                $stClass = ($rep['status'] === 'pending') ? 'badge-suspended' : (($rep['status'] === 'resolved') ? 'badge-active' : 'badge-user');
+                                                $stClass = ($rep['status'] === 'pending') ? 'badge-pending' : (($rep['status'] === 'resolved') ? 'badge-active' : 'badge-user');
                                                 ?>
                                                 <span class="admin-badge-pill <?= $stClass ?>"><?= htmlspecialchars($rep['status']) ?></span>
                                             </td>
@@ -497,7 +493,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                             <input type="hidden" name="admin_action" value="resolve_report">
                                                             <input type="hidden" name="report_id" value="<?= $rep['id'] ?>">
                                                             <input type="hidden" name="resolve_action" value="dismiss">
-                                                            <button type="submit" class="btn-admin-action btn-edit">
+                                                            <button type="submit" class="btn-admin-action">
                                                                 Hylkää
                                                             </button>
                                                         </form>
@@ -556,14 +552,14 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                 <strong><?= htmlspecialchars($fb['subject']) ?></strong>
                                                 <p style="margin:4px 0 0; color:#8b98a5; font-size:12px;"><?= nl2br(htmlspecialchars($fb['message'])) ?></p>
                                                 <?php if (!empty($fb['admin_note'])): ?>
-                                                    <div style="margin-top:6px; padding:4px 8px; background:rgba(29,155,240,0.1); border-left:2px solid #1d9bf0; font-size:11px; color:#dbe4eb;">
+                                                    <div class="admin-feedback-reply-box">
                                                         <strong>Vastaus:</strong> <?= htmlspecialchars($fb['admin_note']) ?>
                                                     </div>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
                                                 <?php
-                                                $fbClass = ($fb['status'] === 'unread') ? 'badge-suspended' : (($fb['status'] === 'resolved') ? 'badge-active' : 'badge-user');
+                                                $fbClass = ($fb['status'] === 'unread') ? 'badge-pending' : (($fb['status'] === 'resolved') ? 'badge-active' : 'badge-user');
                                                 ?>
                                                 <span class="admin-badge-pill <?= $fbClass ?>"><?= htmlspecialchars($fb['status']) ?></span>
                                             </td>
@@ -574,8 +570,8 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                                                     <div style="display:flex; flex-direction:column; gap:4px;">
                                                         <input type="text" name="admin_note" class="admin-form-input" style="padding:4px 8px; font-size:12px;" placeholder="Kirjoita vastaus..." value="<?= htmlspecialchars($fb['admin_note'] ?? '') ?>">
                                                         <div class="btn-action-group">
-                                                            <button type="submit" name="status" value="resolved" class="btn-admin-action btn-edit" style="font-size:11px;">Käsitelty</button>
-                                                            <button type="submit" name="status" value="read" class="btn-admin-action btn-suspend" style="font-size:11px;">Luettu</button>
+                                                            <button type="submit" name="status" value="resolved" class="btn-admin-action" style="font-size:11px;">Käsitelty</button>
+                                                            <button type="submit" name="status" value="read" class="btn-admin-action" style="font-size:11px;">Luettu</button>
                                                         </div>
                                                     </div>
                                                 </form>
@@ -612,8 +608,8 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                         <form method="POST">
                             <input type="hidden" name="admin_action" value="clean_orphaned_files">
                             <div style="margin-bottom:12px; display:flex; justify-content:space-between; align-items:center;">
-                                <span style="color:#ff7a00; font-weight:700;">Löytyi <?= count($scanResult['orphans']) ?> tarpeetonta tiedostoa</span>
-                                <button type="submit" class="btn-primary-action" style="background:#f4212e;" onclick="return confirm('Haluatko varmasti poistaa kaikki valitut tiedostot palvelimelta?')">
+                                <span class="storage-orphan-count">Löytyi <?= count($scanResult['orphans']) ?> tarpeetonta tiedostoa</span>
+                                <button type="submit" class="btn-danger-action" onclick="return confirm('Haluatko varmasti poistaa kaikki valitut tiedostot palvelimelta?')">
                                     Poista valitut tiedostot
                                 </button>
                             </div>
@@ -644,7 +640,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                             </div>
                         </form>
                     <?php else: ?>
-                        <div class="admin-empty-state" style="color:#00ba7c;">
+                        <div class="admin-empty-state">
                             Ei orpoja tiedostoja. Kaikki uploads-hakemiston tiedostot ovat aktiivisessa käytössä.
                         </div>
                     <?php endif; ?>
@@ -668,7 +664,7 @@ $adminAvatarUrl = getUserAvatarUrl($_SESSION['avatar'] ?? null);
                     <label class="admin-form-label">Käyttäjänimi (3–20 merkkiä):</label>
                     <input type="text" name="username" id="edit-user-username" class="admin-form-input" required maxlength="20">
                     <div style="font-size:11px; color:#8b98a5; margin-top:4px;">
-                        Pikavalinta: <a href="javascript:void(0)" onclick="sanitizeUsernameDefault()" style="color:#1d9bf0;">Aseta muodossa 'user_{ID}'</a>
+                        Pikavalinta: <a href="javascript:void(0)" onclick="sanitizeUsernameDefault()" class="admin-meta-link">Aseta muodossa 'user_{ID}'</a>
                     </div>
                 </div>
 
