@@ -4,7 +4,7 @@ date_default_timezone_set('Europe/Helsinki');
 
 // Asetetaan sovelluksen versio
 if (!defined('APP_VERSION')) {
-    define('APP_VERSION', '1.2.0');
+    define('APP_VERSION', '1.3.1');
 }
 
 /*

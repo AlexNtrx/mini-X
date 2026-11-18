@@ -11,7 +11,7 @@ Mini-X on selaimessa toimiva täysiverinen mikroblogipalvelu (inspiraationa X / 
 - **Tekijä:** Nithitorn Kaosa-ard
 - **Tutkinto:** Tieto- ja viestintätekniikan perustutkinto (Ohjelmistokehittäjä)
 - **Ajankohta:** Syyskuu – Lokakuu 2026
-- **Versio:** 1.3.0 (Production Release / Final Version)
+- **Versio:** 1.3.1 (Production Release / Final Version)
 
 ---
 
